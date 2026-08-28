@@ -1,0 +1,49 @@
+name: Refresh media
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-media
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install yt-dlp
+        run: pipx install yt-dlp
+
+      - name: Refresh media
+        continue-on-error: true
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: node scripts/refresh-media.mjs --with-social
+
+      - name: Validate generated cache
+        run: npm run validate:media
+
+      - name: Commit refreshed media
+        run: |
+          if git diff --quiet -- src/data/generated/media public/media; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add src/data/generated/media public/media
+          git commit -m 'Refresh generated media'
+          git push

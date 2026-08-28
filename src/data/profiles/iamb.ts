@@ -1,0 +1,175 @@
+import logo from '../../assets/profiles/iamb/logo.png';
+import portrait from '../../assets/profiles/iamb/portrait.png';
+import channels from '../media-channels.json';
+import type { IambProfile } from '../types.ts';
+
+export const iambProfile: IambProfile = {
+  id: 'iamb',
+  name: 'IAMB Synthmusic',
+  shortName: 'IAMB',
+  accent: 'ochre',
+  meta: {
+    home: {
+      de: 'IAMB Synthmusic – cinematischer Synthwave und atmosphärische Produktionen von Markus B. Jetzt reinhören.',
+      en: 'IAMB Synthmusic – cinematic synthwave and atmospheric productions by Markus B. Start listening now.',
+    },
+    music: {
+      de: 'Die neuesten YouTube-Uploads von IAMB Synthmusic, automatisch aktualisiert.',
+      en: 'The latest YouTube uploads from IAMB Synthmusic, refreshed automatically.',
+    },
+    social: {
+      de: 'Beiträge von IAMB Synthmusic auf TikTok und Instagram, automatisch aktualisiert.',
+      en: 'Posts from IAMB Synthmusic on TikTok and Instagram, refreshed automatically.',
+    },
+    contact: {
+      de: 'Kontaktadresse von IAMB Synthmusic.',
+      en: 'Contact address for IAMB Synthmusic.',
+    },
+    about: {
+      de: 'Markus B. aus Bietigheim-Bissingen: Werdegang, Studio-Setup und Inspirationen des Künstlers.',
+      en: 'Markus B. from Bietigheim-Bissingen: career, studio setup and the inspirations behind the artist.',
+    },
+  },
+  hero: {
+    eyebrow: { de: 'Elektronische Soundtracks', en: 'Electronic soundtracks' },
+    title: { de: 'Music from the Space Stage', en: 'Music from the Space Stage' },
+    lead: {
+      de: 'Elektronische Soundtracks von Markus B., eingespielt am Masterkeyboard und produziert in Cakewalk Sonar.',
+      en: 'Electronic soundtracks by Markus B., played on the master keyboard and produced in Cakewalk Sonar.',
+    },
+  },
+  images: {
+    logo,
+    logoAlt: { de: 'Logo von IAMB Synthmusic', en: 'IAMB Synthmusic logo' },
+    portrait,
+    portraitAlt: { de: 'Porträtfoto von Markus B.', en: 'Portrait photo of Markus B.' },
+    portraitTreatment: 'temporary-cutout-pending',
+  },
+  tracks: [
+    {
+      profile: 'iamb',
+      id: 'welcome-1',
+      title: 'Welcome 1',
+      sources: [
+        { format: 'mp3', src: '/audio/iamb/welcome-1.mp3', mimeType: 'audio/mpeg' },
+        { format: 'm4a', src: '/audio/iamb/welcome-1.m4a', mimeType: 'audio/mp4' },
+      ],
+    },
+    {
+      profile: 'iamb',
+      id: 'welcome-2',
+      title: 'Welcome 2',
+      sources: [
+        { format: 'mp3', src: '/audio/iamb/welcome-2.mp3', mimeType: 'audio/mpeg' },
+        { format: 'm4a', src: '/audio/iamb/welcome-2.m4a', mimeType: 'audio/mp4' },
+      ],
+    },
+  ],
+  platforms: [
+    {
+      profile: 'iamb',
+      id: 'youtube',
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@iamb-synthmusic7820',
+      category: 'social',
+      tagline: { de: 'Visuals & Videos', en: 'Visuals & videos' },
+    },
+    {
+      profile: 'iamb',
+      id: 'tiktok',
+      name: 'TikTok',
+      url: 'https://www.tiktok.com/@iamb.synthmusic',
+      category: 'social',
+      tagline: { de: 'Shorts & Snippets', en: 'Shorts & snippets' },
+    },
+    {
+      profile: 'iamb',
+      id: 'instagram',
+      name: 'Instagram',
+      url: 'https://www.instagram.com/iamb.synthmusic/',
+      category: 'social',
+      tagline: { de: 'Stories & Updates', en: 'Stories & updates' },
+    },
+    {
+      profile: 'iamb',
+      id: 'bandlab',
+      name: 'BandLab',
+      url: 'https://www.bandlab.com/iamb_synthmusic',
+      category: 'social',
+      tagline: { de: 'Community & Updates', en: 'Community & updates' },
+      brandMark: '/icons/platforms/bandlab.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'spotify',
+      name: 'Spotify',
+      url: 'https://open.spotify.com/artist/31f8iEkHYOs73gZurN4waJ',
+      category: 'listening',
+      tagline: { de: 'Artist-Seite & Releases', en: 'Artist page & releases' },
+    },
+    {
+      profile: 'iamb',
+      id: 'applemusic',
+      name: 'Apple Music',
+      url: 'https://music.apple.com/us/artist/iamb-synthmusic/1632680655',
+      category: 'listening',
+      tagline: { de: 'High-Fidelity-Stream', en: 'High-fidelity stream' },
+      brandMark: '/icons/platforms/applemusic.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'amazonmusic',
+      name: 'Amazon Music',
+      url: 'https://www.amazon.com/music/player/artists/B0B5PN5NCJ/iamb-synthmusic',
+      category: 'listening',
+      tagline: { de: 'Artist-Seite & Releases', en: 'Artist page & releases' },
+      brandMark: '/icons/platforms/amazonmusic.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'soundcloud',
+      name: 'SoundCloud',
+      url: 'https://soundcloud.com/iamb-synthmusic',
+      category: 'listening',
+      tagline: { de: 'Skizzen & Sessions', en: 'Sketches & sessions' },
+    },
+    {
+      profile: 'iamb',
+      id: 'beatport',
+      name: 'Beatport',
+      url: 'https://www.beatport.com/release/memories-its-your-life/5069423',
+      category: 'listening',
+      tagline: { de: 'Downloads & DJ-Packs', en: 'Downloads & DJ packs' },
+      brandMark: '/icons/platforms/beatport.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'traxsource',
+      name: 'Traxsource',
+      url: 'https://www.traxsource.com/artist/675015/',
+      category: 'listening',
+      tagline: { de: 'DJ-Store & Releases', en: 'DJ store & releases' },
+      brandMark: '/icons/platforms/traxsource.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'qobuz',
+      name: 'Qobuz',
+      url: 'https://www.qobuz.com/us-en/interpreter/iamb-synthmusic/14736427',
+      category: 'listening',
+      tagline: { de: 'Lossless Audio', en: 'Lossless audio' },
+      brandMark: '/icons/platforms/qobuz.svg',
+    },
+    {
+      profile: 'iamb',
+      id: 'bandcamp',
+      name: 'Bandcamp',
+      url: 'https://iamb-synthmusic.bandcamp.com/',
+      category: 'listening',
+      tagline: { de: 'Releases & Downloads', en: 'Releases & downloads' },
+      brandMark: '/icons/platforms/bandcamp.svg',
+    },
+  ],
+  youtube: { profile: 'iamb', ...channels.iamb.youtube },
+  contact: { email: 'iamb.synthmusic@gmail.com' },
+};

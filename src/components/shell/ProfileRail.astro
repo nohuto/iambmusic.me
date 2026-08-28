@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import type { Language, PageId, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import { localize } from '../../i18n/index.ts';
+import { routePath } from '../../lib/routes.ts';
+import Icon from '../ui/Icon.astro';
+import PanelNav from './PanelNav.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  activeProfile: Profile;
+  page: PageId;
+  ui: UiDictionary;
+  sources?: readonly ('tiktok' | 'instagram')[];
+  activeSource?: string | null;
+}
+
+const { lang, profile, activeProfile, page, ui, sources = [], activeSource = null } = Astro.props;
+---
+
+<header class="rail">
+  <div class="inner">
+    <div class="identity">
+      <a class="mark" href={routePath(lang, profile, 'home')}>
+        <Image src={activeProfile.images.logo} alt={localize(activeProfile.images.logoAlt, lang)} width={34} height={34} />
+        <span>{activeProfile.shortName}</span>
+      </a>
+
+      <button
+        class="rail-toggle icon-action"
+        type="button"
+        data-rail-toggle
+        data-collapse={ui.shell.collapseRail}
+        data-expand={ui.shell.expandRail}
+        aria-label={ui.shell.collapseRail}
+      >
+        <Icon name="sidebar-simple" size="1.1rem" />
+      </button>
+    </div>
+
+    <PanelNav
+      lang={lang}
+      profile={profile}
+      page={page}
+      ui={ui}
+      variant="rail"
+      sources={sources}
+      activeSource={activeSource}
+    />
+  </div>
+</header>
+
+<style>
+  .rail {
+    display: none;
+  }
+
+  @media (min-width: 64rem) {
+    .rail {
+      display: block;
+      background: var(--panel-recess);
+      border-inline-end: var(--rule) solid var(--panel-rule);
+    }
+
+    .inner {
+      position: sticky;
+      inset-block-start: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: var(--space-5);
+      block-size: 100dvh;
+      padding: var(--space-5) var(--space-3);
+      align-content: start;
+    }
+  }
+
+  .identity {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+    padding-inline-start: var(--space-2);
+    color: var(--legend);
+    font-size: var(--step-2);
+    font-weight: 700;
+    font-stretch: 115%;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+
+  .mark :global(img) {
+    inline-size: 2.125rem;
+    block-size: 2.125rem;
+    border-radius: var(--radius-inner);
+    object-fit: cover;
+  }
+
+  .rail-toggle {
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border: 0;
+    background: none;
+    color: var(--legend-faint);
+    cursor: pointer;
+  }
+
+  .rail-toggle:hover {
+    color: var(--legend);
+  }
+</style>

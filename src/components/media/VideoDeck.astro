@@ -1,0 +1,89 @@
+---
+import type { Language, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import type { LibraryRow } from '../../lib/library.ts';
+import { routePath } from '../../lib/routes.ts';
+import MediaHead from './MediaHead.astro';
+import MediaRow from './MediaRow.astro';
+
+interface Props {
+  rows: readonly LibraryRow[];
+  generatedAt: string | null;
+  lang: Language;
+  profile: Profile;
+  profileId: ProfileId;
+  ui: UiDictionary;
+  heading: string;
+}
+
+const { rows, generatedAt, lang, profile, profileId, ui, heading } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
+const moreHref = `${routePath(lang, profileId, 'music')}?source=youtube`;
+---
+
+<section class="panel deck" aria-labelledby="deck-heading">
+  <header class="panel-head">
+    <h2 id="deck-heading">{heading}</h2>
+    {
+      generatedAt && (
+        <p class="meta">
+          {ui.video.updated}
+          <time datetime={generatedAt}>{dateFormat.format(new Date(generatedAt))}</time>
+        </p>
+      )
+    }
+  </header>
+
+  {
+    rows.length === 0 ? (
+      <p class="empty">{ui.video.empty}</p>
+    ) : (
+      <>
+        <MediaHead ui={ui} />
+
+        <ul class="rows">
+          {rows.map((row) => (
+            <li>
+              <MediaRow row={row} profile={profile} lang={lang} ui={ui} />
+            </li>
+          ))}
+        </ul>
+
+        <p class="more">
+          <a href={moreHref}>{ui.actions.seeMore}</a>
+        </p>
+      </>
+    )
+  }
+</section>
+
+<style>
+  .deck {
+    position: relative;
+    z-index: 1;
+  }
+
+  .rows {
+    display: grid;
+  }
+
+  li + li {
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
+  .more {
+    padding: var(--space-2) var(--space-2) 0;
+    text-align: end;
+  }
+
+  .more a {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    text-decoration: none;
+  }
+
+  .more a:hover,
+  .more a:focus-visible {
+    color: var(--ink);
+    text-decoration: none;
+  }
+</style>

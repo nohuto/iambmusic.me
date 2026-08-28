@@ -1,0 +1,98 @@
+---
+import type { UiDictionary } from '../../data/types.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  ui: UiDictionary;
+}
+
+const { ui } = Astro.props;
+---
+
+<dialog class="stage" data-video-dialog aria-label={ui.video.dialogLabel}>
+  <div class="controls">
+    <button class="ghost icon-action" type="button" data-video-collapse aria-label={ui.video.collapse}>
+      <Icon name="youtube-logo" size="1.05rem" />
+    </button>
+    <button class="ghost icon-action" type="button" data-video-close aria-label={ui.video.close}>
+      <Icon name="x" weight="bold" size="1.125rem" />
+    </button>
+  </div>
+  <div class="frame" data-video-frame></div>
+</dialog>
+
+<style>
+  .stage {
+    position: fixed;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    background: #000;
+    overflow: visible;
+  }
+
+  .stage[data-mode='compact'] {
+    inset: auto var(--space-4) calc(var(--dock-height) + var(--bottom-nav, 0px) + var(--space-3))
+      auto;
+    inline-size: min(100% - 2rem, 22.25rem);
+    box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.8);
+  }
+
+  .stage[data-mode='expanded'] {
+    inset: 0;
+    margin: auto;
+    inline-size: min(100% - 2rem, 62rem);
+  }
+
+  .stage::backdrop {
+    background: rgb(0 0 0 / 0.86);
+  }
+
+  .frame {
+    aspect-ratio: 16 / 9;
+    inline-size: 100%;
+    min-inline-size: 22.25rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .frame :global(iframe) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+  }
+
+  .controls {
+    position: absolute;
+    inset-block-end: calc(100% + var(--space-1));
+    inset-inline-end: 0;
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .ghost {
+    display: grid;
+    place-items: center;
+    inline-size: var(--touch);
+    block-size: var(--touch);
+    border: 0;
+    background: none;
+    color: #f0f0f2;
+    cursor: pointer;
+  }
+
+  .ghost:hover {
+    color: #fff;
+  }
+
+  .stage[data-mode='compact'] [data-video-collapse] {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .stage[data-mode='compact'] {
+      inline-size: 30rem;
+    }
+  }
+</style>

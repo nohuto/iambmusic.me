@@ -1,0 +1,91 @@
+:root {
+  --panel-ground: #d7dad6;
+  --panel-plate: #eceeea;
+  --panel-recess: #c5c9c4;
+  --panel-rule: #a9aeaa;
+  --legend: #23262a;
+  --legend-quiet: #55595c;
+  --legend-faint: #676c70;
+  --screw: #b3b8b3;
+  --panel-hover: #dfe2de;
+
+  --ink: #7e5804;
+  --ink-field: #b07d12;
+  --ink-on-field: #16181a;
+  --ink-quiet: #63450a;
+
+  --focus: #1b3ea8;
+  --tint: #ddd0b0;
+
+  --radius: 6px;
+  --radius-inner: 4px;
+  --rule: 1px;
+
+  --step-0: 0.72rem;
+  --step-nav: 0.86rem;
+  --step-1: 0.95rem;
+  --step-2: 1rem;
+  --step-3: 1.15rem;
+  --step-lead: clamp(0.95rem, 1.2vw, 1.1rem);
+  --step-title: clamp(2.4rem, 4vw, 3.75rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --rail-width: 14.5rem;
+  --player-width: 20rem;
+  --header-height: 3.5rem;
+  --dock-height: 4.5rem;
+  --bottom-nav: 4.0625rem;
+  --spotlight-height: 23.75rem;
+  --touch: 44px;
+  --utility-height: 31px;
+  --measure: 62ch;
+
+  --legend-tracking: 0.14em;
+  --shadow-plate: 0 1px 2px rgb(16 18 20 / 0.08);
+}
+
+:root[data-profile='aimp'] {
+  --ink: #1d3a6b;
+  --ink-field: #1d3a6b;
+  --ink-on-field: #f2f4f5;
+  --ink-quiet: #162c51;
+  --tint: #c8d2e2;
+}
+
+:root[data-theme='dark'] {
+  --panel-ground: #0b0b0e;
+  --panel-plate: #161619;
+  --panel-recess: #111114;
+  --panel-rule: #ffffff1a;
+  --panel-hover: #212128;
+  --legend: #f0f0f2;
+  --legend-quiet: #9898a2;
+  --legend-faint: #83838d;
+  --screw: #2a2a31;
+
+  --ink: #d3a02b;
+  --ink-field: #b07d12;
+  --ink-on-field: #16181a;
+  --ink-quiet: #b8891f;
+
+  --focus: #8fb4ff;
+  --tint: #241c07;
+
+  --shadow-plate: 0 1px 2px rgb(0 0 0 / 0.6);
+}
+
+:root[data-theme='dark'][data-profile='aimp'] {
+  --ink: #7fa5e3;
+  --ink-field: #2c5aa8;
+  --ink-on-field: #f2f4f5;
+  --ink-quiet: #6b8fcb;
+  --tint: #0d1526;
+}

@@ -1,0 +1,114 @@
+---
+import type { Language, ProfileId, UiDictionary } from '../../data/types.ts';
+import type { MediaLibrary, MediaSource } from '../../lib/media.ts';
+
+interface Props {
+  profileId: ProfileId;
+  lang: Language;
+  ui: UiDictionary;
+  library: MediaLibrary;
+  heading: string;
+  lead: string;
+  sources: readonly MediaSource[];
+  extraCount?: number;
+  refreshedFrom?: MediaSource;
+}
+
+const { lang, ui, library, heading, lead, sources, extraCount = 0, refreshedFrom } = Astro.props;
+
+const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
+const format = (stamp: string | undefined) => (stamp ? dateFormat.format(new Date(stamp)) : null);
+
+const inScope = library.items.filter((item) => sources.includes(item.source));
+const overallDate = refreshedFrom
+  ? format(library.refreshedAt[refreshedFrom])
+  : format(
+      sources
+        .map((source) => library.refreshedAt[source])
+        .filter((value): value is string => Boolean(value))
+        .sort()
+        .at(-1),
+    );
+
+const facts: Record<string, { count: number; date: string | null }> = {
+  '': { count: inScope.length + extraCount, date: overallDate },
+};
+for (const source of sources) {
+  const count = inScope.filter((item) => item.source === source).length;
+  if (count > 0) facts[source] = { count, date: format(library.refreshedAt[source]) };
+}
+const initial = facts[''];
+---
+
+<section class="banner">
+  <div class="copy">
+    <h1>{heading}</h1>
+    <p class="lead">{lead}</p>
+    <p class="facts" aria-live="polite" data-banner-facts data-sets={JSON.stringify(facts)}>
+      <span data-facts-count data-label={ui.music.entries}>{initial?.count} {ui.music.entries}</span>
+      <span class="dot" aria-hidden="true" data-facts-dot hidden={!initial?.date}>&#183;</span>
+      <span data-facts-updated data-label={ui.video.updated} hidden={!initial?.date}>
+        {ui.video.updated} {initial?.date}
+      </span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .banner {
+    display: grid;
+    align-content: end;
+    gap: var(--space-3);
+    min-block-size: 8.5rem;
+    margin-block-start: calc(var(--header-height) * -1);
+    padding-block: var(--header-height) var(--space-3);
+  }
+
+  .copy {
+    display: grid;
+    gap: var(--space-2);
+    max-inline-size: 44rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.25rem);
+    font-stretch: 118%;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .lead {
+    color: var(--legend-quiet);
+    font-size: var(--step-lead);
+    max-inline-size: 60ch;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+  }
+
+  @media (max-width: 64rem) {
+    .banner {
+      min-block-size: 7.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 9vw, 2.6rem);
+    }
+
+    .lead {
+      font-size: var(--step-1);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .banner {
+      min-block-size: 11rem;
+      padding-block-end: var(--space-5);
+    }
+  }
+</style>

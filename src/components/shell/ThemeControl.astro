@@ -1,0 +1,52 @@
+---
+import type { UiDictionary } from '../../data/types.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  ui: UiDictionary;
+}
+
+const { ui } = Astro.props;
+---
+
+<button
+  class="theme-control"
+  type="button"
+  role="switch"
+  data-theme-toggle
+  data-label-light={ui.switches.toLight}
+  data-label-dark={ui.switches.toDark}
+  aria-label={ui.switches.toDark}
+  aria-checked="false"
+>
+  <span class="thumb">
+    <span class="icon" data-theme-icon="dark"><Icon name="moon" size="0.9rem" /></span>
+    <span class="icon" data-theme-icon="light"><Icon name="sun" size="0.9rem" /></span>
+  </span>
+</button>
+
+<style>
+  .theme-control {
+    inline-size: 3.375rem;
+    block-size: var(--utility-height);
+    padding: 3px;
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: 999px;
+    background: var(--panel-plate);
+    cursor: pointer;
+  }
+
+  .theme-control:hover {
+    border-color: var(--legend-faint);
+  }
+
+  .thumb {
+    display: grid;
+    place-items: center;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    border-radius: 50%;
+    background: var(--panel-recess);
+    color: var(--legend);
+  }
+</style>

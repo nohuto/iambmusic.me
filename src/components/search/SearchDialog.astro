@@ -1,0 +1,142 @@
+---
+import type { Language, ProfileId, UiDictionary } from '../../data/types.ts';
+import { routePath } from '../../lib/routes.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  ui: UiDictionary;
+}
+
+const { lang, profile, ui } = Astro.props;
+const musicPath = routePath(lang, profile, 'music');
+---
+
+<dialog
+  class="search"
+  data-search-dialog
+  data-none={ui.search.none}
+  data-music-path={musicPath}
+  aria-label={ui.search.label}
+>
+  <form class="bar" role="search" data-search-form>
+    <Icon name="magnifying-glass" size="1.05rem" />
+    <input
+      type="search"
+      data-search-input
+      placeholder={ui.search.placeholder}
+      aria-label={ui.search.label}
+      autocomplete="off"
+    />
+    <button class="icon-action" type="button" data-search-close aria-label={ui.search.close}>
+      <Icon name="x" weight="bold" size="1.05rem" />
+    </button>
+  </form>
+
+  <ul class="results" data-search-results aria-live="polite"></ul>
+</dialog>
+
+<style>
+  .search {
+    inset-block-start: 12vh;
+    margin-inline: auto;
+    inline-size: min(100% - 2rem, 34rem);
+    max-block-size: min(26rem, 54dvh);
+    padding: var(--space-1) var(--space-2);
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: var(--radius);
+    background: var(--panel-plate);
+    color: var(--legend);
+    overflow: auto;
+  }
+
+  .search::backdrop {
+    background: rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(5px);
+  }
+
+  .bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) 0;
+    color: var(--legend-faint);
+  }
+
+  input {
+    min-block-size: 2rem;
+    border: 0;
+    background: none;
+    color: var(--legend);
+    font-size: var(--step-2);
+    outline: none;
+  }
+
+  .bar button {
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border: 0;
+    border-radius: var(--radius-inner);
+    background: none;
+    color: var(--legend-faint);
+    cursor: pointer;
+  }
+
+  .bar button:hover {
+    color: var(--legend);
+  }
+
+  .results:not(:empty) {
+    display: grid;
+    margin-block-start: var(--space-2);
+    padding-block-start: var(--space-2);
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
+  .results :global(button) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    inline-size: 100%;
+    min-block-size: var(--touch);
+    padding: var(--space-2);
+    border: 0;
+    border-radius: var(--radius-inner);
+    background: none;
+    color: var(--legend);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .results :global(button:hover) {
+    background: var(--panel-hover);
+  }
+
+  .results :global(.art) {
+    inline-size: 2.5rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-inner);
+    object-fit: cover;
+    background: var(--panel-recess);
+  }
+
+  .results :global(.name) {
+    font-size: var(--step-1);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .results :global(.side) {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+</style>

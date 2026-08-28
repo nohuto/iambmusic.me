@@ -1,0 +1,56 @@
+---
+import type { Language, Profile, UiDictionary } from '../../data/types.ts';
+import type { LibraryRow } from '../../lib/library.ts';
+import MediaHead from './MediaHead.astro';
+import MediaRow from './MediaRow.astro';
+
+interface Props {
+  surface: 'music' | 'social';
+  rows: readonly LibraryRow[];
+  profile: Profile;
+  lang: Language;
+  ui: UiDictionary;
+  heading: string;
+}
+
+const { surface, rows, profile, lang, ui, heading } = Astro.props;
+---
+
+<section class="library" data-media-surface={surface} aria-labelledby="library-heading">
+  <h2 id="library-heading" class="sr-only">{heading}</h2>
+
+  <MediaHead ui={ui} />
+
+  <ul class="rows">
+    {
+      rows.map((row) => (
+        <li data-media-row data-source={row.source} data-media-id={row.id}>
+          <MediaRow row={row} profile={profile} lang={lang} ui={ui} />
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="empty" data-media-empty hidden={rows.length > 0}>{ui.video.empty}</p>
+</section>
+
+<style>
+  .library {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .empty {
+    padding: var(--space-5) var(--space-2);
+    color: var(--legend-quiet);
+  }
+</style>

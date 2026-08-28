@@ -1,0 +1,287 @@
+---
+import { primaryNavigation, secondaryNavigation } from '../../data/navigation.ts';
+import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import { routePath } from '../../lib/routes.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  page: PageId;
+  ui: UiDictionary;
+  variant: 'rail' | 'bar';
+  sources?: readonly ('tiktok' | 'instagram')[];
+  activeSource?: string | null;
+}
+
+const { lang, profile, page, ui, variant, sources = [], activeSource = null } = Astro.props;
+
+const sourceGlyphs = { tiktok: 'tiktok-logo', instagram: 'instagram-logo' } as const;
+const sourceNames = { tiktok: 'TikTok', instagram: 'Instagram' } as const;
+
+const icons = {
+  home: 'house',
+  music: 'music-notes',
+  social: 'share-network',
+  about: 'identification-card',
+  contact: 'envelope-simple',
+} as const satisfies Record<PageId, string>;
+
+const rail = variant === 'rail';
+const items = rail ? primaryNavigation : [...primaryNavigation, ...secondaryNavigation];
+const sourceListId = 'social-sources';
+---
+
+<nav class={`panel-nav panel-nav-${variant}`} aria-label={ui.navigationLabel}>
+  {rail && <p class="group-label">{ui.shell.groupMenu}</p>}
+
+  <ul>
+    {
+      items.map((item) => (
+        <li>
+          <div class="row">
+            <a
+              href={routePath(lang, profile, item.page)}
+              data-tip={ui.nav[item.labelKey]}
+              data-social-root={rail && item.page === 'social' ? '' : undefined}
+              aria-current={
+                item.page === page && !(item.page === 'social' && activeSource) ? 'page' : undefined
+              }
+            >
+              <span class="indicator" aria-hidden="true" />
+              <Icon name={icons[item.page]} size="1.25rem" />
+              <span class="label" aria-hidden={variant === 'bar' && item.page === 'social'}>
+                {variant === 'bar' && item.page === 'social'
+                  ? ui.nav.socialShort
+                  : ui.nav[item.labelKey]}
+              </span>
+              {variant === 'bar' && item.page === 'social' && (
+                <span class="sr-only">{ui.nav.social}</span>
+              )}
+            </a>
+
+            {rail && item.page === 'social' && sources.length > 0 && (
+              <button
+                class="disclosure icon-action"
+                type="button"
+                data-source-disclosure
+                data-expand={ui.shell.expandSources}
+                data-collapse={ui.shell.collapseSources}
+                aria-controls={sourceListId}
+                aria-expanded="true"
+                aria-label={ui.shell.collapseSources}
+              >
+                <span class="caret" data-caret="down"><Icon name="caret-down" size="0.9rem" /></span>
+                <span class="caret" data-caret="right">
+                  <Icon name="caret-right" size="0.9rem" />
+                </span>
+              </button>
+            )}
+          </div>
+
+          {rail && item.page === 'social' && sources.length > 0 && (
+            <ul class="sources" id={sourceListId}>
+              {sources.map((source) => (
+                <li>
+                  <a
+                    href={`${routePath(lang, profile, 'social')}?source=${source}`}
+                    data-source-link={source}
+                    aria-current={
+                      page === 'social' && activeSource === source ? 'true' : undefined
+                    }
+                  >
+                    <span class="indicator" aria-hidden="true" />
+                    <Icon name={sourceGlyphs[source]} size="0.95rem" />
+                    <span class="label">{sourceNames[source]}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    rail && (
+      <>
+        <p class="group-label">{ui.shell.groupMore}</p>
+        <ul>
+          {secondaryNavigation.map((item) => (
+            <li>
+              <div class="row">
+                <a
+                  href={routePath(lang, profile, item.page)}
+                  data-tip={ui.nav[item.labelKey]}
+                  aria-current={item.page === page ? 'page' : undefined}
+                >
+                  <span class="indicator" aria-hidden="true" />
+                  <Icon name={icons[item.page]} size="1.25rem" />
+                  <span class="label">{ui.nav[item.labelKey]}</span>
+                </a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</nav>
+
+<style>
+  ul {
+    display: grid;
+  }
+
+  a {
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-block-size: var(--touch);
+    color: var(--legend-quiet);
+    font-size: var(--step-nav);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--legend);
+  }
+
+  a[aria-current] {
+    color: var(--legend);
+  }
+
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .panel-nav-rail {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .group-label {
+    padding-inline-start: calc(2px + var(--space-3));
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: var(--legend-tracking);
+    text-transform: uppercase;
+  }
+
+  .group-label + ul {
+    margin-block-end: var(--space-3);
+  }
+
+  .panel-nav-rail ul {
+    gap: var(--space-1);
+  }
+
+  .panel-nav-rail .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .panel-nav-rail a {
+    grid-template-columns: 2px auto minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-inline-end: var(--space-2);
+    border-radius: var(--radius-inner);
+  }
+
+  .panel-nav-rail .indicator {
+    block-size: 1.15rem;
+    background: transparent;
+  }
+
+  .panel-nav-rail a[aria-current] .indicator {
+    background: var(--ink);
+  }
+
+  .disclosure {
+    display: grid;
+    place-items: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 0;
+    background: none;
+    color: var(--legend-faint);
+    cursor: pointer;
+  }
+
+  .disclosure:hover {
+    color: var(--legend);
+  }
+
+  .caret {
+    grid-area: 1 / 1;
+    display: none;
+  }
+
+  .disclosure[aria-expanded='true'] [data-caret='down'],
+  .disclosure[aria-expanded='false'] [data-caret='right'] {
+    display: block;
+  }
+
+  .sources {
+    margin-inline-start: var(--space-5);
+  }
+
+  @media (min-width: 64rem) {
+    :global(html[data-rail='collapsed']) .panel-nav-rail a,
+    :global(html[data-rail='collapsed']) .panel-nav-rail .search-row {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      gap: 0;
+      padding-inline: 0;
+    }
+
+    :global(html[data-rail='collapsed']) .panel-nav-rail .indicator {
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: 50%;
+      inline-size: 2px;
+      translate: 0 -50%;
+    }
+  }
+
+  .panel-nav-bar ul {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+
+  .panel-nav-bar a {
+    justify-items: center;
+    gap: 2px;
+    padding-block: var(--space-2);
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .panel-nav-bar .label {
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .panel-nav-bar .indicator {
+    inline-size: 1.25rem;
+    block-size: 2px;
+    background: transparent;
+  }
+
+  .panel-nav-bar a[aria-current] .indicator {
+    background: var(--ink);
+  }
+</style>

@@ -1,0 +1,71 @@
+---
+import ArtistPreview from '../../../components/home/ArtistPreview.astro';
+import ProfileSpotlight from '../../../components/home/ProfileSpotlight.astro';
+import PlatformLinks from '../../../components/media/PlatformLinks.astro';
+import VideoDeck from '../../../components/media/VideoDeck.astro';
+import type { Language, ProfileId } from '../../../data/types.ts';
+import { getDictionary, localize } from '../../../i18n/index.ts';
+import AppLayout from '../../../layouts/AppLayout.astro';
+import { resolveProfile } from '../../../lib/profile-context.ts';
+import { profileStaticPaths } from '../../../lib/routes.ts';
+import { getMusicRows } from '../../../lib/library.ts';
+import { getProfileMedia } from '../../../lib/media.ts';
+
+export const getStaticPaths = profileStaticPaths;
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+}
+
+const { lang, profile: profileId } = Astro.props;
+const { profile } = resolveProfile(profileId);
+const ui = getDictionary(lang);
+const videos = getMusicRows(profile, profileId)
+  .filter((row) => row.source === 'youtube')
+  .slice(0, 4);
+const { refreshedAt } = getProfileMedia(profileId);
+const generatedAt = refreshedAt.youtube ?? null;
+---
+
+<AppLayout
+  lang={lang}
+  profile={profileId}
+  activeProfile={profile}
+  page="home"
+  title={profile.name}
+  description={localize(profile.meta.home, lang)}
+>
+  <ProfileSpotlight profile={profile} profileId={profileId} lang={lang} ui={ui} />
+
+  <VideoDeck
+    rows={videos}
+    generatedAt={generatedAt}
+    lang={lang}
+    profile={profile}
+    profileId={profileId}
+    ui={ui}
+    heading={ui.sections.latestVideos}
+  />
+
+  <div class="home-secondary">
+    <PlatformLinks platforms={profile.platforms} lang={lang} ui={ui} />
+    <ArtistPreview profileId={profileId} lang={lang} ui={ui} />
+  </div>
+</AppLayout>
+
+<style>
+  .home-secondary {
+    display: grid;
+    gap: var(--space-5);
+    align-content: start;
+    min-inline-size: 0;
+  }
+
+  @container stage (min-width: 52rem) {
+    .home-secondary {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+</style>

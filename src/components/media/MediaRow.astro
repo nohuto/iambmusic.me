@@ -1,0 +1,204 @@
+---
+import { Image } from 'astro:assets';
+import type { Language, Profile, UiDictionary } from '../../data/types.ts';
+import type { LibraryRow, LibrarySource } from '../../lib/library.ts';
+import { watchUrl } from '../../lib/youtube.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  row: LibraryRow;
+  profile: Profile;
+  lang: Language;
+  ui: UiDictionary;
+}
+
+const { row, profile, lang, ui } = Astro.props;
+const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
+
+const glyphs = {
+  local: 'music-notes',
+  youtube: 'youtube-logo',
+  tiktok: 'tiktok-logo',
+  instagram: 'instagram-logo',
+} as const satisfies Record<LibrarySource, string>;
+
+const names: Record<LibrarySource, string> = {
+  local: ui.music.local,
+  youtube: 'YouTube',
+  tiktok: 'TikTok',
+  instagram: 'Instagram',
+};
+
+const isLocal = row.source === 'local';
+const playsHere = isLocal || row.playable;
+const length =
+  row.durationSeconds === null || !Number.isFinite(row.durationSeconds)
+    ? '-'
+    : `${Math.floor(row.durationSeconds / 60)}:${String(Math.floor(row.durationSeconds % 60)).padStart(2, '0')}`;
+const released = row.publishedAt ? dateFormat.format(new Date(row.publishedAt)) : '-';
+const href = isLocal ? undefined : row.playable ? watchUrl(row.videoId!) : row.url!;
+const Tag = isLocal ? 'button' : 'a';
+---
+
+<Tag
+  class="media-row media-grid"
+  type={isLocal ? 'button' : undefined}
+  href={href}
+  aria-label={row.title}
+  data-play-track={isLocal ? row.id : undefined}
+  data-video-id={row.playable ? row.videoId : undefined}
+  data-video-title={row.playable ? row.title : undefined}
+  target={isLocal ? undefined : '_blank'}
+  rel={isLocal ? undefined : 'noopener noreferrer'}
+>
+  <span class="lead">
+    <span class="shot">
+      {
+        row.thumbnail ? (
+          <img src={row.thumbnail} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <Image class="mark" src={profile.images.logo} alt="" width={96} height={96} />
+        )
+      }
+      <span class="cue">
+        <Icon
+          name={playsHere ? 'play' : 'arrow-square-out'}
+          weight={playsHere ? 'fill' : 'regular'}
+          size="1rem"
+        />
+      </span>
+    </span>
+    <span class="titles">
+      <span class="title">{row.title}</span>
+      {
+        row.publishedAt && (
+          <time class="rowmeta" datetime={row.publishedAt}>
+            {released}
+          </time>
+        )
+      }
+    </span>
+  </span>
+
+  <span class="source">
+    <Icon name={glyphs[row.source]} size="1rem" />
+    <span>{names[row.source]}</span>
+  </span>
+
+  {
+    row.publishedAt ? (
+      <time class="released" datetime={row.publishedAt}>
+        {released}
+      </time>
+    ) : (
+      <span class="released">{released}</span>
+    )
+  }
+  <span class="length" aria-label={ui.music.columns.length}>{length}</span>
+</Tag>
+
+<style>
+  .media-row {
+    min-block-size: 3.5rem;
+    padding-block: var(--space-2);
+    border: 0;
+    border-radius: var(--radius-inner);
+    background: none;
+    color: var(--legend);
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+  }
+
+  button.media-row {
+    inline-size: 100%;
+    cursor: pointer;
+  }
+
+  .media-row:hover {
+    background: var(--panel-hover);
+  }
+
+  .lead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
+  .shot {
+    position: relative;
+    display: block;
+    inline-size: 3.375rem;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-inner);
+    overflow: hidden;
+    background: var(--panel-recess);
+  }
+
+  .shot img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .shot :global(.mark) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+  }
+
+  .cue {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: rgb(0 0 0 / 0.4);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .media-row:hover .cue,
+  .media-row:focus-visible .cue {
+    opacity: 1;
+  }
+
+  .titles {
+    display: grid;
+    gap: 2px;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.35;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .rowmeta {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+  }
+
+  .source {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--legend-quiet);
+    font-size: var(--step-0);
+  }
+
+  .released,
+  .length {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+</style>

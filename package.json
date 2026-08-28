@@ -1,0 +1,25 @@
+{
+  "name": "iambmusic-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "validate:media": "node scripts/refresh-media.mjs --validate-cache",
+    "verify": "npm run check && npm run validate:media",
+    "build": "astro build",
+    "build:cloudflare": "npm run verify && astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@phosphor-icons/core": "^2.1.1",
+    "@types/node": "^24.13.3",
+    "astro": "^7.2.9",
+    "typescript": "^6.0.3"
+  }
+}

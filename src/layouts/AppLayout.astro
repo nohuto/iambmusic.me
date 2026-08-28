@@ -1,0 +1,127 @@
+---
+import AppHeader from '../components/shell/AppHeader.astro';
+import PanelBottomNav from '../components/shell/PanelBottomNav.astro';
+import ProfileRail from '../components/shell/ProfileRail.astro';
+import VideoStage from '../components/media/VideoStage.astro';
+import SearchDialog from '../components/search/SearchDialog.astro';
+import PlayerDock from '../components/player/PlayerDock.astro';
+import type { Language, PageId, Profile, ProfileId } from '../data/types.ts';
+import { getDictionary } from '../i18n/index.ts';
+import { ClientRouter } from 'astro:transitions';
+import { getSocialSources } from '../lib/library.ts';
+import { absoluteUrl, alternateLinks, routePath } from '../lib/routes.ts';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  activeProfile: Profile;
+  page: PageId;
+  title: string;
+  description: string;
+  activeSource?: string | null;
+}
+
+const { lang, profile, activeProfile, page, title, description, activeSource = null } = Astro.props;
+const sources = getSocialSources(profile);
+
+const ui = getDictionary(lang);
+const playbackId = ['playback', lang, profile].join('-');
+const canonical = absoluteUrl(routePath(lang, profile, page), Astro.site);
+const alternates = alternateLinks(profile, page);
+---
+
+<!doctype html>
+<html lang={lang} data-profile={profile} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      alternates.map((alternate) => (
+        <link
+          rel="alternate"
+          hreflang={alternate.hreflang}
+          href={absoluteUrl(alternate.path, Astro.site)}
+        />
+      ))
+    }
+    <ClientRouter fallback="swap" />
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('has-js');
+        let stored = null;
+        try {
+          stored = localStorage.getItem('iambmusic-theme');
+        } catch {}
+        const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : system;
+        let rail = null;
+        let sources = null;
+        try {
+          rail = localStorage.getItem('iambmusic-rail');
+          sources = localStorage.getItem('iambmusic-sources');
+        } catch {}
+        root.dataset.rail = rail === 'collapsed' ? 'collapsed' : 'expanded';
+        root.dataset.sources = sources === 'collapsed' ? 'collapsed' : 'expanded';
+      })();
+    </script>
+  </head>
+  <body>
+  
+    <a class="skip-link" href="#main">{ui.actions.skipToContent}</a>
+
+    <div class="app">
+      <ProfileRail
+        lang={lang}
+        profile={profile}
+        activeProfile={activeProfile}
+        page={page}
+        ui={ui}
+        sources={sources}
+        activeSource={activeSource}
+      />
+
+      <div class="main">
+        <AppHeader
+          lang={lang}
+          profile={profile}
+          activeProfile={activeProfile}
+          page={page}
+          ui={ui}
+        />
+
+        <main id="main" class="stage" transition:animate="none">
+          <slot />
+        </main>
+
+        <PanelBottomNav lang={lang} profile={profile} page={page} ui={ui} />
+      </div>
+    </div>
+
+    <div class="playback" transition:persist={playbackId}>
+      <VideoStage ui={ui} />
+      <PlayerDock profile={activeProfile} profileId={profile} ui={ui} />
+    </div>
+
+    <SearchDialog lang={lang} profile={profile} ui={ui} />
+
+    <script>
+      import '../scripts/theme.ts';
+      import '../scripts/search.ts';
+      import '../scripts/shell.ts';
+      import '../scripts/media-filter.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import PanelNav from './PanelNav.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  page: PageId;
+  ui: UiDictionary;
+}
+
+const { lang, profile, page, ui } = Astro.props;
+---
+
+<div class="bottom">
+  <PanelNav lang={lang} profile={profile} page={page} ui={ui} variant="bar" />
+</div>
+
+<style>
+  .bottom {
+    position: fixed;
+    block-size: var(--bottom-nav);
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 7;
+    padding-block-end: env(safe-area-inset-bottom);
+    background: var(--panel-ground);
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
+  @media (min-width: 64rem) {
+    .bottom {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import MediaTable from '../../../components/media/MediaTable.astro';
+import MusicBanner from '../../../components/media/MusicBanner.astro';
+import type { Language, ProfileId } from '../../../data/types.ts';
+import { getDictionary, localize } from '../../../i18n/index.ts';
+import AppLayout from '../../../layouts/AppLayout.astro';
+import { getMusicRows } from '../../../lib/library.ts';
+import { getProfileMedia } from '../../../lib/media.ts';
+import { resolveProfile } from '../../../lib/profile-context.ts';
+import { profileStaticPaths } from '../../../lib/routes.ts';
+
+export const getStaticPaths = profileStaticPaths;
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+}
+
+const { lang, profile: profileId } = Astro.props;
+const { profile } = resolveProfile(profileId);
+const ui = getDictionary(lang);
+const library = getProfileMedia(profileId);
+
+const rows = getMusicRows(profile, profileId);
+const requested = Astro.url.searchParams.get('source');
+const active = requested === 'youtube' ? 'youtube' : null;
+const visible = active ? rows.filter((row) => row.source === active) : rows;
+---
+
+<AppLayout
+  lang={lang}
+  profile={profileId}
+  activeProfile={profile}
+  page="music"
+  title={`${ui.nav.music} - ${profile.name}`}
+  description={localize(profile.meta.music, lang)}
+  activeSource={active}
+>
+  <MusicBanner
+    profileId={profileId}
+    lang={lang}
+    ui={ui}
+    library={library}
+    heading={ui.nav.music}
+    lead={ui.music.lead}
+    sources={['youtube']}
+    extraCount={profile.tracks.length}
+    refreshedFrom="youtube"
+  />
+
+  <MediaTable surface="music" rows={visible} profile={profile} lang={lang} ui={ui} heading={ui.nav.music} />
+
+</AppLayout>

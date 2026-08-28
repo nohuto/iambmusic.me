@@ -1,0 +1,63 @@
+---
+import { artist } from '../../data/artist.ts';
+import type { Language, ProfileId, UiDictionary } from '../../data/types.ts';
+import { localize } from '../../i18n/index.ts';
+import { routePath } from '../../lib/routes.ts';
+
+interface Props {
+  profileId: ProfileId;
+  lang: Language;
+  ui: UiDictionary;
+}
+
+const { profileId, lang, ui } = Astro.props;
+---
+
+<section class="panel preview" aria-labelledby="preview-heading">
+  <header class="panel-head">
+    <h2 id="preview-heading">{ui.sections.artistPreview}</h2>
+  </header>
+
+  <dl>
+    {
+      artist.glance.map((fact) => (
+        <div class="fact">
+          <dt>{localize(fact.label, lang)}</dt>
+          <dd>{localize(fact.value, lang)}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <p class="more">
+    <a href={routePath(lang, profileId, 'about')}>{ui.actions.readStory}</a>
+  </p>
+</section>
+
+<style>
+  dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-3);
+    padding-inline: var(--space-2);
+  }
+
+  dt {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+  }
+
+  dd {
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .more {
+    padding: var(--space-3) var(--space-2) var(--space-1);
+  }
+
+  .more a {
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+</style>

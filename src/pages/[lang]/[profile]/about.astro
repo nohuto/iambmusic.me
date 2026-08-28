@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { Language, ProfileId } from '../../../data/types.ts';
+import { artist } from '../../../data/artist.ts';
+import { getDictionary, localize } from '../../../i18n/index.ts';
+import AppLayout from '../../../layouts/AppLayout.astro';
+import { resolveProfile } from '../../../lib/profile-context.ts';
+import { profileStaticPaths } from '../../../lib/routes.ts';
+
+export const getStaticPaths = profileStaticPaths;
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+}
+
+const { lang, profile: profileId } = Astro.props;
+const { profile } = resolveProfile(profileId);
+const ui = getDictionary(lang);
+
+const stories = await getCollection('profileStories');
+const story = stories.find((entry) => entry.data.language === lang);
+if (!story) throw new Error(`missing artist story for ${lang}`);
+const { Content } = await render(story);
+---
+
+<AppLayout
+  lang={lang}
+  profile={profileId}
+  activeProfile={profile}
+  page="about"
+  title={`${ui.nav.about} - ${profile.name}`}
+  description={localize(profile.meta.about, lang)}
+>
+  <h1>{story.data.heading}</h1>
+  <p>{story.data.summary}</p>
+
+  {story.data.status === 'provisional' && <p>{ui.notices.provisionalContent}</p>}
+
+  <Content />
+
+  <section aria-labelledby="glance-heading">
+    <h2 id="glance-heading">{ui.sections.glance}</h2>
+    <dl>
+      {
+        artist.glance.map((fact) => (
+          <>
+            <dt>{localize(fact.label, lang)}</dt>
+            <dd>{localize(fact.value, lang)}</dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+
+  {
+    artist.studio && (
+      <section aria-labelledby="studio-heading">
+        <h2 id="studio-heading">{ui.sections.studio}</h2>
+        <p>{localize(artist.studio.software, lang)}</p>
+        <p>{localize(artist.studio.hardware, lang)}</p>
+      </section>
+    )
+  }
+
+  {
+    artist.timeline.length > 0 && (
+      <section aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading">{ui.sections.timeline}</h2>
+        <dl>
+          {artist.timeline.map((entry) => (
+            <>
+              <dt>{entry.period}</dt>
+              <dd>{localize(entry.text, lang)}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+    )
+  }
+
+  {
+    artist.inspirations.length > 0 && (
+      <section aria-labelledby="inspiration-heading">
+        <h2 id="inspiration-heading">{ui.sections.inspiration}</h2>
+        <ul>
+          {artist.inspirations.map((inspiration) => (
+            <li>
+              <a href={inspiration.url} target="_blank" rel="noopener noreferrer">
+                {inspiration.name}
+              </a>
+              <Image src={inspiration.image} alt="" />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+</AppLayout>

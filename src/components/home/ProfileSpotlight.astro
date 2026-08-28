@@ -1,0 +1,317 @@
+---
+import { Image } from 'astro:assets';
+import cutout from '../../assets/artist/portrait-cutout.png';
+import type { Language, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import { localize } from '../../i18n/index.ts';
+import { getPlayables } from '../../lib/playable.ts';
+
+interface Props {
+  profile: Profile;
+  profileId: ProfileId;
+  lang: Language;
+  ui: UiDictionary;
+}
+
+const { profile, profileId, lang, ui } = Astro.props;
+
+const cutoutAlt = { de: 'Freigestelltes Porträt von Markus B.', en: 'Cut-out portrait of Markus B.' };
+const artworkAlt = cutoutAlt[lang];
+const [titleHead = profile.name, ...titleTail] = profile.name.split(' ');
+const titleRest = titleTail.join(' ');
+const firstTrack = getPlayables(profile, profileId).find((entry) => entry.kind === 'local');
+---
+
+<section class="spotlight">
+  <div class="copy">
+    <h1>
+      {titleRest ? (
+        <>
+          {titleHead} <span class="title-tail">{titleRest}</span>
+        </>
+      ) : (
+        profile.name
+      )}
+    </h1>
+    <p class="lead">{localize(profile.hero.lead, lang)}</p>
+    {
+      firstTrack && (
+        <button class="play" type="button" data-play-track={firstTrack.id} aria-label={ui.actions.listenNow}>
+          <span class="play-word" aria-hidden="true">PLAY</span>
+          <span class="play-frame" aria-hidden="true">
+            <span class="play-corner corner-lt" />
+            <span class="play-corner corner-rt" />
+            <span class="play-corner corner-rb" />
+            <span class="play-corner corner-lb" />
+          </span>
+          <span class="play-arrow arrow-left" aria-hidden="true" />
+          <span class="play-arrow arrow-right" aria-hidden="true" />
+        </button>
+      )
+    }
+  </div>
+
+  <div class="artwork cutout">
+    <Image
+      src={cutout}
+      alt={artworkAlt}
+      widths={[380, 640, 900]}
+      sizes="(min-width: 64rem) 30rem, 55vw"
+    />
+  </div>
+</section>
+
+<style>
+  .spotlight {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: var(--space-4);
+    min-block-size: 17rem;
+    padding-block: var(--space-4) var(--space-6);
+  }
+
+  .copy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-3);
+    align-content: center;
+    justify-items: start;
+    max-inline-size: 34rem;
+  }
+
+
+  h1 {
+    font-size: var(--step-title);
+    font-stretch: 115%;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .title-tail {
+    white-space: nowrap;
+  }
+
+  .lead {
+    max-inline-size: 58ch;
+    color: var(--legend-quiet);
+    font-size: var(--step-lead);
+  }
+  .play {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 143px;
+    block-size: 52px;
+    margin-block-start: var(--space-2);
+    margin-inline-start: 1.25rem;
+    border: 0;
+    background: none;
+    color: var(--legend);
+    cursor: pointer;
+  }
+
+  .play-word {
+    z-index: 1;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+  }
+
+  .play-frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 4px double var(--ink-field);
+    box-shadow: inset 0 0 15px color-mix(in srgb, var(--ink-field) 30%, transparent);
+    clip-path: polygon(
+      30% 0%,
+      70% 0%,
+      100% 30%,
+      100% 70%,
+      70% 100%,
+      30% 100%,
+      0% 70%,
+      0% 30%
+    );
+  }
+
+  .play-corner {
+    position: absolute;
+    inline-size: 52px;
+    block-size: 52px;
+    background: var(--ink-field);
+    box-shadow: inset 1px 1px 8px color-mix(in srgb, var(--ink) 55%, transparent);
+    transform: scale(1) rotate(45deg);
+    transition: transform 200ms ease;
+  }
+
+  .corner-lt {
+    inset-block-start: -25.5px;
+    inset-inline-start: -39px;
+  }
+
+  .corner-rt {
+    inset-block-start: -25.7px;
+    inset-inline-start: 91%;
+  }
+
+  .corner-rb {
+    inset-block-start: 45%;
+    inset-inline-start: 88%;
+  }
+
+  .corner-lb {
+    inset-block-start: 27.3px;
+    inset-inline-start: -28px;
+  }
+
+  .play-arrow {
+    position: absolute;
+    inset-block-start: 35%;
+    inline-size: 11%;
+    block-size: 30%;
+    background: var(--ink-field);
+    transition: left 200ms ease;
+  }
+
+  .arrow-left {
+    left: -13.5%;
+    clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  }
+
+  .arrow-right {
+    left: 102%;
+    clip-path: polygon(100% 49%, 0 0, 0 100%);
+  }
+
+  .play:hover .play-corner,
+  .play:focus-visible .play-corner {
+    background: var(--ink);
+    transform: scale(1.25) rotate(45deg);
+  }
+
+  .play:hover .play-frame,
+  .play:focus-visible .play-frame {
+    border-color: var(--ink);
+    box-shadow: inset 0 0 26px color-mix(in srgb, var(--ink) 34%, transparent);
+  }
+
+  .play:hover .play-arrow,
+  .play:focus-visible .play-arrow {
+    background: var(--ink);
+  }
+
+  .play:hover .arrow-right,
+  .play:focus-visible .arrow-right {
+    left: -15%;
+    animation: arrow-right 600ms ease-in-out infinite alternate;
+  }
+
+  .play:hover .arrow-left,
+  .play:focus-visible .arrow-left {
+    left: 103%;
+    animation: arrow-left 600ms ease-in-out infinite alternate;
+  }
+
+  @keyframes arrow-left {
+    to {
+      transform: translateX(10px);
+    }
+  }
+
+  @keyframes arrow-right {
+    to {
+      transform: translateX(-10px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .play-corner,
+    .play-arrow {
+      transition: none;
+    }
+
+    .play:hover .play-corner,
+    .play:focus-visible .play-corner {
+      transform: scale(1) rotate(45deg);
+    }
+
+    .play:hover .arrow-right,
+    .play:focus-visible .arrow-right {
+      left: -13.5%;
+      animation: none;
+    }
+
+    .play:hover .arrow-left,
+    .play:focus-visible .arrow-left {
+      left: 102%;
+      animation: none;
+    }
+  }
+
+  .artwork {
+    justify-self: end;
+    inline-size: min(62%, 15rem);
+    margin-block-end: calc(var(--space-6) * -1);
+  }
+
+  .artwork :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    object-fit: contain;
+    object-position: bottom right;
+  }
+
+  .cutout :global(img) {
+    filter: grayscale(1) contrast(1.05);
+  }
+
+
+  @media (min-width: 64rem) {
+    .spotlight {
+      min-block-size: var(--spotlight-height);
+      margin-block-start: calc(var(--header-height) * -1);
+      padding-block: var(--header-height) var(--space-6);
+    }
+
+    .copy {
+      max-inline-size: 32rem;
+    }
+
+    .play {
+      margin-inline-start: 2rem;
+    }
+
+    .artwork {
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline-end: 0;
+      inline-size: clamp(19rem, 44%, 28rem);
+      block-size: calc(100% - var(--space-3));
+      margin-block-end: 0;
+      pointer-events: none;
+    }
+
+    .artwork :global(img) {
+      block-size: 100%;
+    }
+
+    .cutout {
+      inset-block: 0 -2.25rem;
+      block-size: auto;
+    }
+
+
+  }
+
+  @media (min-width: 64rem) and (max-width: 80rem) {
+    .cutout {
+      inset-block-end: 0;
+      inline-size: clamp(15rem, 34%, 21rem);
+    }
+  }
+</style>
+

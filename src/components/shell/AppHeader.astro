@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets';
+import type { Language, PageId, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import { localize } from '../../i18n/index.ts';
+import { routePath } from '../../lib/routes.ts';
+import Icon from '../ui/Icon.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
+import ProfileMenu from './ProfileMenu.astro';
+import ThemeControl from './ThemeControl.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  activeProfile: Profile;
+  page: PageId;
+  ui: UiDictionary;
+}
+
+const { lang, profile, activeProfile, page, ui } = Astro.props;
+---
+
+<header class="app-header">
+  <a class="mark" href={routePath(lang, profile, 'home')}>
+    <Image src={activeProfile.images.logo} alt={localize(activeProfile.images.logoAlt, lang)} width={30} height={30} />
+    <span>{activeProfile.shortName}</span>
+  </a>
+
+  <button class="search-field" type="button" data-search-open aria-label={ui.search.open}>
+    <Icon name="magnifying-glass" size="1rem" />
+    <span>{ui.search.placeholder}</span>
+  </button>
+
+  <button class="search-icon icon-action" type="button" data-search-open aria-label={ui.search.open}>
+    <Icon name="magnifying-glass" size="1.05rem" />
+  </button>
+
+  <div class="utilities">
+    <LanguageSwitch lang={lang} profile={profile} page={page} ui={ui} />
+    <ThemeControl ui={ui} />
+    <ProfileMenu lang={lang} profile={profile} page={page} ui={ui} />
+  </div>
+</header>
+
+<style>
+  .app-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-block-size: var(--header-height);
+    padding-inline: var(--space-4);
+    background: transparent;
+  }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--legend);
+    font-size: var(--step-2);
+    font-weight: 700;
+    font-stretch: 115%;
+    text-decoration: none;
+  }
+
+  .mark :global(img) {
+    inline-size: 1.875rem;
+    block-size: 1.875rem;
+    border-radius: var(--radius-inner);
+    object-fit: cover;
+  }
+
+  .search-field {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: 1.9375rem;
+    padding-inline: var(--space-3);
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: var(--radius);
+    background: var(--panel-plate);
+    color: var(--legend-faint);
+    font-size: var(--step-nav);
+    cursor: pointer;
+  }
+
+  .search-field:hover {
+    color: var(--legend);
+    border-color: var(--legend-faint);
+  }
+
+  .search-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border: 0;
+    border-radius: var(--radius);
+    background: none;
+    color: var(--legend-quiet);
+    cursor: pointer;
+  }
+
+  .utilities {
+    display: flex;
+    align-items: center;
+    gap: 0.4375rem;
+    margin-inline-start: auto;
+  }
+
+  @media (max-width: 30rem) {
+    .mark span {
+      display: none;
+    }
+
+    .app-header {
+      gap: var(--space-2);
+      padding-inline: var(--space-3);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .app-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, min(22rem, 30%)) minmax(0, 1fr);
+      padding-inline: var(--space-6);
+    }
+
+    .mark {
+      display: none;
+    }
+
+    .search-field {
+      display: inline-flex;
+      grid-column: 2;
+      inline-size: 100%;
+    }
+
+    .search-icon {
+      display: none;
+    }
+
+    .utilities {
+      grid-column: 3;
+    }
+  }
+</style>

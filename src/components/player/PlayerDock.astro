@@ -1,0 +1,411 @@
+---
+import { Image } from 'astro:assets';
+import type { Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import { getPlayables } from '../../lib/playable.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  profile: Profile;
+  profileId: ProfileId;
+  ui: UiDictionary;
+}
+
+const { profile, profileId, ui } = Astro.props;
+const playables = getPlayables(profile, profileId);
+const first = profile.tracks[0];
+const hasQueue = playables.length > 1;
+---
+
+{
+  first && (
+    <div class="dock" data-player data-profile={profileId}>
+      <audio preload="metadata" data-player-audio />
+      <script is:inline type="application/json" data-playables set:html={JSON.stringify(playables)} />
+
+      <span class="thin" aria-hidden="true" />
+
+      <div class="identity">
+        <span class="art" data-player-art>
+          <Image src={profile.images.logo} alt="" width={80} height={80} />
+        </span>
+        <span class="meta">
+          <span class="title" data-player-title>{first.title}</span>
+          <span class="source" data-player-source hidden>
+            <Icon name="youtube-logo" size="0.85rem" />
+            YouTube
+          </span>
+        </span>
+      </div>
+
+      <div class="transport">
+        <div class="buttons">
+          <button
+            class="icon-action"
+            type="button"
+            data-player-shuffle
+            data-on={ui.player.shuffleOff}
+            data-off={ui.player.shuffleOn}
+            aria-pressed="false"
+            aria-label={ui.player.shuffleOn}
+          >
+            <Icon name="shuffle" size="1rem" />
+          </button>
+          {hasQueue && (
+            <button class="icon-action" type="button" data-player-previous aria-label={ui.player.previous}>
+              <Icon name="skip-back" weight="fill" size="1.05rem" />
+            </button>
+          )}
+          <button
+            class="play icon-action"
+            type="button"
+            data-player-toggle
+            data-play={ui.player.play}
+            data-pause={ui.player.pause}
+            aria-label={ui.player.play}
+          >
+            <span data-player-icon="play"><Icon name="play" weight="fill" size="1.15rem" /></span>
+            <span data-player-icon="pause"><Icon name="pause" weight="fill" size="1.15rem" /></span>
+          </button>
+          {hasQueue && (
+            <button class="icon-action" type="button" data-player-next aria-label={ui.player.next}>
+              <Icon name="skip-forward" weight="fill" size="1.05rem" />
+            </button>
+          )}
+          <button
+            class="icon-action"
+            type="button"
+            data-player-repeat
+            data-repeat="off"
+            data-off={ui.player.repeatOff}
+            data-all={ui.player.repeatAll}
+            data-one={ui.player.repeatOne}
+            aria-label={ui.player.repeatOff}
+          >
+            <span data-repeat-icon="all"><Icon name="repeat" size="1rem" /></span>
+            <span data-repeat-icon="one"><Icon name="repeat-once" size="1rem" /></span>
+          </button>
+        </div>
+
+        <div class="progress">
+          <span class="time" data-player-elapsed>0:00</span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            step="0.1"
+            data-player-seek
+            aria-label={ui.player.seek}
+          />
+          <span class="time" data-player-duration>0:00</span>
+        </div>
+      </div>
+
+      <div class="side">
+        <button
+          class="stage-toggle icon-action"
+          type="button"
+          data-player-stage
+          data-expand={ui.video.expand}
+          data-collapse={ui.video.collapse}
+          aria-label={ui.video.expand}
+          hidden
+        >
+          <Icon name="youtube-logo" size="1.05rem" />
+        </button>
+
+        <div class="volume">
+          <button
+            class="icon-action"
+            type="button"
+            data-player-mute
+            data-mute={ui.player.mute}
+            data-unmute={ui.player.unmute}
+            aria-label={ui.player.mute}
+          >
+            <span data-player-icon="unmuted"><Icon name="speaker-high" size="1.05rem" /></span>
+            <span data-player-icon="muted"><Icon name="speaker-x" size="1.05rem" /></span>
+          </button>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.5"
+            data-player-volume
+            aria-label={ui.player.volume}
+          />
+        </div>
+      </div>
+
+      <p
+        class="error"
+        data-player-error
+        data-track={ui.player.error}
+        data-video={ui.video.unavailable}
+        role="status"
+        hidden
+      />
+    </div>
+  )
+}
+
+<style>
+  .dock {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: var(--bottom-nav, 0px);
+    z-index: 6;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-block-size: var(--dock-height);
+    padding: var(--space-2) var(--space-4);
+    background: var(--panel-recess);
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
+  .thin {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    block-size: 2px;
+    inline-size: var(--progress, 0%);
+    background: var(--ink);
+  }
+
+  .identity {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
+  .art {
+    display: block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: var(--radius-inner);
+    overflow: hidden;
+    background: var(--panel-plate);
+    flex: none;
+  }
+
+  .art :global(img) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .meta {
+    display: grid;
+    gap: 1px;
+    min-inline-size: 0;
+  }
+
+  .title {
+    font-size: var(--step-1);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .source {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+  }
+
+  .transport {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-1);
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  button {
+    display: grid;
+    place-items: center;
+    inline-size: var(--touch);
+    block-size: var(--touch);
+    border: 0;
+    border-radius: var(--radius-inner);
+    background: none;
+    color: var(--legend);
+    cursor: pointer;
+  }
+
+  .play {
+    color: var(--ink);
+  }
+
+  [data-player-shuffle],
+  [data-player-repeat] {
+    inline-size: 2.25rem;
+    color: var(--legend-quiet);
+  }
+
+  [data-player-shuffle][aria-pressed='true'],
+  [data-player-repeat]:not([data-repeat='off']) {
+    color: var(--ink);
+  }
+
+  [data-repeat-icon] {
+    grid-area: 1 / 1;
+    display: none;
+  }
+
+  [data-player-repeat]:not([data-repeat='one']) [data-repeat-icon='all'],
+  [data-player-repeat][data-repeat='one'] [data-repeat-icon='one'] {
+    display: block;
+  }
+
+  [data-player-icon] {
+    grid-area: 1 / 1;
+    display: none;
+  }
+
+  .dock:not([data-state='playing']) [data-player-icon='play'],
+  .dock[data-state='playing'] [data-player-icon='pause'],
+  .dock:not([data-muted='true']) [data-player-icon='unmuted'],
+  .dock[data-muted='true'] [data-player-icon='muted'] {
+    display: block;
+  }
+
+  .progress {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .time {
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .side {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: end;
+  }
+
+  .volume {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .volume input {
+    inline-size: 5rem;
+  }
+
+  .error {
+    grid-column: 1 / -1;
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+
+  input[type='range'] {
+    inline-size: 100%;
+    block-size: 1rem;
+    margin: 0;
+    background: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    block-size: 4px;
+    border-radius: var(--radius-inner);
+    background: linear-gradient(
+      to right,
+      var(--ink) 0 var(--fill, 0%),
+      var(--panel-hover) var(--fill, 0%) 100%
+    );
+  }
+
+  input[type='range']::-moz-range-track {
+    block-size: 4px;
+    border-radius: var(--radius-inner);
+    background: var(--panel-hover);
+  }
+
+  input[type='range']::-moz-range-progress {
+    block-size: 4px;
+    border-radius: var(--radius-inner);
+    background: var(--ink);
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    inline-size: 9px;
+    block-size: 9px;
+    margin-block-start: -2.5px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--legend);
+    opacity: 0;
+  }
+
+  input[type='range']::-moz-range-thumb {
+    inline-size: 9px;
+    block-size: 9px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--legend);
+    opacity: 0;
+  }
+
+  input[type='range']:hover::-webkit-slider-thumb,
+  input[type='range']:active::-webkit-slider-thumb,
+  input[type='range']:focus-visible::-webkit-slider-thumb {
+    opacity: 1;
+  }
+
+  input[type='range']:hover::-moz-range-thumb,
+  input[type='range']:active::-moz-range-thumb,
+  input[type='range']:focus-visible::-moz-range-thumb {
+    opacity: 1;
+  }
+
+  @media (min-width: 48rem) {
+    .dock {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-5);
+    }
+
+    .thin {
+      display: none;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      inline-size: min(100%, 30rem);
+    }
+
+    .volume {
+      display: flex;
+      justify-content: end;
+    }
+  }
+
+  [hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  import '../../scripts/audio-player.ts';
+</script>

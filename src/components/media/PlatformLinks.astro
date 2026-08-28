@@ -1,0 +1,94 @@
+---
+import type { Language, PlatformLink, UiDictionary } from '../../data/types.ts';
+
+interface Props {
+  platforms: readonly PlatformLink[];
+  lang: Language;
+  ui: UiDictionary;
+}
+
+const { platforms, ui } = Astro.props;
+
+const resolve = (platform: PlatformLink) => ({
+  ...platform,
+  mark: platform.brandMark ?? `/icons/platforms/${platform.id}.svg`,
+});
+
+const groups = [
+  { id: 'listening', heading: ui.sections.listeningPlatforms },
+  { id: 'social', heading: ui.sections.socialPlatforms },
+] as const;
+---
+
+<section class="panel platforms" aria-labelledby="platforms-heading">
+  <header class="panel-head">
+    <h2 id="platforms-heading">{ui.sections.platforms}</h2>
+  </header>
+
+  {
+    groups.map((group) => {
+      const entries = platforms.filter((p) => p.category === group.id).map(resolve);
+      return entries.length === 0 ? null : (
+        <div class="group">
+          <h3>{group.heading}</h3>
+          <ul>
+            {entries.map((platform) => (
+              <li>
+                <a href={platform.url} target="_blank" rel="noopener noreferrer">
+                  <img class="mark" src={platform.mark} alt="" width="18" height="18" loading="lazy" />
+                  <span>{platform.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    })
+  }
+</section>
+
+<style>
+  .group + .group {
+    margin-block-start: var(--space-3);
+    padding-block-start: var(--space-3);
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
+  h3 {
+    padding-inline: var(--space-2);
+    margin-block-end: var(--space-2);
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: var(--space-1);
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: var(--touch);
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-inner);
+    color: var(--legend);
+    font-size: var(--step-1);
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: var(--panel-hover);
+    color: var(--ink);
+  }
+
+  .mark {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    object-fit: contain;
+    flex: none;
+  }
+</style>

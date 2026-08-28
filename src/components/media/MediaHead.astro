@@ -1,0 +1,27 @@
+---
+import type { UiDictionary } from '../../data/types.ts';
+
+interface Props {
+  ui: UiDictionary;
+}
+
+const { ui } = Astro.props;
+---
+
+<div class="media-head media-grid" aria-hidden="true">
+  <span>{ui.music.columns.title}</span>
+  <span class="source"><span>{ui.music.columns.source}</span></span>
+  <span class="released">{ui.music.columns.released}</span>
+  <span class="length">{ui.music.columns.length}</span>
+</div>
+
+<style>
+  .media-head {
+    padding-block: var(--space-2);
+    border-block-end: var(--rule) solid var(--panel-rule);
+    color: var(--legend-faint);
+    font-size: var(--step-0);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+</style>

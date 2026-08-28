@@ -1,0 +1,65 @@
+---
+import { readFile } from 'node:fs/promises';
+
+const supported = [
+  'house',
+  'music-notes',
+  'identification-card',
+  'sun',
+  'moon',
+  'caret-down',
+  'caret-right',
+  'check',
+  'envelope-simple',
+  'sidebar-simple',
+  'play',
+  'x',
+  'arrow-square-out',
+  'youtube-logo',
+  'translate',
+  'spotify-logo',
+  'soundcloud-logo',
+  'tiktok-logo',
+  'instagram-logo',
+  'pause',
+  'skip-back',
+  'skip-forward',
+  'speaker-high',
+  'speaker-x',
+  'magnifying-glass',
+  'share-network',
+  'shuffle',
+  'repeat',
+  'repeat-once',
+] as const;
+
+export type IconName = (typeof supported)[number];
+
+interface Props {
+  name: IconName;
+  weight?: 'regular' | 'fill' | 'bold';
+  size?: string;
+}
+
+const { name, weight = 'regular', size = '1.25rem' } = Astro.props;
+
+const file = weight === 'regular' ? `${name}.svg` : `${name}-${weight}.svg`;
+const source = await readFile(
+  new URL(`../../../node_modules/@phosphor-icons/core/assets/${weight}/${file}`, import.meta.url),
+  'utf8',
+);
+
+const markup = source.replace(
+  '<svg ',
+  `<svg width="${size}" height="${size}" aria-hidden="true" focusable="false" class="icon-glyph" `,
+);
+---
+
+<Fragment set:html={markup} />
+
+<style is:global>
+  .icon-glyph {
+    display: block;
+    flex: none;
+  }
+</style>

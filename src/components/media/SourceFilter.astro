@@ -1,0 +1,88 @@
+---
+import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import type { MediaSource } from '../../lib/media.ts';
+import { routePath } from '../../lib/routes.ts';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  lang: Language;
+  profile: ProfileId;
+  page: PageId;
+  ui: UiDictionary;
+  sources: readonly MediaSource[];
+  active: MediaSource | null;
+}
+
+const { lang, profile, page, ui, sources, active } = Astro.props;
+const base = routePath(lang, profile, page);
+
+const glyphs = {
+  youtube: 'youtube-logo',
+  tiktok: 'tiktok-logo',
+  instagram: 'instagram-logo',
+} as const;
+
+const names = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram' } as const;
+---
+
+<nav class="sources" aria-label={ui.music.filterLabel}>
+  <ul>
+    <li>
+      <a href={base} data-source-link="" aria-current={active === null ? 'true' : undefined}>
+        {ui.music.all}
+      </a>
+    </li>
+    {
+      sources.map((source) => (
+        <li>
+          <a
+            href={`${base}?source=${source}`}
+            data-source-link={source}
+            aria-current={active === source ? 'true' : undefined}
+          >
+            <Icon name={glyphs[source]} size="0.95rem" />
+            {names[source]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: 2rem;
+    padding-inline: var(--space-3);
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: var(--radius);
+    color: var(--legend-quiet);
+    font-size: var(--step-nav);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--legend);
+  }
+
+  a[aria-current] {
+    background: var(--panel-plate);
+    border-color: var(--legend-faint);
+    color: var(--legend);
+  }
+
+  @media (min-width: 64rem) {
+    .sources {
+      display: none;
+    }
+  }
+</style>
