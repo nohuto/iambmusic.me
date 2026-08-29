@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Alles Gute zum Vatertag</title>
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+  <link rel="stylesheet" href="vatertag.css?v=20260513-centered-intro">
+</head>
+<body>
+  <canvas class="sky" data-sky aria-hidden="true"></canvas>
+  <div class="stage-glow" aria-hidden="true"></div>
+
+  <main class="vatertag-page">
+    <section class="intro" data-intro>
+      <div class="intro-content">
+        <div class="intro-orbit" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="heart-wrap" aria-hidden="true">
+          <svg class="heart" viewBox="0 0 100 92" role="img">
+            <defs>
+              <linearGradient id="heartGradient" x1="12" y1="10" x2="88" y2="86" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ff9bb2"/>
+                <stop offset="0.52" stop-color="#ff416d"/>
+                <stop offset="1" stop-color="#c11546"/>
+              </linearGradient>
+              <radialGradient id="heartShine" cx="34%" cy="24%" r="18%">
+                <stop offset="0" stop-color="#fff4f7"/>
+                <stop offset="0.6" stop-color="#ffd8e1"/>
+                <stop offset="1" stop-color="#ffd8e1" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <path class="heart-core" fill="url(#heartGradient)" d="M50 85C20 58 8 45 8 27C8 14 18 5 31 5C39 5 46 9 50 16C54 9 61 5 69 5C82 5 92 14 92 27C92 45 80 58 50 85Z"/>
+            <circle class="heart-highlight" fill="url(#heartShine)" cx="32" cy="23" r="11"/>
+          </svg>
+          <div class="heart-pulse"></div>
+        </div>
+        <p class="intro-kicker">14. Mai 2026</p>
+        <h1>Alles Gute zum Vatertag</h1>
+        <button class="open-letter" type="button" data-open-letter>
+          <span>Brief &ouml;ffnen</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="letter-section" id="brief" data-letter-section aria-label="Vatertagsbrief">
+      <div class="letter-shell">
+        <div class="score-ribbon" aria-hidden="true">
+          <span>&#119070;</span>
+          <span>&#119073;</span>
+          <span>&#119082;</span>
+          <span>&#119070;</span>
+        </div>
+
+        <article class="letter" data-letter>
+          <div class="letter-topline">
+            <span>F&uuml;r Papa</span>
+          </div>
+
+          <h2>Alles Gute zum Vatertag</h2>
+
+          <p class="letter-line">
+            Da du mit deiner Musik immer mehr zur KI &uuml;bergehst, wollten wir heute
+            nochmal einen Schritt (zur&uuml;ck) in die klassische Musik machen.
+          </p>
+
+          <p class="letter-line">
+            Deshalb warten heute 3 Vorstellungen auf dich:
+          </p>
+
+          <div class="concert-card" data-concert-card>
+            <div class="concert-meta">
+              <span>Forum am Schlosspark Ludwigsburg</span>
+              <span>Donnerstag, 14. Mai 2026, 17:00 Uhr</span>
+            </div>
+
+            <button class="concert-cover" type="button" data-reveal-concert aria-expanded="false">
+              <span class="cover-label">Klick auf mich</span>
+              <span class="beethoven-mark" aria-hidden="true">B</span>
+            </button>
+
+            <div class="concert-reveal" aria-live="polite">
+              <p class="tiny-title">Beethoven-Tage: Orchesterkonzert #1</p>
+              <h3>Trio Wanderer &amp; Stuttgarter Philharmoniker</h3>
+              <p>
+                Mit Vincent Coq, Jean-Marc Phillips-Varjab&eacute;dian und
+                Rapha&euml;l Pidoux, dirigiert von Adrian Prabava.
+              </p>
+              <div class="program-grid">
+                <span>Leonore-Ouvert&uuml;re Nr. 1</span>
+                <span>Tripelkonzert C-Dur op. 56</span>
+                <span>Sinfonie Nr. 4 B-Dur op. 60</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="letter-line">
+            Hoffentlich bekommst du davon den Kopf auch ein wenig frei :)
+          </p>
+
+          <p class="signature">
+            Wir haben dich lieb<br>
+            <strong>
+              <span>Noel</span>
+              <span>&amp;</span>
+              <span>Jacquel<span class="heart-i">&#305;<span class="heart-dot" aria-hidden="true"></span></span>ne</span>
+            </strong>
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="vatertag.js?v=20260513-centered-intro"></script>
+</body>
+</html>
