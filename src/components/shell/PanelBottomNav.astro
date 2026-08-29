@@ -19,11 +19,11 @@ const { lang, profile, page, ui } = Astro.props;
 <style>
   .bottom {
     position: fixed;
-    block-size: var(--bottom-nav);
+    block-size: var(--bottom-stack);
     inset-inline: 0;
     inset-block-end: 0;
     z-index: 7;
-    padding-block-end: env(safe-area-inset-bottom);
+    padding-block-end: var(--safe-bottom);
     background: var(--panel-ground);
     border-block-start: var(--rule) solid var(--panel-rule);
   }

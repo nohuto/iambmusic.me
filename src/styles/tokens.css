@@ -42,6 +42,8 @@
   --intro-gap: 2rem;
   --dock-height: 4.5rem;
   --bottom-nav: 4.0625rem;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bottom-stack: calc(var(--bottom-nav) + var(--safe-bottom));
   --spotlight-height: 23.75rem;
   --touch: 44px;
   --utility-height: 31px;

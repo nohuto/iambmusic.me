@@ -14,7 +14,7 @@ export const en: UiDictionary = {
   actions: {
     discoverMusic: 'Discover music',
     discoverLabel: 'DISCOVER',
-    readStory: 'More about me',
+    readStory: 'Learn more about me',
     skipToContent: 'Skip to content',
     seeMore: 'See more',
   },

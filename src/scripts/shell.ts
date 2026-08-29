@@ -58,9 +58,10 @@ document.addEventListener('click', (event) => {
 
 function place(menu: HTMLElement, trigger: HTMLElement): void {
   const anchor = trigger.getBoundingClientRect();
+  const viewport = window.visualViewport?.height ?? document.documentElement.clientHeight;
   const room = document.documentElement.clientWidth - menu.offsetWidth - 8;
   const below = anchor.bottom + 4;
-  const fits = below + menu.offsetHeight <= document.documentElement.clientHeight - 8;
+  const fits = below + menu.offsetHeight <= viewport - 8;
   const top = fits ? below : anchor.top - 4 - menu.offsetHeight;
 
   menu.style.insetBlockStart = `${Math.max(8, top)}px`;
@@ -98,6 +99,20 @@ function anchorMenus(): void {
   }
 }
 
+let headerWatch: IntersectionObserver | null = null;
+
+function watchHeader(): void {
+  headerWatch?.disconnect();
+  headerWatch = null;
+  const sentinel = document.querySelector<HTMLElement>('[data-header-sentinel]');
+  const header = document.querySelector<HTMLElement>('[data-app-header]');
+  if (!sentinel || !header) return;
+  headerWatch = new IntersectionObserver(([entry]) => {
+    header.toggleAttribute('data-stuck', entry?.isIntersecting === false);
+  });
+  headerWatch.observe(sentinel);
+}
+
 function setup(): void {
   restoreRoot();
   const railSource = [
@@ -105,6 +120,7 @@ function setup(): void {
   ].some((link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'));
   applySources(railSource || root.dataset['sources'] !== 'collapsed');
   anchorMenus();
+  watchHeader();
 }
 
 function restoreRoot(): void {

@@ -48,7 +48,8 @@ const musicPath = routePath(lang, profile, 'music');
     border-radius: var(--radius);
     background: var(--panel-plate);
     color: var(--legend);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .search::backdrop {
@@ -66,12 +67,20 @@ const musicPath = routePath(lang, profile, 'music');
   }
 
   input {
+    min-inline-size: 0;
     min-block-size: 2rem;
     border: 0;
     background: none;
     color: var(--legend);
     font-size: var(--step-2);
     outline: none;
+  }
+
+  input::-webkit-search-decoration,
+  input::-webkit-search-cancel-button,
+  input::-webkit-search-results-button {
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   .bar button {
@@ -92,6 +101,7 @@ const musicPath = routePath(lang, profile, 'music');
 
   .results:not(:empty) {
     display: grid;
+    min-inline-size: 0;
     margin-block-start: var(--space-2);
     padding-block-start: var(--space-2);
     border-block-start: var(--rule) solid var(--panel-rule);
@@ -103,6 +113,7 @@ const musicPath = routePath(lang, profile, 'music');
     align-items: center;
     gap: var(--space-3);
     inline-size: 100%;
+    min-inline-size: 0;
     min-block-size: var(--touch);
     padding: var(--space-2);
     border: 0;
@@ -118,6 +129,7 @@ const musicPath = routePath(lang, profile, 'music');
   }
 
   .results :global(.art) {
+    flex: none;
     inline-size: 2.5rem;
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-inner);
@@ -126,6 +138,7 @@ const musicPath = routePath(lang, profile, 'music');
   }
 
   .results :global(.name) {
+    min-inline-size: 0;
     font-size: var(--step-1);
     font-weight: 600;
     overflow: hidden;

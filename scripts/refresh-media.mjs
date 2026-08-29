@@ -214,6 +214,12 @@ const ITEM_KEYS = [
   'url',
 ];
 
+const canonical = (item) => JSON.stringify(Object.keys(item).sort().map((key) => [key, item[key]]));
+
+export function sameItems(before, after) {
+  return before.length === after.length && before.every((item, at) => canonical(item) === canonical(after[at]));
+}
+
 export function validateMedia(feed, profileId) {
   const invalid = (message) => assert(false, `generated media invalid: ${message}`);
   if (!isPlainObject(feed)) invalid('feed is not an object');
@@ -284,10 +290,14 @@ export function mergeSource(previousItems, incoming, source, now, additive = fal
   const existing = previousItems.filter((item) => item.source === source);
   const byId = new Map(existing.map((item) => [item.id, item]));
 
-  const merged = incoming.map((item) => ({
-    ...item,
-    discoveredAt: byId.get(item.id)?.discoveredAt ?? now,
-  }));
+  const merged = incoming.map((item) => {
+    const before = byId.get(item.id);
+    return {
+      ...item,
+      thumbnail: item.thumbnail ?? before?.thumbnail ?? null,
+      discoveredAt: before?.discoveredAt ?? now,
+    };
+  });
 
   if (additive) {
     const seen = new Set(merged.map((item) => item.id));
@@ -396,23 +406,32 @@ export async function refreshAll({
   validateChannels(channels);
 
   const feeds = new Map();
+  const pending = new Map();
   for (const [profileId, channel] of Object.entries(channels)) {
     const previous = await readMedia(profileId, outputDir).catch(() => null);
     const previousItems = previous?.items ?? [];
     const incoming = await buildYouTubeItems(channel.youtube, request);
 
+    const items = mergeSource(previousItems, incoming, 'youtube', now);
+
+    if (previous && sameItems(previousItems, items)) {
+      feeds.set(profileId, validateMedia(previous, profileId));
+      continue;
+    }
+
     const feed = {
       profile: profileId,
       generatedAt: now,
       refreshedAt: { ...(previous?.refreshedAt ?? {}), youtube: now },
-      items: mergeSource(previousItems, incoming, 'youtube', now),
+      items,
     };
     feeds.set(profileId, validateMedia(feed, profileId));
+    pending.set(profileId, feeds.get(profileId));
   }
 
   const directory = fileURLToPath(outputDir);
   await mkdir(directory, { recursive: true });
-  await replaceAtomically(directory, feeds, renameFile);
+  if (pending.size > 0) await replaceAtomically(directory, pending, renameFile);
   return feeds;
 }
 
@@ -477,12 +496,19 @@ async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
       console.warn(`${profileId} ${source}: no usable records, keeping the previous cache`);
       continue;
     }
-    items = mergeSource(items, incoming, source, now, true);
+    const merged = mergeSource(items, incoming, source, now, true);
+    if (sameItems(items, merged)) {
+      console.log(`${profileId} ${source}: unchanged`);
+      continue;
+    }
+    items = merged;
     refreshedAt[source] = now;
     console.log(`${profileId} ${source}: ${incoming.length} records`);
   }
 
-  const next = validateMedia({ ...feed, items, refreshedAt }, profileId);
+  if (sameItems(feed.items, items)) return feed;
+
+  const next = validateMedia({ ...feed, generatedAt: now, items, refreshedAt }, profileId);
   await replaceAtomically(fileURLToPath(outputDir), new Map([[profileId, next]]), renameTarget);
   return next;
 }

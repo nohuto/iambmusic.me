@@ -14,7 +14,7 @@ export const de: UiDictionary = {
   actions: {
     discoverMusic: 'Musik entdecken',
     discoverLabel: 'ENTDECKEN',
-    readStory: 'Mehr über mich',
+    readStory: 'Erfahre mehr über mich',
     skipToContent: 'Zum Inhalt springen',
     seeMore: 'Mehr ansehen',
   },

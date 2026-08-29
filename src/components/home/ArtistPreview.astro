@@ -16,6 +16,7 @@ const { profileId, lang, ui } = Astro.props;
 <section class="panel preview" aria-labelledby="preview-heading">
   <header class="panel-head">
     <h2 id="preview-heading">{ui.sections.artistPreview}</h2>
+    <a class="more" href={routePath(lang, profileId, 'about')}>{ui.actions.readStory}</a>
   </header>
 
   <dl>
@@ -28,10 +29,6 @@ const { profileId, lang, ui } = Astro.props;
       ))
     }
   </dl>
-
-  <p class="more">
-    <a href={routePath(lang, profileId, 'about')}>{ui.actions.readStory}</a>
-  </p>
 </section>
 
 <style>
@@ -50,15 +47,5 @@ const { profileId, lang, ui } = Astro.props;
   dd {
     font-size: var(--step-1);
     font-weight: 600;
-  }
-
-  .more {
-    padding: var(--space-3) var(--space-2) var(--space-1);
-  }
-
-  .more a {
-    font-size: var(--step-1);
-    font-weight: 400;
-    text-decoration: none;
   }
 </style>

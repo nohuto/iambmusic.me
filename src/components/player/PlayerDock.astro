@@ -178,7 +178,7 @@ const hasQueue = playables.length > 1;
   .dock {
     position: fixed;
     inset-inline: 0;
-    inset-block-end: var(--bottom-nav, 0px);
+    inset-block-end: var(--bottom-stack, 0px);
     z-index: 6;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -255,8 +255,13 @@ const hasQueue = playables.length > 1;
       display: grid;
     }
 
+    .dock[data-art='expanded'] .identity {
+      gap: 0;
+    }
+
     .dock[data-art='expanded'] .art-slot {
       position: static;
+      inline-size: 0;
     }
 
     .dock[data-art='expanded'] .art {

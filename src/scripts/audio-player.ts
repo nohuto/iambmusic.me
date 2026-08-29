@@ -261,10 +261,7 @@ if (dock && audio) {
     frame?.replaceChildren();
   }
 
-  function clearVideo(): void {
-    releasePlayer();
-    video = null;
-    resumeAt = 0;
+  function hideStage(): void {
     stageToggle?.setAttribute('hidden', '');
     if (stage?.open) {
       switching = true;
@@ -272,6 +269,23 @@ if (dock && audio) {
     }
     stage?.removeAttribute('data-mode');
     document.documentElement.style.overflow = '';
+  }
+
+  function clearVideo(): void {
+    releasePlayer();
+    video = null;
+    resumeAt = 0;
+    hideStage();
+  }
+
+  function closeVideo(): void {
+    const at = player?.getCurrentTime();
+    if (typeof at === 'number' && Number.isFinite(at) && at >= 0) resumeAt = at;
+    releasePlayer();
+    hideStage();
+    setState(false);
+    setProgress(resumeAt, video?.durationSeconds ?? 0);
+    remember();
   }
 
   function queueIndexOf(id: string): number {
@@ -530,9 +544,7 @@ if (dock && audio) {
   });
 
   stageClose?.addEventListener('click', () => {
-    remember();
-    clearVideo();
-    setState(false);
+    closeVideo();
   });
 
   stage?.addEventListener('close', () => {
@@ -540,9 +552,7 @@ if (dock && audio) {
       switching = false;
       return;
     }
-    remember();
-    clearVideo();
-    setState(false);
+    closeVideo();
   });
 
   audio.addEventListener('play', () => {
@@ -605,9 +615,7 @@ if (dock && audio) {
   addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || !video) return;
     if (stage?.dataset['mode'] !== 'compact') return;
-    remember();
-    clearVideo();
-    setState(false);
+    closeVideo();
   });
 
   addEventListener('pagehide', () => {

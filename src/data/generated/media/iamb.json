@@ -1,10 +1,10 @@
 {
   "profile": "iamb",
-  "generatedAt": "2026-08-29T12:42:12.083Z",
+  "generatedAt": "2026-08-29T01:45:50.751Z",
   "refreshedAt": {
     "instagram": "2026-08-18T12:20:32.000Z",
-    "tiktok": "2026-08-29T12:42:12.083Z",
-    "youtube": "2026-08-29T12:42:12.083Z"
+    "tiktok": "2026-08-18T12:20:32.000Z",
+    "youtube": "2026-08-29T01:45:50.751Z"
   },
   "items": [
     {
@@ -26,11 +26,15 @@
       "id": "tiktok:7633684186137742624",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7633684186137742624",
-      "title": "iamb Synthmusic  feat.  AiMP Music | Project   A Space Theme Eine ein...",
+      "title": "iamb Synthmusic feat. AiMP Music | Project A Space Theme Ein...",
       "publishedAt": "2026-04-28T05:53:37.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 165,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7633684186137742624.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -84,11 +88,15 @@
       "id": "tiktok:7604526828904058134",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7604526828904058134",
-      "title": "Escape from earth - New Soundtrack. A part of humanity from many coun...",
+      "title": "Escape from earth - New Soundtrack. A part of humanity from...",
       "publishedAt": "2026-02-08T16:08:02.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 477,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7604526828904058134.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -110,11 +118,15 @@
       "id": "tiktok:7599626579400084758",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7599626579400084758",
-      "title": "Teaser -  Escape from Earth  - #Teaser #Escape #earth #Soundtrack #mu...",
+      "title": "Teaser - Escape from Earth - #Teaser #Escape #earth #Soundtr...",
       "publishedAt": "2026-01-26T11:12:35.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 27,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7599626579400084758.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -137,11 +149,15 @@
       "id": "tiktok:7590161620534349078",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7590161620534349078",
-      "title": "Happy new year. Ich wünsche allen ein schönes, glückliches, gesundes ...",
+      "title": "Happy new year. Ich wünsche allen ein schönes, glückliches,...",
       "publishedAt": "2025-12-31T23:03:39.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 84,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7590161620534349078.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -163,11 +179,15 @@
       "id": "tiktok:7587392988670692630",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7587392988670692630",
-      "title": "Merry Christmas. Ich wünsche allen ein schönes und gesegnetes Weihnac...",
+      "title": "Merry Christmas. Ich wünsche allen ein schönes und gesegnete...",
       "publishedAt": "2025-12-24T11:59:59.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 103,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7587392988670692630.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -190,11 +210,15 @@
       "id": "tiktok:7578221770285583638",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7578221770285583638",
-      "title": "It‘s time for „Time goes by“. I wish you all a wonderful Advent time....",
+      "title": "It‘s time for „Time goes by“. I wish you all a wonderful Adv...",
       "publishedAt": "2025-11-29T18:50:57.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 216,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7578221770285583638.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -216,11 +240,15 @@
       "id": "tiktok:7573414771685412118",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7573414771685412118",
-      "title": "„The flight of Voyager 1“. A Soundtrack by iamb-synthmusic. Voyager 1...",
+      "title": "„The flight of Voyager 1“. A Soundtrack by iamb-synthmusic....",
       "publishedAt": "2025-11-16T19:57:20.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 220,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7573414771685412118.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -258,11 +286,15 @@
       "id": "tiktok:7567417703745555734",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7567417703745555734",
-      "title": "It‘s time for „Halloween Night III“. A short Scary Music-Video by iam...",
+      "title": "It‘s time for „Halloween Night III“. A short Scary Music-Vid...",
       "publishedAt": "2025-10-31T16:05:39.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 124,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7567417703745555734.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -300,11 +332,15 @@
       "id": "tiktok:7549580657249242390",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7549580657249242390",
-      "title": "Mein nächster Soundtrack „The Astronaut‘s Wife“. Viel Spaß beim ansch...",
+      "title": "Mein nächster Soundtrack „The Astronaut‘s Wife“. Viel Spaß b...",
       "publishedAt": "2025-09-13T14:28:48.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 237,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7549580657249242390.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -342,11 +378,15 @@
       "id": "tiktok:7536281993227586838",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7536281993227586838",
-      "title": "Virtual City. Mein neuer Soundtrack taucht ein in eine virtuelle Welt...",
+      "title": "Virtual City. Mein neuer Soundtrack taucht ein in eine virtu...",
       "publishedAt": "2025-08-08T18:23:11.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 247,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7536281993227586838.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -384,11 +424,15 @@
       "id": "tiktok:7499163646388440342",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7499163646388440342",
-      "title": "Memories - It's your life A few nights later, here is my new song. I ...",
+      "title": "Memories - It's your life A few nights later, here is my new...",
       "publishedAt": "2025-04-30T17:45:02.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 268,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7499163646388440342.jpg",
+        "height": 540,
+        "width": 960
+      },
       "playback": "external"
     },
     {
@@ -442,33 +486,45 @@
       "id": "tiktok:7487218782885252354",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7487218782885252354",
-      "title": "Viel Spaß beim zuhören und anschauen. Enjoy. #Nordic #Story #Klangkun...",
+      "title": "Viel Spaß beim zuhören und anschauen. Enjoy. #Nordic #Story...",
       "publishedAt": "2025-03-29T13:12:53.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 168,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7487218782885252354.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
       "id": "tiktok:7478244027435994390",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7478244027435994390",
-      "title": "#KlangKunst #ElectronicMusic #technocollective #sunnyday #producer #s...",
+      "title": "#KlangKunst #ElectronicMusic #technocollective #sunnyday #pr...",
       "publishedAt": "2025-03-05T08:46:18.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 32,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7478244027435994390.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
       "id": "tiktok:7477583985431022850",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7477583985431022850",
-      "title": "#Klangkunst #technocollective #member #ElectronicMusic #synth #likе #...",
+      "title": "#Klangkunst #technocollective #member #ElectronicMusic #synt...",
       "publishedAt": "2025-03-03T14:04:58.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 52,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7477583985431022850.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -490,22 +546,30 @@
       "id": "tiktok:7472898417488973078",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7472898417488973078",
-      "title": "Inspiriert durch @KlangKunst. Ein kurzes Musikvideo. North Song - Par...",
+      "title": "Inspiriert durch @KlangKunst. Ein kurzes Musikvideo. North S...",
       "publishedAt": "2025-02-18T23:02:35.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 65,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7472898417488973078.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
       "id": "tiktok:7458403001384865046",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7458403001384865046",
-      "title": "Judgement day. When part of humanity has left the earth, the worst pr...",
+      "title": "Judgement day. When part of humanity has left the earth, the...",
       "publishedAt": "2025-01-10T21:32:55.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 143,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7458403001384865046.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -573,22 +637,30 @@
       "id": "tiktok:7443924880959245590",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7443924880959245590",
-      "title": "The year is coming to an end. I wish all my followers and listeners a...",
+      "title": "The year is coming to an end. I wish all my followers and li...",
       "publishedAt": "2024-12-02T21:10:26.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 37,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7443924880959245590.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
       "id": "tiktok:7443911795863047446",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7443911795863047446",
-      "title": "The year is coming to an end. My song “Time goes by” is intended to g...",
+      "title": "The year is coming to an end. My song “Time goes by” is inte...",
       "publishedAt": "2024-12-02T20:19:38.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 59,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7443911795863047446.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -626,11 +698,15 @@
       "id": "tiktok:7427548549224697121",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7427548549224697121",
-      "title": "I wish all a happy and spooky Halloween time. Here is my short „Hallo...",
+      "title": "I wish all a happy and spooky Halloween time. Here is my sho...",
       "publishedAt": "2024-10-19T18:01:56.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 98,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7427548549224697121.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -668,11 +744,15 @@
       "id": "tiktok:7422010032545434913",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7422010032545434913",
-      "title": "Space Traveler. A new short project. Enjoy the moment of my electroni...",
+      "title": "Space Traveler. A new short project. Enjoy the moment of my...",
       "publishedAt": "2024-10-04T19:49:45.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 157,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7422010032545434913.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -710,11 +790,15 @@
       "id": "tiktok:7382124727671786784",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7382124727671786784",
-      "title": "A day on earth - Part I. Life is like a movie. As soon as we are born...",
+      "title": "A day on earth - Part I. Life is like a movie. As soon as we...",
       "publishedAt": "2024-06-19T08:14:26.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 142,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7382124727671786784.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -752,11 +836,15 @@
       "id": "tiktok:7375640047514602785",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7375640047514602785",
-      "title": "iamb-synthmusic. Dark Reflection - A short dark track about our restl...",
+      "title": "iamb-synthmusic. Dark Reflection - A short dark track about...",
       "publishedAt": "2024-06-01T20:50:25.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 163,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7375640047514602785.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -778,11 +866,15 @@
       "id": "tiktok:7356850779405307168",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7356850779405307168",
-      "title": "Escape from Earth - The crazy part of my next track. I hope you like ...",
+      "title": "Escape from Earth - The crazy part of my next track. I hope...",
       "publishedAt": "2024-04-12T05:38:46.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 49,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7356850779405307168.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -834,11 +926,15 @@
       "id": "tiktok:7285749578039643424",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7285749578039643424",
-      "title": "Futureworld - #New #Video Finally the video of my first space story w...",
+      "title": "Futureworld - #New #Video Finally the video of my first spac...",
       "publishedAt": "2023-10-03T15:09:30.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 51,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7285749578039643424.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -876,11 +972,15 @@
       "id": "tiktok:7281314280325188896",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7281314280325188896",
-      "title": "Last in Space - Is anybody out there? The 3rd part of my space story....",
+      "title": "Last in Space - Is anybody out there? The 3rd part of my spa...",
       "publishedAt": "2023-09-21T16:18:15.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 34,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7281314280325188896.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -963,11 +1063,15 @@
       "id": "tiktok:7220527287500819739",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7220527287500819739",
-      "title": "Weightless - Music from the space stage ✨🎶✨. #Enjoy #my #new #space #...",
+      "title": "Weightless - Music from the space stage ✨🎶✨. #Enjoy #my #new...",
       "publishedAt": "2023-04-10T20:53:48.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 34,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7220527287500819739.jpg",
+        "height": 960,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -1036,11 +1140,15 @@
       "id": "tiktok:7133365846893808901",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7133365846893808901",
-      "title": "Holiday with my family. The best time of the year. Reel with a part o...",
+      "title": "Holiday with my family. The best time of the year. Reel with...",
       "publishedAt": "2022-08-18T23:42:46.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 30,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7133365846893808901.jpg",
+        "height": 718,
+        "width": 540
+      },
       "playback": "external"
     },
     {
@@ -1062,11 +1170,15 @@
       "id": "tiktok:7130968639221648646",
       "source": "tiktok",
       "url": "https://www.tiktok.com/@iamb.synthmusic/video/7130968639221648646",
-      "title": "A „Reelmusic“ Version. iamb- #reelmusic #short #track .Put on your he...",
+      "title": "A „Reelmusic“ Version. iamb- #reelmusic #short #track .Put o...",
       "publishedAt": "2022-08-12T12:40:23.000Z",
       "discoveredAt": "2026-08-18T12:20:32.000Z",
-      "durationSeconds": 93,
-      "thumbnail": null,
+      "durationSeconds": null,
+      "thumbnail": {
+        "url": "/media/tiktok/7130968639221648646.jpg",
+        "height": 882,
+        "width": 540
+      },
       "playback": "external"
     },
     {

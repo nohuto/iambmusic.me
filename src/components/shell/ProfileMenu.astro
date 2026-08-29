@@ -106,15 +106,23 @@ const menuId = 'profile-menu';
     background: var(--panel-plate);
     color: var(--legend);
     box-shadow: var(--shadow-plate);
+    block-size: fit-content;
+    max-block-size: calc(
+      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--space-5)
+    );
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .menu:popover-open {
     display: grid;
+    align-content: start;
     gap: var(--space-2);
   }
 
   .menu ul {
     display: grid;
+    align-content: start;
     gap: var(--space-1);
   }
 

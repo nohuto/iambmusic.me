@@ -19,7 +19,9 @@ interface Props {
 const { lang, profile, activeProfile, page, ui } = Astro.props;
 ---
 
-<header class="app-header">
+<span class="sticky-probe" data-header-sentinel aria-hidden="true"></span>
+
+<header class="app-header" data-app-header>
   <a class="mark" href={routePath(lang, profile, 'home')}>
     <Image src={activeProfile.images.logo} alt={localize(activeProfile.images.logoAlt, lang)} width={30} height={30} />
     <span>{activeProfile.shortName}</span>
@@ -42,6 +44,14 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
 </header>
 
 <style>
+  .sticky-probe {
+    position: absolute;
+    inset-block-start: 0;
+    inline-size: 1px;
+    block-size: 1px;
+    pointer-events: none;
+  }
+
   .app-header {
     position: sticky;
     inset-block-start: 0;
@@ -54,6 +64,12 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     min-block-size: var(--header-height);
     padding-inline: var(--space-4);
     background: transparent;
+  }
+
+  .app-header[data-stuck] {
+    background: color-mix(in srgb, var(--panel-ground) 72%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
 
   .mark {
