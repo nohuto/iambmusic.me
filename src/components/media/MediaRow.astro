@@ -269,14 +269,22 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     background: var(--panel-plate);
     color: var(--legend);
     box-shadow: var(--shadow-plate);
+    block-size: fit-content;
+    max-block-size: calc(
+      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--space-5)
+    );
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .row-menu:popover-open {
     display: grid;
+    align-content: start;
   }
 
   .row-menu ul {
     display: grid;
+    align-content: start;
   }
 
   .row-menu li:first-child {
