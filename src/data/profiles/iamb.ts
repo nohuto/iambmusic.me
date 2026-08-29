@@ -6,7 +6,6 @@ export const iambProfile: IambProfile = {
   id: 'iamb',
   name: 'IAMB Synthmusic',
   shortName: 'IAMB',
-  accent: 'ochre',
   meta: {
     home: {
       de: 'Meine Welt aus cinematischem Synthwave und atmosphärischen Produktionen. Jetzt reinhören.',
@@ -67,7 +66,6 @@ export const iambProfile: IambProfile = {
       name: 'YouTube',
       url: 'https://www.youtube.com/@iamb-synthmusic7820',
       category: 'social',
-      tagline: { de: 'Visuals & Videos', en: 'Visuals & videos' },
     },
     {
       profile: 'iamb',
@@ -75,7 +73,6 @@ export const iambProfile: IambProfile = {
       name: 'TikTok',
       url: 'https://www.tiktok.com/@iamb.synthmusic',
       category: 'social',
-      tagline: { de: 'Shorts & Snippets', en: 'Shorts & snippets' },
     },
     {
       profile: 'iamb',
@@ -83,7 +80,6 @@ export const iambProfile: IambProfile = {
       name: 'Instagram',
       url: 'https://www.instagram.com/iamb.synthmusic/',
       category: 'social',
-      tagline: { de: 'Stories & Updates', en: 'Stories & updates' },
     },
     {
       profile: 'iamb',
@@ -91,7 +87,6 @@ export const iambProfile: IambProfile = {
       name: 'BandLab',
       url: 'https://www.bandlab.com/iamb_synthmusic',
       category: 'social',
-      tagline: { de: 'Community & Updates', en: 'Community & updates' },
       brandMark: '/icons/platforms/bandlab.svg',
     },
     {
@@ -100,7 +95,6 @@ export const iambProfile: IambProfile = {
       name: 'Spotify',
       url: 'https://open.spotify.com/artist/31f8iEkHYOs73gZurN4waJ',
       category: 'listening',
-      tagline: { de: 'Künstlerseite & Releases', en: 'Artist page & releases' },
     },
     {
       profile: 'iamb',
@@ -108,7 +102,6 @@ export const iambProfile: IambProfile = {
       name: 'Apple Music',
       url: 'https://music.apple.com/us/artist/iamb-synthmusic/1632680655',
       category: 'listening',
-      tagline: { de: 'Streaming in hoher Qualität', en: 'High quality streaming' },
       brandMark: '/icons/platforms/applemusic.svg',
     },
     {
@@ -117,7 +110,6 @@ export const iambProfile: IambProfile = {
       name: 'Amazon Music',
       url: 'https://www.amazon.com/music/player/artists/B0B5PN5NCJ/iamb-synthmusic',
       category: 'listening',
-      tagline: { de: 'Künstlerseite & Releases', en: 'Artist page & releases' },
       brandMark: '/icons/platforms/amazonmusic.svg',
     },
     {
@@ -126,7 +118,6 @@ export const iambProfile: IambProfile = {
       name: 'SoundCloud',
       url: 'https://soundcloud.com/iamb-synthmusic',
       category: 'listening',
-      tagline: { de: 'Skizzen & Sessions', en: 'Sketches & sessions' },
     },
     {
       profile: 'iamb',
@@ -134,7 +125,6 @@ export const iambProfile: IambProfile = {
       name: 'Beatport',
       url: 'https://www.beatport.com/release/memories-its-your-life/5069423',
       category: 'listening',
-      tagline: { de: 'Downloads & DJ Packs', en: 'Downloads & DJ packs' },
       brandMark: '/icons/platforms/beatport.svg',
     },
     {
@@ -143,7 +133,6 @@ export const iambProfile: IambProfile = {
       name: 'Traxsource',
       url: 'https://www.traxsource.com/artist/675015/',
       category: 'listening',
-      tagline: { de: 'DJ Store & Releases', en: 'DJ store & releases' },
       brandMark: '/icons/platforms/traxsource.svg',
     },
     {
@@ -152,7 +141,6 @@ export const iambProfile: IambProfile = {
       name: 'Qobuz',
       url: 'https://www.qobuz.com/us-en/interpreter/iamb-synthmusic/14736427',
       category: 'listening',
-      tagline: { de: 'Lossless Audio', en: 'Lossless audio' },
       brandMark: '/icons/platforms/qobuz.svg',
     },
     {
@@ -161,7 +149,6 @@ export const iambProfile: IambProfile = {
       name: 'Bandcamp',
       url: 'https://iamb-synthmusic.bandcamp.com/',
       category: 'listening',
-      tagline: { de: 'Releases & Downloads', en: 'Releases & downloads' },
       brandMark: '/icons/platforms/bandcamp.svg',
     },
   ],

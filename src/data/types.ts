@@ -9,8 +9,6 @@ export type PageId = (typeof pageIds)[number];
 
 export type LocalizedText = Readonly<Record<Language, string>>;
 
-export type AccentId = 'ochre' | 'blue';
-
 export type AudioFormat = 'mp3' | 'm4a' | 'wav';
 
 export interface AudioSource {
@@ -50,7 +48,6 @@ export interface PlatformLink<P extends ProfileId = ProfileId> {
   readonly name: string;
   readonly url: string;
   readonly category: PlatformCategory;
-  readonly tagline: LocalizedText;
   readonly brandMark?: string;
 }
 
@@ -58,25 +55,6 @@ export interface ChannelIdentity<P extends ProfileId = ProfileId> {
   readonly profile: P;
   readonly handle: string;
   readonly channelId?: string;
-}
-
-export interface GeneratedVideoThumbnail {
-  readonly url: string;
-  readonly width: number;
-  readonly height: number;
-}
-
-export interface GeneratedVideo {
-  readonly videoId: string;
-  readonly title: string;
-  readonly publishedAt: string;
-  readonly thumbnail: GeneratedVideoThumbnail;
-}
-
-export interface GeneratedYouTubeFeed<P extends ProfileId = ProfileId> {
-  readonly profile: P;
-  readonly generatedAt: string;
-  readonly videos: readonly GeneratedVideo[];
 }
 
 export interface HeroContent {
@@ -97,7 +75,7 @@ export interface GlanceFact {
 }
 
 export interface TimelineEntry {
-  readonly period: string;
+  readonly period: LocalizedText;
   readonly text: LocalizedText;
 }
 
@@ -116,7 +94,6 @@ export interface Profile<P extends ProfileId = ProfileId> {
   readonly id: P;
   readonly name: string;
   readonly shortName: string;
-  readonly accent: AccentId;
   readonly meta: PageMeta;
   readonly hero: HeroContent;
   readonly images: ProfileImages;
@@ -148,21 +125,16 @@ export interface UiDictionary {
   readonly actions: {
     readonly discoverMusic: string;
     readonly discoverLabel: string;
-    readonly latestVideos: string;
     readonly readStory: string;
-    readonly openMenu: string;
-    readonly closeMenu: string;
     readonly skipToContent: string;
     readonly seeMore: string;
   };
   readonly sections: {
-    readonly nowPlaying: string;
     readonly latestVideos: string;
     readonly platforms: string;
     readonly listeningPlatforms: string;
     readonly socialPlatforms: string;
     readonly artistPreview: string;
-    readonly glance: string;
     readonly studio: string;
     readonly timeline: string;
     readonly inspiration: string;
@@ -198,9 +170,9 @@ export interface UiDictionary {
     readonly placeholder: string;
     readonly none: string;
     readonly close: string;
-    readonly results: string;
   };
   readonly player: {
+    readonly region: string;
     readonly play: string;
     readonly pause: string;
     readonly previous: string;
@@ -209,12 +181,7 @@ export interface UiDictionary {
     readonly volume: string;
     readonly mute: string;
     readonly unmute: string;
-    readonly elapsed: string;
-    readonly duration: string;
-    readonly loading: string;
-    readonly ended: string;
     readonly error: string;
-    readonly queue: string;
     readonly shuffleOn: string;
     readonly shuffleOff: string;
     readonly repeatOff: string;
@@ -224,14 +191,10 @@ export interface UiDictionary {
     readonly collapseArt: string;
   };
   readonly video: {
-    readonly play: string;
     readonly close: string;
     readonly expand: string;
     readonly collapse: string;
     readonly dialogLabel: string;
-    readonly source: string;
-    readonly attribution: string;
-    readonly openOnYouTube: string;
     readonly unavailable: string;
     readonly empty: string;
     readonly updated: string;
@@ -240,14 +203,12 @@ export interface UiDictionary {
     readonly profile: string;
     readonly active: string;
     readonly language: string;
-    readonly theme: string;
     readonly toLight: string;
     readonly toDark: string;
   };
   readonly shell: {
     readonly groupMenu: string;
     readonly groupMore: string;
-    readonly contact: string;
     readonly expandSources: string;
     readonly collapseSources: string;
     readonly collapseRail: string;

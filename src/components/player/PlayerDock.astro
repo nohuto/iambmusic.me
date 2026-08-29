@@ -20,6 +20,8 @@ const hasQueue = playables.length > 1;
   first && (
     <div
       class="dock"
+      role="region"
+      aria-label={ui.player.region}
       data-player
       data-profile={profileId}
       data-queued={ui.music.queued}
@@ -390,8 +392,8 @@ const hasQueue = playables.length > 1;
 
   .progress input[type='range'] {
     display: block;
-    block-size: 1rem;
-    margin-block-start: -6px;
+    block-size: 1.5rem;
+    margin-block-start: -10px;
   }
 
   .time {
@@ -504,6 +506,7 @@ const hasQueue = playables.length > 1;
     }
 
     .progress input[type='range'] {
+      block-size: 1rem;
       margin-block-start: 0;
     }
 

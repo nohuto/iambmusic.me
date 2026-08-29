@@ -14,7 +14,7 @@ const { ui } = Astro.props;
 
   <button class="sort" type="button" data-sort="title" aria-label={ui.music.sortTitle}>
     {ui.music.columns.title}
-    <span class="caret" data-sort-caret aria-hidden="true">
+    <span class="caret" aria-hidden="true">
       <span data-caret="asc"><Icon name="caret-up" weight="bold" size="0.7rem" /></span>
       <span data-caret="desc"><Icon name="caret-down" weight="bold" size="0.7rem" /></span>
     </span>
@@ -24,7 +24,7 @@ const { ui } = Astro.props;
 
   <button class="sort released" type="button" data-sort="released" aria-label={ui.music.sortReleased}>
     {ui.music.columns.released}
-    <span class="caret" data-sort-caret aria-hidden="true">
+    <span class="caret" aria-hidden="true">
       <span data-caret="asc"><Icon name="caret-up" weight="bold" size="0.7rem" /></span>
       <span data-caret="desc"><Icon name="caret-down" weight="bold" size="0.7rem" /></span>
     </span>

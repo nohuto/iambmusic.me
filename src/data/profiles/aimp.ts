@@ -6,7 +6,6 @@ export const aimpProfile: AimpProfile = {
   id: 'aimp',
   name: 'AiMP Music Project',
   shortName: 'AiMP',
-  accent: 'blue',
   meta: {
     home: {
       de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
@@ -55,7 +54,6 @@ export const aimpProfile: AimpProfile = {
       name: 'YouTube',
       url: 'https://www.youtube.com/@AiMP-Musicproject',
       category: 'social',
-      tagline: { de: 'Visuals & Videos', en: 'Visuals & videos' },
     },
     {
       profile: 'aimp',
@@ -63,7 +61,6 @@ export const aimpProfile: AimpProfile = {
       name: 'SoundCloud',
       url: 'https://soundcloud.com/aimp-musicproject',
       category: 'listening',
-      tagline: { de: 'Skizzen & Sessions', en: 'Sketches & sessions' },
     },
   ],
   youtube: { profile: 'aimp', ...channels.aimp.youtube },

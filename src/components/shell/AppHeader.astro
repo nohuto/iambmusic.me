@@ -47,6 +47,7 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     inset-block-start: 0;
     z-index: 4;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
@@ -106,7 +107,9 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
 
   .utilities {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.4375rem;
     margin-inline-start: auto;
   }

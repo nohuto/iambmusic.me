@@ -23,14 +23,6 @@ export function profileStaticPaths() {
   }));
 }
 
-export function otherLanguage(lang: Language): Language {
-  return lang === 'de' ? 'en' : 'de';
-}
-
-export function otherProfile(profile: ProfileId): ProfileId {
-  return profile === 'iamb' ? 'aimp' : 'iamb';
-}
-
 export function alternateLinks(profile: ProfileId, page: PageId) {
   return [
     ...languages.map((lang) => ({ hreflang: lang, path: routePath(lang, profile, page) })),

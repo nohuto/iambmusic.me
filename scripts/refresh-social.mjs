@@ -3,16 +3,26 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const run = promisify(execFile);
 const coverRoot = fileURLToPath(new URL('../public/media/', import.meta.url));
+const COVER_WIDTH = 320;
+const COVER_QUALITY = 78;
+
+function optimizeCover(bytes) {
+  return sharp(bytes)
+    .resize({ width: COVER_WIDTH, withoutEnlargement: true })
+    .jpeg({ quality: COVER_QUALITY, mozjpeg: true })
+    .toBuffer();
+}
 
 async function saveCover(source, id, url) {
   if (!url) return null;
   try {
     const response = await fetch(url);
     if (!response.ok) return null;
-    const bytes = Buffer.from(await response.arrayBuffer());
+    const bytes = await optimizeCover(Buffer.from(await response.arrayBuffer()));
     await mkdir(path.join(coverRoot, source), { recursive: true });
     await writeFile(path.join(coverRoot, source, `${id}.jpg`), bytes);
     return { url: `/media/${source}/${id}.jpg`, width: null, height: null };

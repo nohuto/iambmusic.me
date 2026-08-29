@@ -148,26 +148,6 @@ a:hover {
   font: inherit;
 }
 
-.legend {
-  font-size: var(--step-0);
-  font-weight: 600;
-  font-stretch: 112%;
-  letter-spacing: var(--legend-tracking);
-  text-transform: uppercase;
-  color: var(--legend-quiet);
-}
-
-.plate {
-  background: var(--panel-plate);
-  border: var(--rule) solid var(--panel-rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-plate);
-}
-
-.prose {
-  max-inline-size: var(--measure);
-}
-
 .skip-link {
   position: absolute;
   inset-inline-start: var(--space-4);
@@ -251,20 +231,6 @@ html[data-theme='dark'] .theme-control .thumb {
   container: stage / inline-size;
   padding: var(--space-5) var(--space-4)
     calc(var(--dock-height) + var(--bottom-nav, 0px) + var(--space-6));
-  display: grid;
-  gap: var(--space-5);
-  align-content: start;
-  min-inline-size: 0;
-}
-
-.dashboard {
-  display: grid;
-  gap: var(--space-5);
-  min-inline-size: 0;
-}
-
-.dashboard-main,
-.dashboard-rail {
   display: grid;
   gap: var(--space-5);
   align-content: start;
@@ -464,11 +430,6 @@ html[data-theme='dark'] .theme-control .thumb {
 
   .stage {
     padding: var(--intro-gap) var(--space-6) calc(var(--dock-height) + var(--space-7));
-  }
-
-  .dashboard {
-    grid-template-columns: minmax(0, 1fr) var(--player-width);
-    align-items: start;
   }
 }
 

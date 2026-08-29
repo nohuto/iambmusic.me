@@ -10,8 +10,3 @@ export const primaryNavigation: readonly NavigationItem[] = [
 export const secondaryNavigation: readonly NavigationItem[] = [
   { page: 'contact', labelKey: 'contact' },
 ];
-
-export const navigationItems: readonly NavigationItem[] = [
-  ...primaryNavigation,
-  ...secondaryNavigation,
-];

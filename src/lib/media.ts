@@ -45,20 +45,3 @@ export function getProfileMedia(profile: ProfileId): MediaLibrary {
   if (!library || library.profile !== profile) return { ...empty, profile };
   return library;
 }
-
-const sourceOrder: readonly MediaSource[] = ['youtube', 'tiktok', 'instagram'];
-
-export function getProfileSources(profile: ProfileId): readonly MediaSource[] {
-  const { items } = getProfileMedia(profile);
-  return sourceOrder.filter((source) => items.some((item) => item.source === source));
-}
-
-export function getPlayableVideos(profile: ProfileId): readonly MediaItem[] {
-  return getProfileMedia(profile).items.filter(
-    (item) => item.source === 'youtube' && item.playback === 'youtube-embed',
-  );
-}
-
-export function getLatestVideos(profile: ProfileId, limit = 4): readonly MediaItem[] {
-  return getPlayableVideos(profile).slice(0, limit);
-}

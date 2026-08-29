@@ -64,7 +64,7 @@ const { Content } = await render(story);
           <dl class="timeline">
             {artist.timeline.map((entry) => (
               <div class="moment">
-                <dt>{entry.period}</dt>
+                <dt>{localize(entry.period, lang)}</dt>
                 <dd>{localize(entry.text, lang)}</dd>
               </div>
             ))}

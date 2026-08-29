@@ -1,4 +1,4 @@
 Contact: mailto:iamb@noverse.dev
-Expires: 2028-01-01T12:00:00Z
+Expires: 2027-08-01T12:00:00Z
 Canonical: https://iambmusic.me/.well-known/security.txt
 Preferred-Languages: en

@@ -6,7 +6,7 @@ function items(panel: HTMLElement): HTMLElement[] {
   return [...panel.querySelectorAll<HTMLElement>('[data-media-row]')];
 }
 
-export function renumber(panel: HTMLElement): void {
+function renumber(panel: HTMLElement): void {
   let visible = 0;
   for (const item of items(panel)) {
     const cell = item.querySelector<HTMLElement>('[data-row-index]');
