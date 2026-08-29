@@ -7,7 +7,6 @@ import MediaRow from './MediaRow.astro';
 
 interface Props {
   rows: readonly LibraryRow[];
-  generatedAt: string | null;
   lang: Language;
   profile: Profile;
   profileId: ProfileId;
@@ -15,22 +14,18 @@ interface Props {
   heading: string;
 }
 
-const { rows, generatedAt, lang, profile, profileId, ui, heading } = Astro.props;
-const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
+const { rows, lang, profile, profileId, ui, heading } = Astro.props;
 const moreHref = `${routePath(lang, profileId, 'music')}?source=youtube`;
 ---
 
-<section class="panel deck" aria-labelledby="deck-heading">
+<section class="panel deck" data-sortable aria-labelledby="deck-heading">
   <header class="panel-head">
     <h2 id="deck-heading">{heading}</h2>
-    {
-      generatedAt && (
-        <p class="meta">
-          {ui.video.updated}
-          <time datetime={generatedAt}>{dateFormat.format(new Date(generatedAt))}</time>
-        </p>
-      )
-    }
+    {rows.length > 0 && (
+      <a class="more" href={moreHref}>
+        {ui.actions.seeMore}
+      </a>
+    )}
   </header>
 
   {
@@ -41,16 +36,18 @@ const moreHref = `${routePath(lang, profileId, 'music')}?source=youtube`;
         <MediaHead ui={ui} />
 
         <ul class="rows">
-          {rows.map((row) => (
-            <li>
-              <MediaRow row={row} profile={profile} lang={lang} ui={ui} />
+          {rows.map((row, position) => (
+            <li
+              data-media-row
+              data-sort-title={row.title}
+              data-sort-date={row.publishedAt ?? ''}
+              data-sort-order={position}
+            >
+              <MediaRow row={row} position={position + 1} profile={profile} lang={lang} ui={ui} />
             </li>
           ))}
         </ul>
 
-        <p class="more">
-          <a href={moreHref}>{ui.actions.seeMore}</a>
-        </p>
       </>
     )
   }
@@ -71,18 +68,14 @@ const moreHref = `${routePath(lang, profileId, 'music')}?source=youtube`;
   }
 
   .more {
-    padding: var(--space-2) var(--space-2) 0;
-    text-align: end;
-  }
-
-  .more a {
     color: var(--legend-faint);
     font-size: var(--step-0);
     text-decoration: none;
+    white-space: nowrap;
   }
 
-  .more a:hover,
-  .more a:focus-visible {
+  .more:hover,
+  .more:focus-visible {
     color: var(--ink);
     text-decoration: none;
   }

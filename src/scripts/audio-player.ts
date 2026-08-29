@@ -100,6 +100,8 @@ if (dock && audio) {
   const stageClose = document.querySelector<HTMLButtonElement>('[data-video-close]');
   const shuffle = pick<HTMLButtonElement>('[data-player-shuffle]');
   const repeat = pick<HTMLButtonElement>('[data-player-repeat]');
+  const status = pick('[data-player-status]');
+  const artToggle = pick<HTMLButtonElement>('[data-player-art-toggle]');
   const artHtml = artEl?.innerHTML ?? '';
 
   const storageKey = `iambmusic-player-${dock.dataset['profile'] ?? ''}`;
@@ -118,6 +120,9 @@ if (dock && audio) {
   let repeatMode: 'off' | 'all' | 'one' = 'off';
   let order: number[] = playables.map((_, position) => position);
   let queueMove = false;
+  let manualQueue: string[] = [];
+  let selectedId: string | null = null;
+  let scrubbing = false;
 
   const clock = (seconds: number): string => {
     if (!Number.isFinite(seconds)) return '0:00';
@@ -135,6 +140,7 @@ if (dock && audio) {
     dock!.dataset['state'] = playing ? 'playing' : 'paused';
     const label = playing ? toggle?.dataset['pause'] : toggle?.dataset['play'];
     if (label) toggle?.setAttribute('aria-label', label);
+    syncRows();
   }
 
   function setQueue(enabled: boolean): void {
@@ -143,22 +149,45 @@ if (dock && audio) {
   }
 
   function setProgress(current: number, total: number): void {
-    if (elapsed) elapsed.textContent = clock(current);
+    if (elapsed && !scrubbing) elapsed.textContent = clock(current);
     if (duration) duration.textContent = clock(total);
-    if (seek && document.activeElement !== seek) {
+    if (seek && !scrubbing) {
       seek.max = String(total || 0);
       seek.value = String(current);
       setFill(seek);
     }
-    dock!.style.setProperty('--progress', `${total ? (current / total) * 100 : 0}%`);
   }
 
   function identify(item: { title: string; thumbnail?: string | null }, youtube: boolean): void {
     if (titleEl) titleEl.textContent = item.title;
     sourceEl?.toggleAttribute('hidden', !youtube);
     setQueue(playables.length > 1);
-    if (!artEl) return;
-    artEl.innerHTML = youtube && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
+    if (artEl) {
+      artEl.innerHTML = youtube && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
+    }
+    syncRows();
+  }
+
+  function announce(message: string | undefined): void {
+    if (!status || !message) return;
+    status.textContent = message;
+  }
+
+  function currentId(): string | null {
+    return playables[index]?.id ?? null;
+  }
+
+  function syncRows(): void {
+    const playingId = dock!.dataset['state'] === 'playing' ? currentId() : null;
+    for (const row of document.querySelectorAll<HTMLElement>('[data-row-id]')) {
+      const id = row.dataset['rowId'];
+      const active = id === playingId;
+      row.dataset['rowState'] = active ? 'playing' : 'paused';
+      row.toggleAttribute('data-row-selected', id === selectedId);
+      const button = row.querySelector<HTMLButtonElement>('[data-row-play]');
+      const label = active ? button?.dataset['pause'] : button?.dataset['play'];
+      if (label) button?.setAttribute('aria-label', label);
+    }
   }
 
   function applyVolume(): void {
@@ -199,6 +228,7 @@ if (dock && audio) {
           shuffled,
           repeatMode,
           order,
+          manualQueue,
         }),
       );
     } catch {
@@ -444,8 +474,21 @@ if (dock && audio) {
     selectVideo(item, 0);
   }
 
+  function takeQueued(): number | undefined {
+    while (manualQueue.length > 0) {
+      const id = manualQueue.shift()!;
+      const at = queueIndexOf(id);
+      if (at >= 0) {
+        remember();
+        return at;
+      }
+    }
+    return undefined;
+  }
+
   function step(delta: number): void {
-    const target = neighbour(delta);
+    const queued = delta > 0 ? takeQueued() : undefined;
+    const target = queued ?? neighbour(delta);
     if (target === undefined) return;
     selectAt(target, playing());
   }
@@ -453,6 +496,11 @@ if (dock && audio) {
   function advance(): void {
     if (repeatMode === 'one') {
       selectAt(index, true);
+      return;
+    }
+    const queued = takeQueued();
+    if (queued !== undefined) {
+      selectAt(queued, true);
       return;
     }
     const target = neighbour(1);
@@ -522,15 +570,27 @@ if (dock && audio) {
     setProgress(audio.currentTime, audio.duration);
   });
 
+  seek?.addEventListener('pointerdown', () => {
+    scrubbing = true;
+  });
+
   seek?.addEventListener('input', () => {
+    scrubbing = true;
     setFill(seek);
     if (elapsed) elapsed.textContent = clock(Number(seek.value));
     if (mode === 'local') audio.currentTime = Number(seek.value);
   });
 
   seek?.addEventListener('change', () => {
+    scrubbing = false;
     if (mode === 'youtube') player?.seekTo(Number(seek.value), true);
   });
+
+  for (const event of ['pointerup', 'pointercancel', 'keyup', 'blur'] as const) {
+    seek?.addEventListener(event, () => {
+      scrubbing = false;
+    });
+  }
 
   volume?.addEventListener('input', () => {
     if (Number(volume.value) > 0) muted = false;
@@ -555,44 +615,83 @@ if (dock && audio) {
     clearVideo();
   });
 
-  document.addEventListener('iamb:select', (event) => {
-    const id = (event as CustomEvent<{ id: string }>).detail?.id;
-    const item = tracks.find((entry) => entry.id === id);
-    if (!item) return;
-    loadTrack(item, false);
-    toggle?.focus();
-  });
+  function startById(id: string): void {
+    const at = queueIndexOf(id);
+    if (at < 0) return;
+    selectedId = id;
+    selectAt(at, true);
+  }
 
-  document.addEventListener('iamb:play', (event) => {
-    const id = (event as CustomEvent<{ id: string }>).detail?.id;
-    const item = playables.find((entry) => entry.id === id);
-    if (!item) return;
-    if (item.kind === 'local') loadTrack(item, true);
-    else void playVideo(item);
+  function setArt(expanded: boolean): void {
+    dock!.dataset['art'] = expanded ? 'expanded' : 'compact';
+    artToggle?.setAttribute('aria-expanded', String(expanded));
+    const label = expanded ? artToggle?.dataset['collapse'] : artToggle?.dataset['expand'];
+    if (label) artToggle?.setAttribute('aria-label', label);
+  }
+
+  artToggle?.addEventListener('click', () => setArt(dock.dataset['art'] !== 'expanded'));
+
+  const wideShell = matchMedia('(min-width: 60rem)');
+  wideShell.addEventListener('change', (event) => {
+    if (!event.matches) setArt(false);
   });
 
   document.addEventListener('click', (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
     const target = event.target as Element | null;
 
-    const local = target?.closest<HTMLElement>('[data-play-track]');
-    if (local) {
-      const item = tracks.find((entry) => entry.id === local.dataset['playTrack']);
-      if (!item) return;
+    const play = target?.closest<HTMLElement>('[data-row-play]');
+    if (play) {
       event.preventDefault();
-      loadTrack(item, true);
+      const id = play.dataset['rowPlay']!;
+      selectedId = id;
+      syncRows();
+      if (id === currentId()) toggle?.click();
+      else startById(id);
       return;
     }
 
-    const trigger = target?.closest<HTMLElement>('[data-video-id]');
-    if (!trigger) return;
-    const item = playables.find(
-      (entry): entry is VideoPlayable =>
-        entry.kind === 'youtube' && entry.videoId === trigger.dataset['videoId'],
-    );
-    if (!item) return;
+    const enqueue = target?.closest<HTMLElement>('[data-row-enqueue]');
+    if (enqueue) {
+      manualQueue.push(enqueue.dataset['rowEnqueue']!);
+      remember();
+      announce(dock.dataset['queued']);
+      enqueue.closest<HTMLElement>('[popover]')?.hidePopover();
+      return;
+    }
+
+    const copy = target?.closest<HTMLElement>('[data-row-copy]');
+    if (copy) {
+      void navigator.clipboard.writeText(copy.dataset['rowCopy']!).then(() => {
+        announce(dock.dataset['copied']);
+      });
+      copy.closest<HTMLElement>('[popover]')?.hidePopover();
+      return;
+    }
+
+    const select = target?.closest<HTMLElement>('[data-row-select]');
+    if (select) {
+      event.preventDefault();
+      selectedId = select.dataset['rowSelect']!;
+      syncRows();
+      return;
+    }
+  });
+
+  document.addEventListener('dblclick', (event) => {
+    const select = (event.target as Element | null)?.closest<HTMLElement>('[data-row-select]');
+    if (!select) return;
     event.preventDefault();
-    void playVideo(item);
+    startById(select.dataset['rowSelect']!);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    const select = (event.target as Element | null)?.closest<HTMLElement>('[data-row-select]');
+    if (!select) return;
+    event.preventDefault();
+    selectedId = select.dataset['rowSelect']!;
+    syncRows();
   });
 
   let restored: Playable | undefined;
@@ -603,6 +702,7 @@ if (dock && audio) {
     if (saved?.shuffled === true) shuffled = true;
     if (saved?.repeatMode === 'all' || saved?.repeatMode === 'one') repeatMode = saved.repeatMode;
     if (Array.isArray(saved?.order) && saved.order.length === playables.length) order = saved.order;
+    if (Array.isArray(saved?.manualQueue)) manualQueue = saved.manualQueue.filter((id: unknown) => typeof id === 'string');
     if (saved?.mode === 'youtube') {
       restored = playables.find(
         (entry) => entry.kind === 'youtube' && entry.videoId === saved.videoId,
@@ -619,6 +719,7 @@ if (dock && audio) {
   applyVolume();
   setShuffle(shuffled);
   setRepeat(repeatMode);
+  document.addEventListener('astro:page-load', syncRows);
 
   const first = tracks[0];
   if (restored?.kind === 'youtube') {

@@ -2,17 +2,19 @@
 import { Image } from 'astro:assets';
 import type { Language, Profile, UiDictionary } from '../../data/types.ts';
 import type { LibraryRow, LibrarySource } from '../../lib/library.ts';
+import { routePath } from '../../lib/routes.ts';
 import { watchUrl } from '../../lib/youtube.ts';
 import Icon from '../ui/Icon.astro';
 
 interface Props {
   row: LibraryRow;
+  position: number;
   profile: Profile;
   lang: Language;
   ui: UiDictionary;
 }
 
-const { row, profile, lang, ui } = Astro.props;
+const { row, position, profile, lang, ui } = Astro.props;
 const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
 
 const glyphs = {
@@ -30,92 +32,158 @@ const names: Record<LibrarySource, string> = {
 };
 
 const isLocal = row.source === 'local';
-const playsHere = isLocal || row.playable;
+const playable = isLocal || row.playable;
 const length =
   row.durationSeconds === null || !Number.isFinite(row.durationSeconds)
     ? '-'
     : `${Math.floor(row.durationSeconds / 60)}:${String(Math.floor(row.durationSeconds % 60)).padStart(2, '0')}`;
 const released = row.publishedAt ? dateFormat.format(new Date(row.publishedAt)) : '-';
-const href = isLocal ? undefined : row.playable ? watchUrl(row.videoId!) : row.url!;
-const Tag = isLocal ? 'button' : 'a';
+const watch = row.videoId ? watchUrl(row.videoId) : null;
+const share = `${new URL(routePath(lang, profile.id, 'music'), Astro.site ?? 'https://iambmusic.me').href}?focus=${encodeURIComponent(row.id)}`;
+const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
 ---
 
-<Tag
-  class="media-row media-grid"
-  type={isLocal ? 'button' : undefined}
-  href={href}
-  aria-label={row.title}
-  data-play-track={isLocal ? row.id : undefined}
-  data-video-id={row.playable ? row.videoId : undefined}
-  data-video-title={row.playable ? row.title : undefined}
-  target={isLocal ? undefined : '_blank'}
-  rel={isLocal ? undefined : 'noopener noreferrer'}
->
-  <span class="lead">
-    <span class="shot">
-      {
-        row.thumbnail ? (
-          <img src={row.thumbnail} alt="" loading="lazy" decoding="async" />
-        ) : (
-          <Image class="mark" src={profile.images.logo} alt="" width={96} height={96} />
-        )
-      }
-      <span class="cue">
-        <Icon
-          name={playsHere ? 'play' : 'arrow-square-out'}
-          weight={playsHere ? 'fill' : 'regular'}
-          size="1rem"
-        />
-      </span>
-    </span>
-    <span class="titles">
-      <span class="title">{row.title}</span>
-      {
-        row.publishedAt && (
-          <time class="rowmeta" datetime={row.publishedAt}>
-            {released}
-          </time>
-        )
-      }
-    </span>
-  </span>
-
-  <span class="source">
-    <Icon name={glyphs[row.source]} size="1rem" />
-    <span>{names[row.source]}</span>
-  </span>
-
+<div class="media-row media-grid" data-row-id={row.id} data-playable={playable ? '' : undefined}>
   {
-    row.publishedAt ? (
-      <time class="released" datetime={row.publishedAt}>
-        {released}
-      </time>
+    playable ? (
+      <button
+        class="transport icon-action"
+        type="button"
+        data-row-play={row.id}
+        data-play={ui.player.play}
+        data-pause={ui.player.pause}
+        aria-label={ui.player.play}
+      >
+        <span class="index" data-row-index aria-hidden="true">{position}</span>
+        <span data-row-icon="play"><Icon name="play" weight="fill" size="0.95rem" /></span>
+        <span data-row-icon="pause"><Icon name="pause" weight="fill" size="0.95rem" /></span>
+        <span data-row-icon="waveform"><Icon name="waveform" weight="bold" size="1rem" /></span>
+      </button>
     ) : (
-      <span class="released">{released}</span>
+      <a
+        class="transport icon-action"
+        href={row.url!}
+        aria-label={ui.music.openExternal}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="index" data-row-index aria-hidden="true">{position}</span>
+        <span data-row-icon="open"><Icon name="arrow-square-out" size="0.95rem" /></span>
+      </a>
     )
   }
-  <span class="length" aria-label={ui.music.columns.length}>{length}</span>
-</Tag>
+
+  <button class="select" type="button" data-row-select={row.id} aria-label={row.title}>
+    <span class="lead">
+      <span class="shot">
+        {
+          row.thumbnail ? (
+            <img src={row.thumbnail} alt="" loading="lazy" decoding="async" />
+          ) : (
+            <Image class="mark" src={profile.images.logo} alt="" width={96} height={96} />
+          )
+        }
+      </span>
+      <span class="titles">
+        <span class="title">{row.title}</span>
+        {
+          row.publishedAt && (
+            <time class="rowmeta" datetime={row.publishedAt}>
+              {released}
+            </time>
+          )
+        }
+      </span>
+    </span>
+
+    <span class="source">
+      <Icon name={glyphs[row.source]} size="1rem" />
+      <span>{names[row.source]}</span>
+    </span>
+
+    <span class="released">{released}</span>
+    <span class="length">{length}</span>
+  </button>
+
+  {
+    playable && (
+      <div class="overflow">
+        <button
+          class="dots icon-action"
+          type="button"
+          popovertarget={menuId}
+          aria-label={ui.music.rowMenu}
+        >
+          <Icon name="dots-three" weight="bold" size="1.05rem" />
+        </button>
+
+        <div class="row-menu" id={menuId} popover data-anchored-menu>
+          <ul>
+            <li>
+              <button type="button" data-row-enqueue={row.id}>{ui.music.addToQueue}</button>
+            </li>
+            {watch && (
+              <li>
+                <a href={watch} target="_blank" rel="noopener noreferrer">
+                  {ui.music.openYouTube}
+                </a>
+              </li>
+            )}
+            <li>
+              <button type="button" data-row-copy={share}>{ui.music.copyLink}</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    )
+  }
+</div>
 
 <style>
   .media-row {
     min-block-size: 3.5rem;
-    padding-block: var(--space-2);
-    border: 0;
     border-radius: var(--radius-inner);
-    background: none;
     color: var(--legend);
-    font: inherit;
-    text-align: start;
-    text-decoration: none;
   }
 
-  button.media-row {
-    inline-size: 100%;
+  .transport,
+  .dots {
+    display: grid;
+    place-items: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border: 0;
+    background: none;
+    color: var(--legend-quiet);
+    cursor: pointer;
+  }
+
+  .transport {
+    color: var(--legend);
+  }
+
+
+  .select {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 2 / -2;
+    align-items: center;
+    gap: var(--space-3);
+    min-inline-size: 0;
+    padding-block: var(--space-2);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
     cursor: pointer;
   }
 
   .media-row:hover {
+    background: var(--panel-hover);
+  }
+
+  .media-row[data-row-selected] {
     background: var(--panel-hover);
   }
 
@@ -128,7 +196,6 @@ const Tag = isLocal ? 'button' : 'a';
   }
 
   .shot {
-    position: relative;
     display: block;
     inline-size: 3.375rem;
     aspect-ratio: 16 / 9;
@@ -147,22 +214,6 @@ const Tag = isLocal ? 'button' : 'a';
     inline-size: 100%;
     block-size: 100%;
     object-fit: contain;
-  }
-
-  .cue {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    background: rgb(0 0 0 / 0.4);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .media-row:hover .cue,
-  .media-row:focus-visible .cue {
-    opacity: 1;
   }
 
   .titles {
@@ -200,5 +251,56 @@ const Tag = isLocal ? 'button' : 'a';
     font-size: var(--step-0);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+  }
+
+  .overflow {
+    position: relative;
+  }
+
+  .row-menu {
+    position: fixed;
+    inset: auto auto auto 0;
+    margin: 0;
+    inline-size: 14rem;
+    max-inline-size: calc(100vw - 1rem);
+    padding: var(--space-1) 0;
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: var(--radius);
+    background: var(--panel-plate);
+    color: var(--legend);
+    box-shadow: var(--shadow-plate);
+  }
+
+  .row-menu:popover-open {
+    display: grid;
+  }
+
+  .row-menu ul {
+    display: grid;
+  }
+
+  .row-menu li:first-child {
+    border-block-end: var(--rule) solid var(--panel-rule);
+  }
+
+  .row-menu :is(a, button) {
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    min-block-size: 2rem;
+    padding-inline: var(--space-3);
+    border: 0;
+    background: none;
+    color: var(--legend);
+    font: inherit;
+    font-size: var(--step-nav);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .row-menu :is(a, button):hover,
+  .row-menu :is(a, button):focus-visible {
+    background: var(--panel-hover);
   }
 </style>

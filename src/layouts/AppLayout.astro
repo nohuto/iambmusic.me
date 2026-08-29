@@ -1,4 +1,6 @@
 ---
+import { getImage } from 'astro:assets';
+import iambLogo from '../assets/profiles/iamb/logo.png';
 import AppHeader from '../components/shell/AppHeader.astro';
 import PanelBottomNav from '../components/shell/PanelBottomNav.astro';
 import ProfileRail from '../components/shell/ProfileRail.astro';
@@ -30,6 +32,7 @@ const ui = getDictionary(lang);
 const playbackId = ['playback', lang, profile].join('-');
 const canonical = absoluteUrl(routePath(lang, profile, page), Astro.site);
 const alternates = alternateLinks(profile, page);
+const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: 'png' });
 ---
 
 <!doctype html>
@@ -40,6 +43,8 @@ const alternates = alternateLinks(profile, page);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
+    <link rel="sitemap" href="/sitemap.xml" />
     {
       alternates.map((alternate) => (
         <link
@@ -118,10 +123,12 @@ const alternates = alternateLinks(profile, page);
     <SearchDialog lang={lang} profile={profile} ui={ui} />
 
     <script>
+      import '../scripts/section-swap.ts';
       import '../scripts/theme.ts';
       import '../scripts/search.ts';
       import '../scripts/shell.ts';
       import '../scripts/media-filter.ts';
+      import '../scripts/media-sort.ts';
     </script>
   </body>
 </html>

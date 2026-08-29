@@ -24,13 +24,16 @@ const supported = [
   'pause',
   'skip-back',
   'skip-forward',
-  'speaker-high',
-  'speaker-x',
+  'speaker-simple-high',
+  'speaker-simple-x',
+  'dots-three',
+  'caret-up',
   'magnifying-glass',
   'share-network',
   'shuffle',
   'repeat',
   'repeat-once',
+  'waveform',
 ] as const;
 
 export type IconName = (typeof supported)[number];

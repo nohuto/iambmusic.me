@@ -18,15 +18,35 @@ const hasQueue = playables.length > 1;
 
 {
   first && (
-    <div class="dock" data-player data-profile={profileId}>
+    <div
+      class="dock"
+      data-player
+      data-profile={profileId}
+      data-queued={ui.music.queued}
+      data-copied={ui.music.copied}
+    >
       <audio preload="metadata" data-player-audio />
       <script is:inline type="application/json" data-playables set:html={JSON.stringify(playables)} />
 
-      <span class="thin" aria-hidden="true" />
-
       <div class="identity">
-        <span class="art" data-player-art>
-          <Image src={profile.images.logo} alt="" width={80} height={80} />
+        <span class="art-slot">
+          <span class="art">
+            <span class="art-image" data-player-art>
+              <Image src={profile.images.logo} alt="" width={80} height={80} />
+            </span>
+            <button
+              class="art-toggle icon-action"
+              type="button"
+              data-player-art-toggle
+              data-expand={ui.player.expandArt}
+              data-collapse={ui.player.collapseArt}
+              aria-expanded="false"
+              aria-label={ui.player.expandArt}
+            >
+              <span data-art-icon="up"><Icon name="caret-up" weight="bold" size="0.7rem" /></span>
+              <span data-art-icon="down"><Icon name="caret-down" weight="bold" size="0.7rem" /></span>
+            </button>
+          </span>
         </span>
         <span class="meta">
           <span class="title" data-player-title>{first.title}</span>
@@ -123,8 +143,8 @@ const hasQueue = playables.length > 1;
             data-unmute={ui.player.unmute}
             aria-label={ui.player.mute}
           >
-            <span data-player-icon="unmuted"><Icon name="speaker-high" size="1.05rem" /></span>
-            <span data-player-icon="muted"><Icon name="speaker-x" size="1.05rem" /></span>
+            <span data-player-icon="unmuted"><Icon name="speaker-simple-high" size="1.05rem" /></span>
+            <span data-player-icon="muted"><Icon name="speaker-simple-x" size="1.05rem" /></span>
           </button>
           <input
             type="range"
@@ -137,6 +157,8 @@ const hasQueue = playables.length > 1;
           />
         </div>
       </div>
+
+      <p class="status" data-player-status role="status" aria-live="polite" />
 
       <p
         class="error"
@@ -166,15 +188,6 @@ const hasQueue = playables.length > 1;
     border-block-start: var(--rule) solid var(--panel-rule);
   }
 
-  .thin {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 0;
-    block-size: 2px;
-    inline-size: var(--progress, 0%);
-    background: var(--ink);
-  }
-
   .identity {
     display: flex;
     align-items: center;
@@ -182,17 +195,98 @@ const hasQueue = playables.length > 1;
     min-inline-size: 0;
   }
 
-  .art {
-    display: block;
+  .art-slot {
+    position: relative;
     inline-size: 2.5rem;
     block-size: 2.5rem;
-    border-radius: var(--radius-inner);
-    overflow: hidden;
-    background: var(--panel-plate);
     flex: none;
   }
 
-  .art :global(img) {
+  .art {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    display: block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    z-index: 1;
+  }
+
+  .art-image {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: var(--radius-inner);
+    overflow: hidden;
+    background: var(--panel-plate);
+  }
+
+  .art-toggle {
+    position: absolute;
+    inset-block-start: 3px;
+    inset-inline-end: 3px;
+    z-index: 2;
+    display: none;
+    place-items: center;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-inner);
+    background: rgb(0 0 0 / 0.55);
+    color: #f0f0f2;
+    cursor: pointer;
+  }
+
+  [data-art-icon] {
+    grid-area: 1 / 1;
+    display: none;
+  }
+
+  .dock:not([data-art='expanded']) [data-art-icon='up'],
+  .dock[data-art='expanded'] [data-art-icon='down'] {
+    display: block;
+  }
+
+  @media (min-width: 60rem) {
+    .art-toggle {
+      display: grid;
+    }
+
+    .dock[data-art='expanded'] .art-slot {
+      position: static;
+    }
+
+    .dock[data-art='expanded'] .art {
+      position: absolute;
+      inset-block-end: 100%;
+      inset-inline-start: 0;
+      inline-size: var(--rail-width);
+      block-size: var(--rail-width);
+      z-index: 5;
+    }
+
+    .dock[data-art='expanded'] .art-image {
+      border-radius: 0;
+    }
+  }
+
+  .status {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-height: 34rem) {
+    .art-toggle {
+      display: none;
+    }
+  }
+
+  .art-image :global(img) {
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
@@ -282,9 +376,22 @@ const hasQueue = playables.length > 1;
   }
 
   .progress {
-    display: none;
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    display: block;
     align-items: center;
     gap: var(--space-2);
+  }
+
+  .progress .time {
+    display: none;
+  }
+
+  .progress input[type='range'] {
+    display: block;
+    block-size: 1rem;
+    margin-block-start: -6px;
   }
 
   .time {
@@ -294,7 +401,7 @@ const hasQueue = playables.length > 1;
   }
 
   .side {
-    display: flex;
+    display: none;
     align-items: center;
     gap: var(--space-2);
     justify-self: end;
@@ -385,14 +492,23 @@ const hasQueue = playables.length > 1;
       gap: var(--space-5);
     }
 
-    .thin {
-      display: none;
-    }
-
     .progress {
+      position: static;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
       inline-size: min(100%, 30rem);
+    }
+
+    .progress .time {
+      display: block;
+    }
+
+    .progress input[type='range'] {
+      margin-block-start: 0;
+    }
+
+    .side {
+      display: flex;
     }
 
     .volume {

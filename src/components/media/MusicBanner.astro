@@ -57,11 +57,9 @@ const initial = facts[''];
 <style>
   .banner {
     display: grid;
-    align-content: end;
+    align-content: start;
     gap: var(--space-3);
-    min-block-size: 8.5rem;
-    margin-block-start: calc(var(--header-height) * -1);
-    padding-block: var(--header-height) var(--space-3);
+    padding-block-end: var(--space-3);
   }
 
   .copy {
@@ -91,11 +89,7 @@ const initial = facts[''];
     font-size: var(--step-0);
   }
 
-  @media (max-width: 64rem) {
-    .banner {
-      min-block-size: 7.5rem;
-    }
-
+  @media (max-width: 60rem) {
     h1 {
       font-size: clamp(2rem, 9vw, 2.6rem);
     }
@@ -105,9 +99,8 @@ const initial = facts[''];
     }
   }
 
-  @media (min-width: 64rem) {
+  @media (min-width: 60rem) {
     .banner {
-      min-block-size: 11rem;
       padding-block-end: var(--space-5);
     }
   }

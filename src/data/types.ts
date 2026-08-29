@@ -80,7 +80,6 @@ export interface GeneratedYouTubeFeed<P extends ProfileId = ProfileId> {
 }
 
 export interface HeroContent {
-  readonly eyebrow: LocalizedText;
   readonly title: LocalizedText;
   readonly lead: LocalizedText;
 }
@@ -90,9 +89,6 @@ export type PageMeta = Readonly<Record<PageId, LocalizedText>>;
 export interface ProfileImages {
   readonly logo: ImageMetadata;
   readonly logoAlt: LocalizedText;
-  readonly portrait: ImageMetadata;
-  readonly portraitAlt: LocalizedText;
-  readonly portraitTreatment: 'temporary-cutout-pending';
 }
 
 export interface GlanceFact {
@@ -150,7 +146,8 @@ export interface UiDictionary {
     readonly contact: string;
   };
   readonly actions: {
-    readonly listenNow: string;
+    readonly discoverMusic: string;
+    readonly discoverLabel: string;
     readonly latestVideos: string;
     readonly readStory: string;
     readonly openMenu: string;
@@ -183,11 +180,16 @@ export interface UiDictionary {
     readonly openExternal: string;
     readonly filterLabel: string;
     readonly local: string;
+    readonly rowMenu: string;
+    readonly sortTitle: string;
+    readonly sortReleased: string;
+    readonly addToQueue: string;
+    readonly openYouTube: string;
+    readonly copyLink: string;
+    readonly queued: string;
+    readonly copied: string;
   };
   readonly social: {
-    readonly lead: string;
-  };
-  readonly contact: {
     readonly lead: string;
   };
   readonly search: {
@@ -218,6 +220,8 @@ export interface UiDictionary {
     readonly repeatOff: string;
     readonly repeatAll: string;
     readonly repeatOne: string;
+    readonly expandArt: string;
+    readonly collapseArt: string;
   };
   readonly video: {
     readonly play: string;

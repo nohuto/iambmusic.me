@@ -44,9 +44,7 @@ const sourceListId = 'social-sources';
               href={routePath(lang, profile, item.page)}
               data-tip={ui.nav[item.labelKey]}
               data-social-root={rail && item.page === 'social' ? '' : undefined}
-              aria-current={
-                item.page === page && !(item.page === 'social' && activeSource) ? 'page' : undefined
-              }
+              aria-current={item.page === page ? 'page' : undefined}
             >
               <span class="indicator" aria-hidden="true" />
               <Icon name={icons[item.page]} size="1.25rem" />
@@ -236,7 +234,7 @@ const sourceListId = 'social-sources';
     margin-inline-start: var(--space-5);
   }
 
-  @media (min-width: 64rem) {
+  @media (min-width: 60rem) {
     :global(html[data-rail='collapsed']) .panel-nav-rail a,
     :global(html[data-rail='collapsed']) .panel-nav-rail .search-row {
       grid-template-columns: minmax(0, 1fr);

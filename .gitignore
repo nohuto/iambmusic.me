@@ -5,3 +5,10 @@ dist/
 .env.*
 *.log
 .DS_Store
+
+tests/
+docs/
+
+api.ps1
+border.png
+webplayer.webp

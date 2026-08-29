@@ -9,7 +9,6 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 import { resolveProfile } from '../../../lib/profile-context.ts';
 import { profileStaticPaths } from '../../../lib/routes.ts';
 import { getMusicRows } from '../../../lib/library.ts';
-import { getProfileMedia } from '../../../lib/media.ts';
 
 export const getStaticPaths = profileStaticPaths;
 
@@ -24,8 +23,6 @@ const ui = getDictionary(lang);
 const videos = getMusicRows(profile, profileId)
   .filter((row) => row.source === 'youtube')
   .slice(0, 4);
-const { refreshedAt } = getProfileMedia(profileId);
-const generatedAt = refreshedAt.youtube ?? null;
 ---
 
 <AppLayout
@@ -40,7 +37,6 @@ const generatedAt = refreshedAt.youtube ?? null;
 
   <VideoDeck
     rows={videos}
-    generatedAt={generatedAt}
     lang={lang}
     profile={profile}
     profileId={profileId}

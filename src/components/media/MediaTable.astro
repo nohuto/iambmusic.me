@@ -16,16 +16,23 @@ interface Props {
 const { surface, rows, profile, lang, ui, heading } = Astro.props;
 ---
 
-<section class="library" data-media-surface={surface} aria-labelledby="library-heading">
+<section class="library" data-media-surface={surface} data-sortable aria-labelledby="library-heading">
   <h2 id="library-heading" class="sr-only">{heading}</h2>
 
   <MediaHead ui={ui} />
 
   <ul class="rows">
     {
-      rows.map((row) => (
-        <li data-media-row data-source={row.source} data-media-id={row.id}>
-          <MediaRow row={row} profile={profile} lang={lang} ui={ui} />
+      rows.map((row, position) => (
+        <li
+          data-media-row
+          data-source={row.source}
+          data-media-id={row.id}
+          data-sort-title={row.title}
+          data-sort-date={row.publishedAt ?? ''}
+          data-sort-order={position}
+        >
+          <MediaRow row={row} position={position + 1} profile={profile} lang={lang} ui={ui} />
         </li>
       ))
     }

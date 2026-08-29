@@ -25,20 +25,38 @@ const ui = getDictionary(lang);
   title={`${ui.nav.contact} - ${profile.name}`}
   description={localize(profile.meta.contact, lang)}
 >
-  <h1>{ui.nav.contact}</h1>
-  <p class="lead">{ui.contact.lead}</p>
-  <p class="address"><a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a></p>
+  <section class="intro">
+    <h1>{ui.nav.contact}</h1>
+    <p class="address">
+      <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
+    </p>
+  </section>
 </AppLayout>
 
 <style>
-  .lead {
-    color: var(--legend-quiet);
+  .intro {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
     max-inline-size: var(--measure);
   }
 
+  .address {
+    padding-block-start: var(--space-2);
+    border-block-start: var(--rule) solid var(--panel-rule);
+  }
+
   .address a {
+    display: inline-block;
+    color: var(--legend);
     font-size: var(--step-3);
     font-weight: 600;
+    text-decoration: none;
     overflow-wrap: anywhere;
+  }
+
+  .address a:hover,
+  .address a:focus-visible {
+    color: var(--ink);
   }
 </style>

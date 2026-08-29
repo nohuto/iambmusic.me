@@ -1,5 +1,4 @@
-import logo from '../../assets/profiles/aimp/logo.jpg';
-import portrait from '../../assets/profiles/aimp/portrait.jpg';
+import logo from '../../assets/profiles/aimp/logo.png';
 import channels from '../media-channels.json';
 import type { AimpProfile } from '../types.ts';
 
@@ -10,43 +9,36 @@ export const aimpProfile: AimpProfile = {
   accent: 'blue',
   meta: {
     home: {
-      de: 'AiMP – cinematische elektronische Musikprojekte in Zusammenarbeit mit KI.',
-      en: 'AiMP – cinematic electronic music projects created in collaboration with AI.',
+      de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
+      en: 'Cinematic electronic music, produced in collaboration with AI.',
     },
     music: {
-      de: 'Die neuesten YouTube-Uploads von AiMP, automatisch aktualisiert.',
-      en: 'The latest YouTube uploads from AiMP, refreshed automatically.',
+      de: 'Hier findest du meine neuesten Uploads von AiMP.',
+      en: 'Find my latest AiMP uploads here.',
     },
     social: {
-      de: 'Social-Media-Kanäle des AiMP Music Project.',
-      en: 'Social media channels of the AiMP Music Project.',
+      de: 'Meine Kanäle auf Social Media für das AiMP Music Project.',
+      en: 'My social media channels for the AiMP Music Project.',
     },
     contact: {
-      de: 'Kontaktadresse des AiMP Music Project.',
-      en: 'Contact address for the AiMP Music Project.',
+      de: 'So erreichst du mich für das AiMP Music Project.',
+      en: 'Get in touch with me about the AiMP Music Project.',
     },
     about: {
-      de: 'Markus B. aus Bietigheim-Bissingen: Werdegang, Studio-Setup und Inspirationen des Künstlers.',
-      en: 'Markus B. from Bietigheim-Bissingen: career, studio setup and the inspirations behind the artist.',
+      de: 'Ich bin Markus B., hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
+      en: 'I’m Markus B., here I share my story, studio setup and inspirations.',
     },
   },
   hero: {
-    eyebrow: { de: 'Musikprojekt mit KI', en: 'Music project with AI' },
     title: { de: 'Music created in collab with AI', en: 'Music created in collab with AI' },
     lead: {
-      de: 'Cinematische elektronische Musikprojekte, die Markus B. gemeinsam mit KI entwickelt.',
-      en: 'Cinematic electronic music projects that Markus B. develops together with AI.',
+      de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
+      en: 'Cinematic electronic music, produced in collaboration with AI.',
     },
   },
   images: {
     logo,
     logoAlt: { de: 'Logo des AiMP Music Project', en: 'AiMP Music Project logo' },
-    portrait,
-    portraitAlt: {
-      de: 'AiMP Music Project Artwork mit Porträt von Markus B.',
-      en: 'AiMP Music Project artwork showing a portrait of Markus B.',
-    },
-    portraitTreatment: 'temporary-cutout-pending',
   },
   tracks: [
     {

@@ -59,21 +59,29 @@ document.addEventListener('click', (event) => {
 function place(menu: HTMLElement, trigger: HTMLElement): void {
   const anchor = trigger.getBoundingClientRect();
   const room = document.documentElement.clientWidth - menu.offsetWidth - 8;
-  menu.style.insetBlockStart = `${anchor.bottom + 4}px`;
+  const below = anchor.bottom + 4;
+  const fits = below + menu.offsetHeight <= document.documentElement.clientHeight - 8;
+  const top = fits ? below : anchor.top - 4 - menu.offsetHeight;
+
+  menu.style.insetBlockStart = `${Math.max(8, top)}px`;
   menu.style.insetInlineStart = `${Math.max(8, Math.min(anchor.right - menu.offsetWidth, room))}px`;
 }
+
+function repositionOpenMenus(): void {
+  for (const menu of document.querySelectorAll<HTMLElement>('[data-anchored-menu]')) {
+    if (!menu.matches(':popover-open')) continue;
+    const trigger = document.querySelector<HTMLElement>(`[popovertarget="${menu.id}"]`);
+    if (trigger) place(menu, trigger);
+  }
+}
+
+addEventListener('resize', repositionOpenMenus);
+addEventListener('scroll', repositionOpenMenus, { passive: true });
 
 function anchorMenus(): void {
   for (const menu of document.querySelectorAll<HTMLElement>('[data-anchored-menu]')) {
     if (menu.dataset['anchored'] === 'ready') continue;
     menu.dataset['anchored'] = 'ready';
-
-    const trigger = document.querySelector<HTMLElement>(`[popovertarget="${menu.id}"]`);
-    if (!trigger) continue;
-
-    const reposition = (): void => {
-      if (menu.matches(':popover-open')) place(menu, trigger);
-    };
 
     menu.addEventListener('beforetoggle', (event) => {
       if ((event as ToggleEvent).newState !== 'open') return;
@@ -84,19 +92,18 @@ function anchorMenus(): void {
 
     menu.addEventListener('toggle', (event) => {
       if ((event as ToggleEvent).newState !== 'open') return;
-      place(menu, trigger);
+      repositionOpenMenus();
       menu.style.visibility = '';
     });
-
-    addEventListener('resize', reposition);
-    addEventListener('scroll', reposition, { passive: true });
   }
 }
 
 function setup(): void {
   restoreRoot();
-  const activeSource = document.querySelector('[data-source-link][aria-current]');
-  applySources(Boolean(activeSource) || root.dataset['sources'] !== 'collapsed');
+  const railSource = [
+    ...document.querySelectorAll<HTMLElement>('.panel-nav-rail .sources [data-source-link]'),
+  ].some((link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'));
+  applySources(railSource || root.dataset['sources'] !== 'collapsed');
   anchorMenus();
 }
 

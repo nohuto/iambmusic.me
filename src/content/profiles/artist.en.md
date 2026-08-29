@@ -1,14 +1,14 @@
 ---
 language: en
 heading: Markus B.
-summary: Electronic soundtracks from Bietigheim-Bissingen, on synthesizers since 1985.
+summary: I make electronic soundtracks and have played synthesizers since 1985.
 status: confirmed
 ---
 
-Hello music lovers. Here you can get a closer look at my productions around electronic music.
+Glad you’re here. This is where I share a little about how my electronic music comes together.
 
-It all started in 1985 with a Roland Jx8P and a Fostex 4-track cassette recorder. By way of drum machines, sequencers and the first PC years I ended up with Cakewalk Sonar, where every production is still made today. After a longer break as a father I picked things up seriously again in 2014 with the Yamaha MoXF6 and released my first complete track in 2021.
+It all started in 1985 with a Roland JX-8P and a Fostex cassette recorder with four tracks. By way of drum machines, sequencers and the first PC years I ended up with Cakewalk Sonar, where every production is still made today. After a longer break as a father I picked things up seriously again in 2014 with the Yamaha MoXF6 and released my first complete track in 2021.
 
-My genre is electronic soundtracks. Everything is played on the master keyboard and produced entirely with soft synths, and since 2026 I have been working closely on mastering to keep improving the quality of my songs.
+I make electronic soundtracks, play them on the master keyboard and produce them entirely with soft synths. Since 2026, I have also focused closely on mastering to keep improving the quality of my songs.
 
-Now lean back, put on your headphones and dive into my world of electronic music. Enjoy.
+Now put on your headphones and step into my world of electronic music. Enjoy.

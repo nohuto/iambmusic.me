@@ -20,7 +20,7 @@ const { profileId, lang, ui } = Astro.props;
 
   <dl>
     {
-      artist.glance.map((fact) => (
+      artist.glance.slice(0, 2).map((fact) => (
         <div class="fact">
           <dt>{localize(fact.label, lang)}</dt>
           <dd>{localize(fact.value, lang)}</dd>
@@ -58,6 +58,7 @@ const { profileId, lang, ui } = Astro.props;
 
   .more a {
     font-size: var(--step-1);
-    font-weight: 600;
+    font-weight: 400;
+    text-decoration: none;
   }
 </style>

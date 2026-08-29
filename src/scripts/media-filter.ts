@@ -36,15 +36,15 @@ function apply(source: string): void {
   }
   dotEl?.toggleAttribute('hidden', !facts.date);
 
-  if (socialRoot) {
-    if (source === '') socialRoot.setAttribute('aria-current', 'page');
-    else socialRoot.removeAttribute('aria-current');
-  }
+  socialRoot?.setAttribute('aria-current', 'page');
+
   for (const link of links) {
     const isActive = (link.dataset['sourceLink'] ?? '') === source;
     if (isActive) link.setAttribute('aria-current', 'true');
     else link.removeAttribute('aria-current');
   }
+
+  document.dispatchEvent(new CustomEvent('iamb:rows-changed'));
 }
 
 function focusRow(id: string): void {

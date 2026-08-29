@@ -1,11 +1,11 @@
 import type { ProfileId } from '../data/types.ts';
 
 const brandAliases: Record<ProfileId, readonly string[]> = {
-  iamb: ['iamb Synthmusic', 'iamb'],
-  aimp: ['AiMP Music Project', 'AiMP Music | Project', 'Ai Music | Project', 'AiMP Music', 'AiMP'],
+  iamb: ['iamb Synthmusic'],
+  aimp: ['AiMP Music Project', 'AiMP Music | Project', 'Ai Music | Project'],
 };
 
-const separator = /^\s*[-–\u2014:|]+\s*/;
+const leadingSeparator = /^[\s\-–\u2014:|]+/;
 
 export function displayTitle(profile: ProfileId, raw: string): string {
   const title = raw.trim();
@@ -15,8 +15,8 @@ export function displayTitle(profile: ProfileId, raw: string): string {
   if (!alias) return title;
 
   const rest = title.slice(alias.length);
-  if (!separator.test(rest)) return title;
+  if (!leadingSeparator.test(rest)) return title;
 
-  const cleaned = rest.replace(separator, '').trim();
+  const cleaned = rest.replace(leadingSeparator, '').trim();
   return cleaned.length > 0 ? cleaned : title;
 }

@@ -16,7 +16,7 @@ export const artist: ArtistProfile = {
   glance: [
     {
       label: { de: 'Rolle', en: 'Role' },
-      value: { de: 'Music Artist & Producer', en: 'Music artist & producer' },
+      value: { de: 'Musiker & Produzent', en: 'Music artist & producer' },
     },
     {
       label: { de: 'Genre', en: 'Genre' },
@@ -33,99 +33,99 @@ export const artist: ArtistProfile = {
   ],
   studio: {
     software: {
-      de: 'DAW Cakewalk Sonar, verschiedene VSTs, iZotope Ozone 12 für das Mastering.',
-      en: 'DAW Cakewalk Sonar, various VSTs, iZotope Ozone 12 for mastering.',
+      de: 'Ich produziere in Cakewalk Sonar mit verschiedenen VSTs und mastere mit iZotope Ozone 12.',
+      en: 'I produce in Cakewalk Sonar with various VSTs and master with iZotope Ozone 12.',
     },
     hardware: {
-      de: 'Yamaha MoXF als Masterkeyboard, Motu M4, Windows-PC. Aus den Anfängen sind einige Synths wie der Roland Jx8P geblieben, aus Platzgründen läuft heute aber alles über Softsynths.',
-      en: 'Yamaha MoXF as master keyboard, Motu M4 and a Windows PC. A few synths from the early days remain, such as the Roland Jx8P, but limited space means everything runs on soft synths today.',
+      de: 'Als Masterkeyboard nutze ich ein Yamaha MoXF, dazu ein Motu M4 und einen Windows PC. Einige Synths aus meinen Anfängen, etwa der Roland JX-8P, sind geblieben. Aus Platzgründen arbeite ich heute aber mit Softsynths.',
+      en: 'I use a Yamaha MoXF as my master keyboard, together with a Motu M4 and a Windows PC. A few synths from my early days remain, including the Roland JX-8P, but limited space means I work with soft synths today.',
     },
   },
   timeline: [
     {
       period: '1985',
       text: {
-        de: 'Erster Synth, der Roland Jx8P, und ein Fostex 4-Spur-Kassettenrecorder.',
-        en: 'First synth, the Roland Jx8P, and a Fostex 4-track cassette recorder.',
+        de: 'Mein erster Synth war der Roland JX-8P, aufgenommen mit einem Fostex Kassettenrecorder mit vier Spuren.',
+        en: 'My first synth was the Roland JX-8P, recorded with a Fostex cassette recorder with four tracks.',
       },
     },
     {
       period: '1986',
-      text: { de: 'Roland TR-505 Drumcomputer.', en: 'Roland TR-505 drum machine.' },
+      text: { de: 'Dazu kam ein Roland TR-505 Drumcomputer.', en: 'I added a Roland TR-505 drum machine.' },
     },
     {
       period: '1987',
-      text: { de: 'Erster Sequencer: C-LAB für den C64.', en: 'First sequencer: C-LAB for the C64.' },
+      text: { de: 'Mein erster Sequencer war C-LAB für den C64.', en: 'My first sequencer was C-LAB for the C64.' },
     },
     {
       period: '1990',
       text: {
-        de: 'Erster PC fürs Studium. Einstieg in Cakewalk für DOS, später die Windows-Versionen bis zu Cakewalk Sonar.',
-        en: 'First PC for university. Started with Cakewalk for DOS, later the Windows versions up to Cakewalk Sonar.',
+        de: 'Für mein Studium kam der erste PC. Ich begann mit Cakewalk für DOS und wechselte später über die Versionen für Windows zu Cakewalk Sonar.',
+        en: 'I got my first PC for university, started with Cakewalk for DOS and later moved through its Windows versions to Cakewalk Sonar.',
       },
     },
     {
       period: '1998',
       text: {
-        de: 'Nutzung von Soundfonts auf der PC-Soundblaster-Karte.',
-        en: 'Used soundfonts with the PC Sound Blaster card.',
+        de: 'Ich nutzte Soundfonts auf der Sound Blaster Karte meines PCs.',
+        en: 'I used soundfonts on my PC’s Sound Blaster card.',
       },
     },
     {
-      period: '2002–2005',
+      period: '2002-2005',
       text: {
-        de: 'Vater geworden und eine längere Pause eingelegt.',
-        en: 'Became a father and took a longer break.',
+        de: 'Ich wurde Vater und legte eine längere Pause ein.',
+        en: 'I became a father and took a longer break.',
       },
     },
     {
       period: '2014',
       text: {
-        de: 'Yamaha MoXF6. Erstmals Keyboard-Unterricht bis 2015.',
-        en: 'Yamaha MoXF6. First keyboard lessons, until 2015.',
+        de: 'Mit dem Yamaha MoXF6 stieg ich wieder ein und nahm bis 2015 erstmals Keyboardunterricht.',
+        en: 'I returned with the Yamaha MoXF6 and took my first keyboard lessons through 2015.',
       },
     },
     {
       period: '2019',
-      text: { de: 'Umstieg auf VST-Instrumente.', en: 'Switched to VST instruments.' },
+      text: { de: 'Ich wechselte zu VSTs.', en: 'I switched to VST instruments.' },
     },
     {
       period: '2021',
       text: {
-        de: 'Einarbeitung in YouTube Studio und Veröffentlichung des ersten vollständigen Tracks.',
-        en: 'Started working with YouTube Studio and released the first complete track.',
+        de: 'Ich arbeitete mich in YouTube Studio ein und veröffentlichte meinen ersten vollständigen Track.',
+        en: 'I learned my way around YouTube Studio and released my first complete track.',
       },
     },
     {
       period: '2022',
       text: {
-        de: 'Beitritt zum Musikvertrieb Artistfy, erster Track auf Spotify und Co., Instagram-Profil erstellt.',
-        en: 'Joined the music distributor Artistfy, released the first track on Spotify and others, created an Instagram profile.',
+        de: 'Ich ging zu Artistfy, brachte meinen ersten Track auf Spotify und Co. heraus und startete mein Profil auf Instagram.',
+        en: 'I joined the music distributor Artistfy, released my first track on Spotify and other platforms, and started my Instagram profile.',
       },
     },
     {
       period: '2023',
-      text: { de: 'TikTok-Profil erstellt.', en: 'Created a TikTok profile.' },
+      text: { de: 'Ich startete mein Profil auf TikTok.', en: 'I started my TikTok profile.' },
     },
     {
       period: '2024',
       text: {
-        de: 'Verschiedene Produktionen, insgesamt vier Titel auf Spotify und Co., Anschaffung einer Videosoftware.',
-        en: 'Various productions, four titles on Spotify and others, and new video software.',
+        de: 'Ich produzierte verschiedene neue Stücke, hatte nun vier Titel auf Spotify und Co. und holte mir eine Videosoftware.',
+        en: 'I produced several new pieces, reached four tracks on Spotify and other platforms, and added video software to my setup.',
       },
     },
     {
       period: '2025',
       text: {
-        de: 'Beitritt zum KlangKunst TechnoCollective im Februar. Ein sehr kreatives Musikjahr.',
-        en: 'Joined the KlangKunst TechnoCollective in February. A very creative musical year.',
+        de: 'Im Februar schloss ich mich dem KlangKunst TechnoCollective an. Es wurde ein sehr kreatives Musikjahr.',
+        en: 'In February, I joined the KlangKunst TechnoCollective. It became a very creative year for my music.',
       },
     },
     {
       period: '2026',
       text: {
-        de: 'Neue Website mit allen Links zur Musik und zu den Musikvideos. Arbeit am Thema Mastering mit iZotope Ozone 12.',
-        en: 'New website with all links to the music and the music videos. Working on mastering with iZotope Ozone 12.',
+        de: 'Ich baute diese Website für meine Musik und Musikvideos auf und vertiefte das Mastering mit iZotope Ozone 12.',
+        en: 'I built this website for my music and videos and went deeper into mastering with iZotope Ozone 12.',
       },
     },
   ],

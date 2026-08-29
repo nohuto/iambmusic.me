@@ -1,0 +1,80 @@
+---
+import { getImage } from 'astro:assets';
+import iambLogo from '../assets/profiles/iamb/logo.png';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: 'png' });
+---
+
+<!doctype html>
+<html lang="de" data-profile="iamb" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - IAMB Synthmusic</title>
+    <meta name="description" content="Diese Seite gibt es nicht. This page does not exist." />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        let stored = null;
+        try {
+          stored = localStorage.getItem('iambmusic-theme');
+        } catch {}
+        const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : system;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="missing">
+      <h1>404</h1>
+      <p lang="de">Diese Seite gibt es nicht.</p>
+      <p lang="en">This page does not exist.</p>
+      <p class="links">
+        <a href="/de/iamb/">Startseite</a>
+        <a href="/en/iamb/">Home</a>
+      </p>
+    </main>
+  </body>
+</html>
+
+<style>
+  .missing {
+    display: grid;
+    gap: var(--space-3);
+    align-content: center;
+    min-block-size: 100dvh;
+    max-inline-size: 32rem;
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-4);
+  }
+
+  h1 {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    color: var(--legend-quiet);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding-block-start: var(--space-2);
+  }
+
+  .links a {
+    color: var(--legend);
+    font-weight: 600;
+  }
+
+  .links a:hover,
+  .links a:focus-visible {
+    color: var(--ink);
+  }
+</style>

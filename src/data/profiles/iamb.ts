@@ -1,5 +1,4 @@
 import logo from '../../assets/profiles/iamb/logo.png';
-import portrait from '../../assets/profiles/iamb/portrait.png';
 import channels from '../media-channels.json';
 import type { IambProfile } from '../types.ts';
 
@@ -10,40 +9,36 @@ export const iambProfile: IambProfile = {
   accent: 'ochre',
   meta: {
     home: {
-      de: 'IAMB Synthmusic – cinematischer Synthwave und atmosphärische Produktionen von Markus B. Jetzt reinhören.',
-      en: 'IAMB Synthmusic – cinematic synthwave and atmospheric productions by Markus B. Start listening now.',
+      de: 'Meine Welt aus cinematischem Synthwave und atmosphärischen Produktionen. Jetzt reinhören.',
+      en: 'My world of cinematic synthwave and atmospheric productions. Start listening now.',
     },
     music: {
-      de: 'Die neuesten YouTube-Uploads von IAMB Synthmusic, automatisch aktualisiert.',
-      en: 'The latest YouTube uploads from IAMB Synthmusic, refreshed automatically.',
+      de: 'Hier findest du meine neuesten Uploads auf YouTube für IAMB Synthmusic.',
+      en: 'Find my latest IAMB Synthmusic uploads here.',
     },
     social: {
-      de: 'Beiträge von IAMB Synthmusic auf TikTok und Instagram, automatisch aktualisiert.',
-      en: 'Posts from IAMB Synthmusic on TikTok and Instagram, refreshed automatically.',
+      de: 'Meine Beiträge für IAMB Synthmusic auf TikTok und Instagram.',
+      en: 'My IAMB Synthmusic posts on TikTok and Instagram.',
     },
     contact: {
-      de: 'Kontaktadresse von IAMB Synthmusic.',
-      en: 'Contact address for IAMB Synthmusic.',
+      de: 'So erreichst du mich bei IAMB Synthmusic.',
+      en: 'Get in touch with me at IAMB Synthmusic.',
     },
     about: {
-      de: 'Markus B. aus Bietigheim-Bissingen: Werdegang, Studio-Setup und Inspirationen des Künstlers.',
-      en: 'Markus B. from Bietigheim-Bissingen: career, studio setup and the inspirations behind the artist.',
+      de: 'Ich bin Markus B., hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
+      en: 'I’m Markus B., here I share my story, studio setup and inspirations.',
     },
   },
   hero: {
-    eyebrow: { de: 'Elektronische Soundtracks', en: 'Electronic soundtracks' },
     title: { de: 'Music from the Space Stage', en: 'Music from the Space Stage' },
     lead: {
-      de: 'Elektronische Soundtracks von Markus B., eingespielt am Masterkeyboard und produziert in Cakewalk Sonar.',
-      en: 'Electronic soundtracks by Markus B., played on the master keyboard and produced in Cakewalk Sonar.',
+      de: 'Elektronische Soundtracks, gespielt auf meinem Masterkeyboard und produziert mit Cakewalk Sonar.',
+      en: 'Electronic soundtracks, played on my master keyboard and produced with Cakewalk Sonar.',
     },
   },
   images: {
     logo,
     logoAlt: { de: 'Logo von IAMB Synthmusic', en: 'IAMB Synthmusic logo' },
-    portrait,
-    portraitAlt: { de: 'Porträtfoto von Markus B.', en: 'Portrait photo of Markus B.' },
-    portraitTreatment: 'temporary-cutout-pending',
   },
   tracks: [
     {
@@ -105,7 +100,7 @@ export const iambProfile: IambProfile = {
       name: 'Spotify',
       url: 'https://open.spotify.com/artist/31f8iEkHYOs73gZurN4waJ',
       category: 'listening',
-      tagline: { de: 'Artist-Seite & Releases', en: 'Artist page & releases' },
+      tagline: { de: 'Künstlerseite & Releases', en: 'Artist page & releases' },
     },
     {
       profile: 'iamb',
@@ -113,7 +108,7 @@ export const iambProfile: IambProfile = {
       name: 'Apple Music',
       url: 'https://music.apple.com/us/artist/iamb-synthmusic/1632680655',
       category: 'listening',
-      tagline: { de: 'High-Fidelity-Stream', en: 'High-fidelity stream' },
+      tagline: { de: 'Streaming in hoher Qualität', en: 'High quality streaming' },
       brandMark: '/icons/platforms/applemusic.svg',
     },
     {
@@ -122,7 +117,7 @@ export const iambProfile: IambProfile = {
       name: 'Amazon Music',
       url: 'https://www.amazon.com/music/player/artists/B0B5PN5NCJ/iamb-synthmusic',
       category: 'listening',
-      tagline: { de: 'Artist-Seite & Releases', en: 'Artist page & releases' },
+      tagline: { de: 'Künstlerseite & Releases', en: 'Artist page & releases' },
       brandMark: '/icons/platforms/amazonmusic.svg',
     },
     {
@@ -139,7 +134,7 @@ export const iambProfile: IambProfile = {
       name: 'Beatport',
       url: 'https://www.beatport.com/release/memories-its-your-life/5069423',
       category: 'listening',
-      tagline: { de: 'Downloads & DJ-Packs', en: 'Downloads & DJ packs' },
+      tagline: { de: 'Downloads & DJ Packs', en: 'Downloads & DJ packs' },
       brandMark: '/icons/platforms/beatport.svg',
     },
     {
@@ -148,7 +143,7 @@ export const iambProfile: IambProfile = {
       name: 'Traxsource',
       url: 'https://www.traxsource.com/artist/675015/',
       category: 'listening',
-      tagline: { de: 'DJ-Store & Releases', en: 'DJ store & releases' },
+      tagline: { de: 'DJ Store & Releases', en: 'DJ store & releases' },
       brandMark: '/icons/platforms/traxsource.svg',
     },
     {
