@@ -63,6 +63,7 @@ document.addEventListener('click', (event) => {
   }
   button.dataset['direction'] = direction;
   sort(panel, column, direction);
+  document.dispatchEvent(new CustomEvent('iamb:rows-changed'));
 });
 
 function setup(): void {

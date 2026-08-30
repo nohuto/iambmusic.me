@@ -170,7 +170,8 @@ if (dock && audio) {
   let frameEl: HTMLIFrameElement | null = null;
   let shuffled = false;
   let repeatMode: 'off' | 'all' | 'one' = 'off';
-  let order: number[] = playables.map((_, position) => position);
+  let sequence: number[] = playables.map((_, position) => position);
+  let order: number[] = [...sequence];
   let queueMove = false;
   let manualQueue: string[] = [];
   let selectedId: string | null = null;
@@ -195,7 +196,7 @@ if (dock && audio) {
     syncRows();
   }
 
-  function setQueue(enabled: boolean): void {
+  function setSkipAvailable(enabled: boolean): void {
     previous?.toggleAttribute('hidden', !enabled);
     next?.toggleAttribute('hidden', !enabled);
   }
@@ -224,7 +225,7 @@ if (dock && audio) {
         icon.style.display = icon.dataset['playerSourceIcon'] === source ? 'block' : 'none';
       }
     }
-    setQueue(playables.length > 1);
+    setSkipAvailable(order.length > 1);
     if (artEl) {
       artEl.innerHTML = source && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
     }
@@ -472,11 +473,15 @@ if (dock && audio) {
     });
   }
 
-  function selectSoundCloud(item: SoundCloudPlayable, startSeconds: number): void {
+  function selectSoundCloud(
+    item: SoundCloudPlayable,
+    startSeconds: number,
+    shouldPlay = false,
+  ): void {
     audio!.pause();
     clearVideo();
-    soundcloudShouldPlay = false;
-    soundcloudPlayer?.pause();
+    soundcloudShouldPlay = shouldPlay;
+    if (!shouldPlay) soundcloudPlayer?.pause();
     mode = 'soundcloud';
     sound = item;
     index = queueIndexOf(item.id);
@@ -552,11 +557,10 @@ if (dock && audio) {
 
   async function playSoundCloud(item: SoundCloudPlayable, startSeconds = 0): Promise<void> {
     if (!soundcloudFrame) return;
-    selectSoundCloud(item, startSeconds);
-    soundcloudShouldPlay = true;
+    selectSoundCloud(item, startSeconds, true);
 
     try {
-      const api = await soundcloudApi();
+      const api = window.SC?.Widget ? window.SC : await soundcloudApi();
       if (mode !== 'soundcloud' || sound !== item) return;
 
       if (!soundcloudPlayer) {
@@ -619,23 +623,35 @@ if (dock && audio) {
 
   function rebuildOrder(): void {
     if (!shuffled) {
-      order = playables.map((_, position) => position);
+      order = [...sequence];
+      setSkipAvailable(order.length > 1);
       return;
     }
-    const rest = playables
-      .map((_, position) => position)
-      .filter((position) => position !== index);
+    const rest = sequence.filter((position) => position !== index);
     for (let i = rest.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
       [rest[i], rest[j]] = [rest[j]!, rest[i]!];
     }
-    order = [index, ...rest];
+    order = sequence.includes(index) ? [index, ...rest] : rest;
+    setSkipAvailable(order.length > 1);
+  }
+
+  function syncSequence(): void {
+    const visible = [...document.querySelectorAll<HTMLElement>('[data-row-id][data-playable]')]
+      .filter((row) => !row.closest<HTMLElement>('[data-media-row]')?.hidden)
+      .map((row) => queueIndexOf(row.dataset['rowId'] ?? ''))
+      .filter((position, at, positions) => position >= 0 && positions.indexOf(position) === at);
+    if (visible.length === 0) return;
+    sequence = visible;
+    rebuildOrder();
   }
 
   function neighbour(delta: number): number | undefined {
     const size = order.length;
-    if (size < 2) return undefined;
+    if (size === 0) return undefined;
     const at = order.indexOf(index);
+    if (at < 0) return delta > 0 ? order[0] : order[size - 1];
+    if (size < 2) return undefined;
     return order[(at + delta + size) % size];
   }
 
@@ -942,9 +958,14 @@ if (dock && audio) {
 
   setState(false);
   applyVolume();
+  syncSequence();
   setShuffle(shuffled);
   setRepeat(repeatMode);
-  document.addEventListener('astro:page-load', syncRows);
+  document.addEventListener('iamb:rows-changed', syncSequence);
+  document.addEventListener('astro:page-load', () => {
+    syncSequence();
+    syncRows();
+  });
 
   const first = tracks[0];
   if (restored?.kind === 'youtube') {
