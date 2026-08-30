@@ -449,7 +449,8 @@ html[data-theme='dark'] .theme-control .thumb {
   }
 }
 
-html[data-sources='collapsed'] .panel-nav-rail .sources {
+html[data-music-sources='collapsed'] #music-sources,
+html[data-social-sources='collapsed'] #social-sources {
   display: none;
 }
 

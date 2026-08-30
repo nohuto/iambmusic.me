@@ -1,6 +1,6 @@
 import type { ProfileId } from '../data/types.ts';
 
-export type MediaSource = 'youtube' | 'instagram' | 'tiktok';
+export type MediaSource = 'youtube' | 'soundcloud' | 'instagram' | 'tiktok';
 
 export interface MediaThumbnail {
   readonly url: string;
@@ -18,7 +18,7 @@ export interface MediaItem {
   readonly durationSeconds: number | null;
   readonly thumbnail: MediaThumbnail | null;
   readonly videoId?: string;
-  readonly playback: 'youtube-embed' | 'external';
+  readonly playback: 'youtube-embed' | 'soundcloud-widget' | 'external';
 }
 
 export interface MediaLibrary {

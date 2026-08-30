@@ -1,7 +1,7 @@
 import { navigate } from 'astro:transitions/client';
 
 interface Entry {
-  kind: 'local' | 'youtube';
+  kind: 'local' | 'youtube' | 'soundcloud';
   id: string;
   title: string;
   thumbnail?: string | null;
@@ -43,7 +43,7 @@ function setup(): void {
 
   function select(entry: Entry): void {
     close();
-    const filter = entry.kind === 'youtube' ? 'source=youtube&' : '';
+    const filter = entry.kind === 'local' ? '' : `source=${entry.kind}&`;
     void navigate(`${musicPath}?${filter}focus=${encodeURIComponent(entry.id)}`);
   }
 
@@ -80,7 +80,8 @@ function setup(): void {
 
       const side = document.createElement('span');
       side.className = 'side';
-      side.textContent = entry.kind === 'youtube' ? clock(entry.durationSeconds) || 'YouTube' : '♪';
+      side.textContent = clock(entry.durationSeconds) ||
+        (entry.kind === 'local' ? '♪' : entry.kind === 'youtube' ? 'YouTube' : 'SoundCloud');
 
       button.append(art, name, side);
       button.addEventListener('click', () => select(entry));

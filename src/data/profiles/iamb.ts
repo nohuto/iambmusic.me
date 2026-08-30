@@ -12,8 +12,8 @@ export const iambProfile: IambProfile = {
       en: 'My world of cinematic synthwave and atmospheric productions. Start listening now.',
     },
     music: {
-      de: 'Hier findest du meine neuesten Uploads auf YouTube für IAMB Synthmusic.',
-      en: 'Find my latest IAMB Synthmusic uploads here.',
+      de: 'Hier findest du meine neuesten Uploads auf YouTube und SoundCloud für IAMB Synthmusic.',
+      en: 'Find my latest IAMB Synthmusic uploads on YouTube and SoundCloud here.',
     },
     social: {
       de: 'Meine Beiträge für IAMB Synthmusic auf TikTok und Instagram.',

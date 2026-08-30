@@ -20,6 +20,7 @@ const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
 const glyphs = {
   local: 'music-notes',
   youtube: 'youtube-logo',
+  soundcloud: 'soundcloud-logo',
   tiktok: 'tiktok-logo',
   instagram: 'instagram-logo',
 } as const satisfies Record<LibrarySource, string>;
@@ -27,6 +28,7 @@ const glyphs = {
 const names: Record<LibrarySource, string> = {
   local: ui.music.local,
   youtube: 'YouTube',
+  soundcloud: 'SoundCloud',
   tiktok: 'TikTok',
   instagram: 'Instagram',
 };
@@ -39,6 +41,8 @@ const length =
     : `${Math.floor(row.durationSeconds / 60)}:${String(Math.floor(row.durationSeconds % 60)).padStart(2, '0')}`;
 const released = row.publishedAt ? dateFormat.format(new Date(row.publishedAt)) : '-';
 const watch = row.videoId ? watchUrl(row.videoId) : null;
+const sourceLink = row.source === 'soundcloud' ? row.url : watch;
+const sourceLinkLabel = row.source === 'soundcloud' ? ui.music.openSoundCloud : ui.music.openYouTube;
 const share = `${new URL(routePath(lang, profile.id, 'music'), Astro.site ?? 'https://iambmusic.me').href}?focus=${encodeURIComponent(row.id)}`;
 const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
 ---
@@ -122,10 +126,10 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
             <li>
               <button type="button" data-row-enqueue={row.id}>{ui.music.addToQueue}</button>
             </li>
-            {watch && (
+            {sourceLink && (
               <li>
-                <a href={watch} target="_blank" rel="noopener noreferrer">
-                  {ui.music.openYouTube}
+                <a href={sourceLink} target="_blank" rel="noopener noreferrer">
+                  {sourceLinkLabel}
                 </a>
               </li>
             )}

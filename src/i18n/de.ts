@@ -29,7 +29,7 @@ export const de: UiDictionary = {
     inspiration: 'Inspirationen',
   },
   music: {
-    lead: 'Hier findest du alle meine Uploads auf YouTube und kannst sie direkt anhören. Wenn du mich supporten möchtest, dann lass gerne ein Abo da, um zukünftig nichts mehr zu verpassen.',
+    lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören.',
     all: 'Alle',
     entries: 'Einträge',
     columns: {
@@ -46,6 +46,7 @@ export const de: UiDictionary = {
     sortReleased: 'Nach Veröffentlichung sortieren',
     addToQueue: 'Zur Warteschlange hinzufügen',
     openYouTube: 'Auf YouTube öffnen',
+    openSoundCloud: 'Auf SoundCloud öffnen',
     copyLink: 'Link zum Song kopieren',
     queued: 'Zur Warteschlange hinzugefügt.',
     copied: 'Link kopiert.',

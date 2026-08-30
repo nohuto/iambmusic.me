@@ -4,12 +4,14 @@
       "handle": "@iamb-synthmusic7820",
       "channelId": "UCVV-a7quRaRVbh6bfrUVx4A"
     },
+    "soundcloud": "https://soundcloud.com/iamb-synthmusic",
     "instagram": "iamb.synthmusic",
     "tiktok": "iamb.synthmusic"
   },
   "aimp": {
     "youtube": {
       "handle": "@AiMP-Musicproject"
-    }
+    },
+    "soundcloud": "https://soundcloud.com/aimp-musicproject"
   }
 }

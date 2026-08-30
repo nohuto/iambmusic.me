@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { Language, PageId, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
 import { localize } from '../../i18n/index.ts';
+import type { MusicSource, SocialSource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
 import PanelNav from './PanelNav.astro';
@@ -12,11 +13,21 @@ interface Props {
   activeProfile: Profile;
   page: PageId;
   ui: UiDictionary;
-  sources?: readonly ('tiktok' | 'instagram')[];
+  musicSources?: readonly MusicSource[];
+  socialSources?: readonly SocialSource[];
   activeSource?: string | null;
 }
 
-const { lang, profile, activeProfile, page, ui, sources = [], activeSource = null } = Astro.props;
+const {
+  lang,
+  profile,
+  activeProfile,
+  page,
+  ui,
+  musicSources = [],
+  socialSources = [],
+  activeSource = null,
+} = Astro.props;
 ---
 
 <aside class="rail">
@@ -45,7 +56,8 @@ const { lang, profile, activeProfile, page, ui, sources = [], activeSource = nul
       page={page}
       ui={ui}
       variant="rail"
-      sources={sources}
+      musicSources={musicSources}
+      socialSources={socialSources}
       activeSource={activeSource}
     />
   </div>

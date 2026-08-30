@@ -32,7 +32,9 @@ jobs:
         continue-on-error: true
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: node scripts/refresh-media.mjs --with-social
+          SOUNDCLOUD_CLIENT_ID: ${{ secrets.SOUNDCLOUD_CLIENT_ID }}
+          SOUNDCLOUD_CLIENT_SECRET: ${{ secrets.SOUNDCLOUD_CLIENT_SECRET }}
+        run: node scripts/refresh-media.mjs --with-social --with-soundcloud
 
       - name: Validate generated cache
         run: npm run validate:media

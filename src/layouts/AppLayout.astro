@@ -10,7 +10,7 @@ import PlayerDock from '../components/player/PlayerDock.astro';
 import type { Language, PageId, Profile, ProfileId } from '../data/types.ts';
 import { getDictionary } from '../i18n/index.ts';
 import { ClientRouter } from 'astro:transitions';
-import { getSocialSources } from '../lib/library.ts';
+import { getMusicSources, getSocialSources } from '../lib/library.ts';
 import { absoluteUrl, alternateLinks, routePath } from '../lib/routes.ts';
 import '../styles/tokens.css';
 import '../styles/global.css';
@@ -26,7 +26,8 @@ interface Props {
 }
 
 const { lang, profile, activeProfile, page, title, description, activeSource = null } = Astro.props;
-const sources = getSocialSources(profile);
+const musicSources = getMusicSources(activeProfile, profile);
+const socialSources = getSocialSources(profile);
 
 const ui = getDictionary(lang);
 const playbackId = ['playback', lang, profile].join('-');
@@ -73,13 +74,16 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
         const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : system;
         let rail = null;
-        let sources = null;
+        let musicSources = null;
+        let socialSources = null;
         try {
           rail = localStorage.getItem('iambmusic-rail');
-          sources = localStorage.getItem('iambmusic-sources');
+          musicSources = localStorage.getItem('iambmusic-music-sources');
+          socialSources = localStorage.getItem('iambmusic-social-sources');
         } catch {}
         root.dataset.rail = rail === 'collapsed' ? 'collapsed' : 'expanded';
-        root.dataset.sources = sources === 'collapsed' ? 'collapsed' : 'expanded';
+        root.dataset.musicSources = musicSources === 'collapsed' ? 'collapsed' : 'expanded';
+        root.dataset.socialSources = socialSources === 'collapsed' ? 'collapsed' : 'expanded';
       })();
     </script>
   </head>
@@ -94,7 +98,8 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
         activeProfile={activeProfile}
         page={page}
         ui={ui}
-        sources={sources}
+        musicSources={musicSources}
+        socialSources={socialSources}
         activeSource={activeSource}
       />
 

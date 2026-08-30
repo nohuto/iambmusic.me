@@ -4,6 +4,7 @@ interface LocalPlayable {
   kind: 'local';
   id: string;
   title: string;
+  durationSeconds: number;
   sources: { src: string; mimeType: string }[];
 }
 
@@ -12,11 +13,21 @@ interface VideoPlayable {
   id: string;
   title: string;
   videoId: string;
+  url: string;
   thumbnail: string | null;
   durationSeconds: number | null;
 }
 
-type Playable = LocalPlayable | VideoPlayable;
+interface SoundCloudPlayable {
+  kind: 'soundcloud';
+  id: string;
+  title: string;
+  url: string;
+  thumbnail: string | null;
+  durationSeconds: number | null;
+}
+
+type Playable = LocalPlayable | VideoPlayable | SoundCloudPlayable;
 
 interface YouTubePlayer {
   playVideo(): void;
@@ -47,14 +58,33 @@ interface YouTubeApi {
   PlayerState: { PLAYING: number; PAUSED: number; ENDED: number; BUFFERING: number };
 }
 
+interface SoundCloudWidget {
+  bind(event: string, listener: (data?: { currentPosition?: number }) => void): void;
+  load(url: string, options: Record<string, unknown>): void;
+  play(): void;
+  pause(): void;
+  seekTo(milliseconds: number): void;
+  setVolume(level: number): void;
+  getDuration(callback: (milliseconds: number) => void): void;
+}
+
+interface SoundCloudApi {
+  Widget: {
+    (iframe: HTMLIFrameElement): SoundCloudWidget;
+    Events: Record<'READY' | 'PLAY' | 'PAUSE' | 'PLAY_PROGRESS' | 'FINISH' | 'ERROR', string>;
+  };
+}
+
 declare global {
   interface Window {
     YT?: YouTubeApi;
+    SC?: SoundCloudApi;
     onYouTubeIframeAPIReady?: () => void;
   }
 }
 
 let apiRequest: Promise<YouTubeApi> | null = null;
+let soundcloudApiRequest: Promise<SoundCloudApi> | null = null;
 
 function youtubeApi(): Promise<YouTubeApi> {
   apiRequest ??= new Promise<YouTubeApi>((resolve) => {
@@ -68,6 +98,21 @@ function youtubeApi(): Promise<YouTubeApi> {
     document.head.append(tag);
   });
   return apiRequest;
+}
+
+function soundcloudApi(): Promise<SoundCloudApi> {
+  soundcloudApiRequest ??= new Promise<SoundCloudApi>((resolve, reject) => {
+    if (window.SC?.Widget) {
+      resolve(window.SC);
+      return;
+    }
+    const tag = document.createElement('script');
+    tag.src = 'https://w.soundcloud.com/player/api.js';
+    tag.onload = () => (window.SC?.Widget ? resolve(window.SC) : reject(new Error('SoundCloud')));
+    tag.onerror = () => reject(new Error('SoundCloud'));
+    document.head.append(tag);
+  });
+  return soundcloudApiRequest;
 }
 
 const dock = document.querySelector<HTMLElement>('[data-player]');
@@ -87,6 +132,7 @@ if (dock && audio) {
   const titleEl = pick('[data-player-title]');
   const artEl = pick('[data-player-art]');
   const sourceEl = pick('[data-player-source]');
+  const soundcloudFrame = pick<HTMLIFrameElement>('[data-soundcloud-frame]');
   const toggle = pick<HTMLButtonElement>('[data-player-toggle]');
   const previous = pick<HTMLButtonElement>('[data-player-previous]');
   const next = pick<HTMLButtonElement>('[data-player-next]');
@@ -106,9 +152,15 @@ if (dock && audio) {
 
   const storageKey = `iambmusic-player-${dock.dataset['profile'] ?? ''}`;
   let index = 0;
-  let mode: 'local' | 'youtube' = 'local';
+  let mode: 'local' | 'youtube' | 'soundcloud' = 'local';
   let video: VideoPlayable | null = null;
+  let sound: SoundCloudPlayable | null = null;
   let player: YouTubePlayer | null = null;
+  let soundcloudPlayer: SoundCloudWidget | null = null;
+  let soundcloudLoadedUrl = '';
+  let soundcloudPosition = 0;
+  let soundcloudDuration = 0;
+  let soundcloudShouldPlay = false;
   let request = 0;
   let ticker = 0;
   let resumeAt = 0;
@@ -158,12 +210,23 @@ if (dock && audio) {
     }
   }
 
-  function identify(item: { title: string; thumbnail?: string | null }, youtube: boolean): void {
+  function identify(
+    item: { title: string; thumbnail?: string | null; url?: string },
+    source: 'youtube' | 'soundcloud' | null,
+  ): void {
     if (titleEl) titleEl.textContent = item.title;
-    sourceEl?.toggleAttribute('hidden', !youtube);
+    sourceEl?.toggleAttribute('hidden', source === null);
+    if (sourceEl instanceof HTMLAnchorElement && source) {
+      sourceEl.href = item.url ?? '#';
+      const label = sourceEl.querySelector<HTMLElement>('[data-player-source-label]');
+      if (label) label.textContent = source === 'youtube' ? 'YouTube' : 'SoundCloud';
+      for (const icon of sourceEl.querySelectorAll<HTMLElement>('[data-player-source-icon]')) {
+        icon.style.display = icon.dataset['playerSourceIcon'] === source ? 'block' : 'none';
+      }
+    }
     setQueue(playables.length > 1);
     if (artEl) {
-      artEl.innerHTML = youtube && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
+      artEl.innerHTML = source && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
     }
     syncRows();
   }
@@ -199,6 +262,7 @@ if (dock && audio) {
       if (muted) player.mute();
       else player.unMute();
     }
+    soundcloudPlayer?.setVolume(muted ? 0 : Math.round(level * 100));
     dock!.dataset['muted'] = String(muted);
     const label = muted ? mute?.dataset['unmute'] : mute?.dataset['mute'];
     if (label) mute?.setAttribute('aria-label', label);
@@ -212,8 +276,9 @@ if (dock && audio) {
   }
 
   function currentTime(): number {
-    if (mode !== 'youtube') return audio!.currentTime;
-    return player ? player.getCurrentTime() : resumeAt;
+    if (mode === 'youtube') return player ? player.getCurrentTime() : resumeAt;
+    if (mode === 'soundcloud') return soundcloudPosition;
+    return audio!.currentTime;
   }
 
   function remember(): void {
@@ -224,6 +289,7 @@ if (dock && audio) {
           mode,
           index,
           videoId: video?.videoId,
+          itemId: currentId(),
           time: currentTime(),
           shuffled,
           repeatMode,
@@ -278,6 +344,14 @@ if (dock && audio) {
     hideStage();
   }
 
+  function clearSoundCloud(): void {
+    soundcloudShouldPlay = false;
+    soundcloudPlayer?.pause();
+    sound = null;
+    soundcloudPosition = 0;
+    soundcloudDuration = 0;
+  }
+
   function closeVideo(): void {
     const at = player?.getCurrentTime();
     if (typeof at === 'number' && Number.isFinite(at) && at >= 0) resumeAt = at;
@@ -294,6 +368,7 @@ if (dock && audio) {
 
   function loadTrack(track: LocalPlayable, play: boolean): void {
     clearVideo();
+    clearSoundCloud();
     mode = 'local';
     index = queueIndexOf(track.id);
     if (shuffled && !queueMove) rebuildOrder();
@@ -306,8 +381,9 @@ if (dock && audio) {
         return element;
       }),
     );
-    identify(track, false);
+    identify(track, null);
     error?.setAttribute('hidden', '');
+    setProgress(0, track.durationSeconds);
     audio!.load();
     if (play) void audio!.play();
     remember();
@@ -333,12 +409,13 @@ if (dock && audio) {
 
   function selectVideo(item: VideoPlayable, startSeconds: number): void {
     audio!.pause();
+    clearSoundCloud();
     mode = 'youtube';
     video = item;
     index = queueIndexOf(item.id);
     if (shuffled && !queueMove) rebuildOrder();
     resumeAt = startSeconds;
-    identify(item, true);
+    identify(item, 'youtube');
     error?.setAttribute('hidden', '');
     setProgress(startSeconds, item.durationSeconds ?? 0);
     setState(false);
@@ -395,6 +472,114 @@ if (dock && audio) {
     });
   }
 
+  function selectSoundCloud(item: SoundCloudPlayable, startSeconds: number): void {
+    audio!.pause();
+    clearVideo();
+    soundcloudShouldPlay = false;
+    soundcloudPlayer?.pause();
+    mode = 'soundcloud';
+    sound = item;
+    index = queueIndexOf(item.id);
+    if (shuffled && !queueMove) rebuildOrder();
+    soundcloudPosition = startSeconds;
+    soundcloudDuration = item.durationSeconds ?? 0;
+    identify(item, 'soundcloud');
+    error?.setAttribute('hidden', '');
+    setProgress(startSeconds, soundcloudDuration);
+    setState(false);
+    remember();
+  }
+
+  function soundcloudOptions(autoPlay: boolean, callback?: () => void): Record<string, unknown> {
+    return {
+      auto_play: autoPlay,
+      buying: false,
+      sharing: false,
+      download: false,
+      show_artwork: false,
+      show_playcount: false,
+      show_user: false,
+      callback,
+    };
+  }
+
+  function soundcloudUrl(url: string, autoPlay: boolean): string {
+    const embed = new URL('https://w.soundcloud.com/player/');
+    embed.searchParams.set('url', url);
+    for (const [key, value] of Object.entries(soundcloudOptions(autoPlay))) {
+      if (typeof value === 'boolean') embed.searchParams.set(key, String(value));
+    }
+    return embed.href;
+  }
+
+  function bindSoundCloud(api: SoundCloudApi, widget: SoundCloudWidget): void {
+    const events = api.Widget.Events;
+    widget.bind(events.READY, () => {
+      if (mode !== 'soundcloud' || sound?.url !== soundcloudLoadedUrl) return;
+      applyVolume();
+      widget.getDuration((milliseconds) => {
+        soundcloudDuration = milliseconds / 1000 || sound?.durationSeconds || 0;
+        setProgress(soundcloudPosition, soundcloudDuration);
+      });
+      if (soundcloudPosition > 0) widget.seekTo(soundcloudPosition * 1000);
+      if (soundcloudShouldPlay) widget.play();
+    });
+    widget.bind(events.PLAY, () => {
+      if (mode === 'soundcloud') setState(true);
+    });
+    widget.bind(events.PAUSE, () => {
+      if (mode !== 'soundcloud') return;
+      setState(false);
+      remember();
+    });
+    widget.bind(events.PLAY_PROGRESS, (data) => {
+      if (mode !== 'soundcloud' || typeof data?.currentPosition !== 'number') return;
+      soundcloudPosition = data.currentPosition / 1000;
+      setProgress(soundcloudPosition, soundcloudDuration || sound?.durationSeconds || 0);
+    });
+    widget.bind(events.FINISH, () => {
+      if (mode === 'soundcloud') advance();
+    });
+    widget.bind(events.ERROR, () => {
+      if (mode !== 'soundcloud') return;
+      setState(false);
+      showError(error?.dataset['track']);
+    });
+  }
+
+  async function playSoundCloud(item: SoundCloudPlayable, startSeconds = 0): Promise<void> {
+    if (!soundcloudFrame) return;
+    selectSoundCloud(item, startSeconds);
+    soundcloudShouldPlay = true;
+
+    try {
+      const api = await soundcloudApi();
+      if (mode !== 'soundcloud' || sound !== item) return;
+
+      if (!soundcloudPlayer) {
+        soundcloudLoadedUrl = item.url;
+        soundcloudFrame.src = soundcloudUrl(item.url, true);
+        soundcloudPlayer = api.Widget(soundcloudFrame);
+        bindSoundCloud(api, soundcloudPlayer);
+        return;
+      }
+
+      soundcloudLoadedUrl = item.url;
+      soundcloudPlayer.load(
+        item.url,
+        soundcloudOptions(true, () => {
+          if (mode !== 'soundcloud' || sound !== item || !soundcloudPlayer) return;
+          applyVolume();
+          if (soundcloudPosition > 0) soundcloudPlayer.seekTo(soundcloudPosition * 1000);
+          soundcloudPlayer.play();
+        }),
+      );
+    } catch {
+      setState(false);
+      showError(error?.dataset['track']);
+    }
+  }
+
   toggle?.addEventListener('click', () => {
     if (mode === 'youtube') {
       if (!video) return;
@@ -404,6 +589,19 @@ if (dock && audio) {
       }
       if (dock.dataset['state'] === 'playing') player.pauseVideo();
       else player.playVideo();
+      return;
+    }
+    if (mode === 'soundcloud') {
+      if (!sound) return;
+      if (!soundcloudPlayer || soundcloudLoadedUrl !== sound.url) {
+        void playSoundCloud(sound, soundcloudPosition);
+      } else if (dock.dataset['state'] === 'playing') {
+        soundcloudShouldPlay = false;
+        soundcloudPlayer.pause();
+      } else {
+        soundcloudShouldPlay = true;
+        soundcloudPlayer.play();
+      }
       return;
     }
     if (audio.paused) void audio.play();
@@ -469,12 +667,17 @@ if (dock && audio) {
       loadTrack(item, play);
       return;
     }
+    if (item.kind === 'soundcloud') {
+      if (play) void playSoundCloud(item);
+      else selectSoundCloud(item, 0);
+      return;
+    }
     if (play && player && stage?.open) {
       video = item;
       index = next;
       resumeAt = 0;
       if (frameEl) frameEl.title = item.title;
-      identify(item, true);
+      identify(item, 'youtube');
       setProgress(0, item.durationSeconds ?? 0);
       player.loadVideoById(item.videoId);
       remember();
@@ -594,6 +797,10 @@ if (dock && audio) {
   seek?.addEventListener('change', () => {
     scrubbing = false;
     if (mode === 'youtube') player?.seekTo(Number(seek.value), true);
+    if (mode === 'soundcloud') {
+      soundcloudPosition = Number(seek.value);
+      soundcloudPlayer?.seekTo(soundcloudPosition * 1000);
+    }
   });
 
   for (const event of ['pointerup', 'pointercancel', 'keyup', 'blur'] as const) {
@@ -621,6 +828,7 @@ if (dock && audio) {
   addEventListener('pagehide', () => {
     remember();
     clearVideo();
+    clearSoundCloud();
   });
 
   function startById(id: string): void {
@@ -715,6 +923,10 @@ if (dock && audio) {
       restored = playables.find(
         (entry) => entry.kind === 'youtube' && entry.videoId === saved.videoId,
       );
+    } else if (saved?.mode === 'soundcloud') {
+      restored = playables.find(
+        (entry) => entry.kind === 'soundcloud' && entry.id === saved.itemId,
+      );
     } else if (saved?.mode === 'local' && typeof saved.index === 'number') {
       const candidate = playables[saved.index];
       if (candidate?.kind === 'local') restored = candidate;
@@ -733,6 +945,9 @@ if (dock && audio) {
   if (restored?.kind === 'youtube') {
     if (first) loadTrack(first, false);
     selectVideo(restored, savedTime);
+  } else if (restored?.kind === 'soundcloud') {
+    if (first) loadTrack(first, false);
+    selectSoundCloud(restored, savedTime);
   } else {
     resumeLocal = savedTime;
     const start = restored?.kind === 'local' ? restored : first;

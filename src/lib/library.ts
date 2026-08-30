@@ -3,6 +3,7 @@ import { displayTitle } from './display-title.ts';
 import { getProfileMedia, type MediaItem, type MediaSource } from './media.ts';
 
 export type SocialSource = 'tiktok' | 'instagram';
+export type MusicSource = 'youtube' | 'soundcloud';
 export type LibrarySource = MediaSource | 'local';
 
 export interface LibraryRow {
@@ -21,13 +22,16 @@ function fromMedia(profileId: ProfileId, item: MediaItem): LibraryRow {
   return {
     id: item.id,
     source: item.source,
-    title: item.source === 'youtube' ? displayTitle(profileId, item.title) : item.title,
+    title:
+      item.source === 'youtube' || item.source === 'soundcloud'
+        ? displayTitle(profileId, item.title)
+        : item.title,
     publishedAt: item.publishedAt,
     durationSeconds: item.durationSeconds,
     thumbnail: item.thumbnail?.url ?? null,
     url: item.url,
     videoId: item.videoId ?? null,
-    playable: item.playback === 'youtube-embed',
+    playable: item.playback === 'youtube-embed' || item.playback === 'soundcloud-widget',
   };
 }
 
@@ -44,11 +48,22 @@ export function getMusicRows(profile: Profile, profileId: ProfileId): readonly L
     playable: true,
   }));
 
-  const videos = getProfileMedia(profileId)
-    .items.filter((item) => item.source === 'youtube' && item.playback === 'youtube-embed')
+  const streams = getProfileMedia(profileId)
+    .items.filter(
+      (item) =>
+        item.playback === 'youtube-embed' || item.playback === 'soundcloud-widget',
+    )
     .map((item) => fromMedia(profileId, item));
 
-  return [...local, ...videos];
+  return [...local, ...streams];
+}
+
+export function getMusicSources(profile: Profile, profileId: ProfileId): readonly MusicSource[] {
+  const rows = getProfileMedia(profileId).items;
+  return (['youtube', 'soundcloud'] as const).filter((source) =>
+    profile.platforms.some((platform) => platform.id === source) ||
+    rows.some((row) => row.source === source),
+  );
 }
 
 export function getSocialRows(profileId: ProfileId): readonly LibraryRow[] {

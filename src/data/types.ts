@@ -158,6 +158,7 @@ export interface UiDictionary {
     readonly sortReleased: string;
     readonly addToQueue: string;
     readonly openYouTube: string;
+    readonly openSoundCloud: string;
     readonly copyLink: string;
     readonly queued: string;
     readonly copied: string;

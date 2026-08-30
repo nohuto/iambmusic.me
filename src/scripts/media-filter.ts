@@ -11,8 +11,7 @@ function apply(source: string): void {
   const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-source-link]')];
   const surface = document.querySelector<HTMLElement>('[data-media-surface]');
   const owner = surface?.dataset['mediaSurface'] ?? '';
-  const socialRoot =
-    owner === 'social' ? document.querySelector<HTMLAnchorElement>('[data-social-root]') : null;
+  const sourceRoot = document.querySelector<HTMLAnchorElement>(`[data-source-root="${owner}"]`);
   const factsEl = document.querySelector<HTMLElement>('[data-banner-facts]');
   const countEl = document.querySelector<HTMLElement>('[data-facts-count]');
   const dotEl = document.querySelector<HTMLElement>('[data-facts-dot]');
@@ -36,7 +35,7 @@ function apply(source: string): void {
   }
   dotEl?.toggleAttribute('hidden', !facts.date);
 
-  socialRoot?.setAttribute('aria-current', 'page');
+  sourceRoot?.setAttribute('aria-current', 'page');
 
   for (const link of links) {
     const isActive = (link.dataset['sourceLink'] ?? '') === source;
@@ -72,6 +71,7 @@ document.addEventListener('click', (event) => {
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
   const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('[data-source-link]');
   if (!link) return;
+  if (new URL(link.href).pathname !== location.pathname) return;
   event.preventDefault();
   const source = link.dataset['sourceLink'] ?? '';
   history.replaceState(null, '', source ? `?source=${source}` : location.pathname);

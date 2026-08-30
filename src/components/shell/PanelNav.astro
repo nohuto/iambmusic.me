@@ -1,6 +1,7 @@
 ---
 import { primaryNavigation, secondaryNavigation } from '../../data/navigation.ts';
 import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import type { MusicSource, SocialSource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
 
@@ -10,14 +11,34 @@ interface Props {
   page: PageId;
   ui: UiDictionary;
   variant: 'rail' | 'bar';
-  sources?: readonly ('tiktok' | 'instagram')[];
+  musicSources?: readonly MusicSource[];
+  socialSources?: readonly SocialSource[];
   activeSource?: string | null;
 }
 
-const { lang, profile, page, ui, variant, sources = [], activeSource = null } = Astro.props;
+const {
+  lang,
+  profile,
+  page,
+  ui,
+  variant,
+  musicSources = [],
+  socialSources = [],
+  activeSource = null,
+} = Astro.props;
 
-const sourceGlyphs = { tiktok: 'tiktok-logo', instagram: 'instagram-logo' } as const;
-const sourceNames = { tiktok: 'TikTok', instagram: 'Instagram' } as const;
+const sourceGlyphs = {
+  youtube: 'youtube-logo',
+  soundcloud: 'soundcloud-logo',
+  tiktok: 'tiktok-logo',
+  instagram: 'instagram-logo',
+} as const;
+const sourceNames = {
+  youtube: 'YouTube',
+  soundcloud: 'SoundCloud',
+  tiktok: 'TikTok',
+  instagram: 'Instagram',
+} as const;
 
 const icons = {
   home: 'house',
@@ -29,7 +50,6 @@ const icons = {
 
 const rail = variant === 'rail';
 const items = rail ? primaryNavigation : [...primaryNavigation, ...secondaryNavigation];
-const sourceListId = 'social-sources';
 ---
 
 <nav class={`panel-nav panel-nav-${variant}`} aria-label={ui.navigationLabel}>
@@ -37,13 +57,15 @@ const sourceListId = 'social-sources';
 
   <ul>
     {
-      items.map((item) => (
-        <li>
+      items.map((item) => {
+        const sources = item.page === 'music' ? musicSources : item.page === 'social' ? socialSources : [];
+        const sourceListId = `${item.page}-sources`;
+        return <li>
           <div class="row">
             <a
               href={routePath(lang, profile, item.page)}
               data-tip={ui.nav[item.labelKey]}
-              data-social-root={rail && item.page === 'social' ? '' : undefined}
+              data-source-root={rail && sources.length > 0 ? item.page : undefined}
               aria-current={item.page === page ? 'page' : undefined}
             >
               <span class="indicator" aria-hidden="true" />
@@ -58,11 +80,11 @@ const sourceListId = 'social-sources';
               )}
             </a>
 
-            {rail && item.page === 'social' && sources.length > 0 && (
+            {rail && sources.length > 0 && (
               <button
                 class="disclosure icon-action"
                 type="button"
-                data-source-disclosure
+                data-source-disclosure={item.page}
                 data-expand={ui.shell.expandSources}
                 data-collapse={ui.shell.collapseSources}
                 aria-controls={sourceListId}
@@ -77,15 +99,15 @@ const sourceListId = 'social-sources';
             )}
           </div>
 
-          {rail && item.page === 'social' && sources.length > 0 && (
+          {rail && sources.length > 0 && (
             <ul class="sources" id={sourceListId}>
               {sources.map((source) => (
                 <li>
                   <a
-                    href={`${routePath(lang, profile, 'social')}?source=${source}`}
+                    href={`${routePath(lang, profile, item.page)}?source=${source}`}
                     data-source-link={source}
                     aria-current={
-                      page === 'social' && activeSource === source ? 'true' : undefined
+                      page === item.page && activeSource === source ? 'true' : undefined
                     }
                   >
                     <span class="indicator" aria-hidden="true" />
@@ -96,8 +118,8 @@ const sourceListId = 'social-sources';
               ))}
             </ul>
           )}
-        </li>
-      ))
+        </li>;
+      })
     }
   </ul>
 

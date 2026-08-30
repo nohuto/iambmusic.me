@@ -18,11 +18,17 @@ const base = routePath(lang, profile, page);
 
 const glyphs = {
   youtube: 'youtube-logo',
+  soundcloud: 'soundcloud-logo',
   tiktok: 'tiktok-logo',
   instagram: 'instagram-logo',
 } as const;
 
-const names = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram' } as const;
+const names = {
+  youtube: 'YouTube',
+  soundcloud: 'SoundCloud',
+  tiktok: 'TikTok',
+  instagram: 'Instagram',
+} as const;
 ---
 
 <nav class="sources" aria-label={ui.music.filterLabel}>

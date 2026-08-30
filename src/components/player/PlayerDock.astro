@@ -28,6 +28,14 @@ const hasQueue = playables.length > 1;
       data-copied={ui.music.copied}
     >
       <audio preload="metadata" data-player-audio />
+      <iframe
+        class="soundcloud-engine"
+        data-soundcloud-frame
+        title="SoundCloud"
+        allow="autoplay"
+        aria-hidden="true"
+        tabindex="-1"
+      />
       <script is:inline type="application/json" data-playables set:html={JSON.stringify(playables)} />
 
       <div class="identity">
@@ -52,10 +60,18 @@ const hasQueue = playables.length > 1;
         </span>
         <span class="meta">
           <span class="title" data-player-title>{first.title}</span>
-          <span class="source" data-player-source hidden>
-            <Icon name="youtube-logo" size="0.85rem" />
-            YouTube
-          </span>
+          <a
+            class="source"
+            data-player-source
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+          >
+            <span data-player-source-icon="youtube"><Icon name="youtube-logo" size="0.85rem" /></span>
+            <span data-player-source-icon="soundcloud"><Icon name="soundcloud-logo" size="0.85rem" /></span>
+            <span data-player-source-label />
+          </a>
         </span>
       </div>
 
@@ -287,6 +303,16 @@ const hasQueue = playables.length > 1;
     white-space: nowrap;
   }
 
+  .soundcloud-engine {
+    position: fixed;
+    inline-size: 1px;
+    block-size: 1px;
+    inset: -1px auto auto -1px;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   @media (max-height: 34rem) {
     .art-toggle {
       display: none;
@@ -319,6 +345,11 @@ const hasQueue = playables.length > 1;
     gap: var(--space-1);
     color: var(--legend-faint);
     font-size: var(--step-0);
+    text-decoration: none;
+  }
+
+  [data-player-source-icon] {
+    display: none;
   }
 
   .transport {

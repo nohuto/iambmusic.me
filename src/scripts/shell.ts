@@ -29,13 +29,15 @@ function applyRail(collapsed: boolean): void {
   if (label) button?.setAttribute('aria-label', label);
 }
 
-function disclosure(): HTMLButtonElement | null {
-  return document.querySelector<HTMLButtonElement>('[data-source-disclosure]');
+type SourceGroup = 'music' | 'social';
+
+function disclosure(group: SourceGroup): HTMLButtonElement | null {
+  return document.querySelector<HTMLButtonElement>(`[data-source-disclosure="${group}"]`);
 }
 
-function applySources(expanded: boolean): void {
-  const button = disclosure();
-  root.dataset['sources'] = expanded ? 'expanded' : 'collapsed';
+function applySources(group: SourceGroup, expanded: boolean): void {
+  const button = disclosure(group);
+  root.dataset[`${group}Sources`] = expanded ? 'expanded' : 'collapsed';
   button?.setAttribute('aria-expanded', String(expanded));
   const label = expanded ? button?.dataset['collapse'] : button?.dataset['expand'];
   if (label) button?.setAttribute('aria-label', label);
@@ -49,10 +51,12 @@ document.addEventListener('click', (event) => {
     applyRail(collapsed);
     return;
   }
-  if (target?.closest('[data-source-disclosure]')) {
-    const expanded = root.dataset['sources'] === 'collapsed';
-    store('iambmusic-sources', expanded ? 'expanded' : 'collapsed');
-    applySources(expanded);
+  const sourceToggle = target?.closest<HTMLButtonElement>('[data-source-disclosure]');
+  const group = sourceToggle?.dataset['sourceDisclosure'] as SourceGroup | undefined;
+  if (group) {
+    const expanded = root.dataset[`${group}Sources`] === 'collapsed';
+    store(`iambmusic-${group}-sources`, expanded ? 'expanded' : 'collapsed');
+    applySources(group, expanded);
   }
 });
 
@@ -156,10 +160,12 @@ function watchHeader(): void {
 
 function setup(): void {
   restoreRoot();
-  const railSource = [
-    ...document.querySelectorAll<HTMLElement>('.panel-nav-rail .sources [data-source-link]'),
-  ].some((link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'));
-  applySources(railSource || root.dataset['sources'] !== 'collapsed');
+  for (const group of ['music', 'social'] as const) {
+    const active = [...document.querySelectorAll<HTMLElement>(`#${group}-sources [data-source-link]`)].some(
+      (link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'),
+    );
+    applySources(group, active || root.dataset[`${group}Sources`] !== 'collapsed');
+  }
   anchorMenus();
   syncContextMenuScrollLock();
   watchHeader();
@@ -167,7 +173,10 @@ function setup(): void {
 
 function restoreRoot(): void {
   applyRail(read('iambmusic-rail') === 'collapsed');
-  root.dataset['sources'] = read('iambmusic-sources') === 'collapsed' ? 'collapsed' : 'expanded';
+  for (const group of ['music', 'social'] as const) {
+    root.dataset[`${group}Sources`] =
+      read(`iambmusic-${group}-sources`) === 'collapsed' ? 'collapsed' : 'expanded';
+  }
 }
 
 setup();

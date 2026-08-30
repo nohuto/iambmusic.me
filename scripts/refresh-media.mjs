@@ -69,7 +69,7 @@ export function validateChannels(channels) {
   for (const [profileId, channel] of Object.entries(channels)) {
     assert(isPlainObject(channel), `channel identity invalid: ${profileId} is not an object`);
     const unexpected = Object.keys(channel).filter(
-      (key) => !['youtube', 'instagram', 'tiktok'].includes(key),
+      (key) => !['youtube', 'soundcloud', 'instagram', 'tiktok'].includes(key),
     );
     assert(
       unexpected.length === 0,
@@ -98,6 +98,11 @@ export function validateChannels(channels) {
         `channel identity invalid: ${profileId} has an invalid ${social} handle`,
       );
     }
+    assert(
+      channel.soundcloud === undefined ||
+        /^https:\/\/soundcloud\.com\/[A-Za-z0-9_-]+\/?$/.test(channel.soundcloud),
+      `channel identity invalid: ${profileId} has an invalid soundcloud URL`,
+    );
   }
   return channels;
 }
@@ -201,7 +206,7 @@ export function selectLatestVideos(items, limit = HOME_COUNT) {
     .slice(0, limit);
 }
 
-const SOURCES = ['youtube', 'instagram', 'tiktok'];
+const SOURCES = ['youtube', 'soundcloud', 'instagram', 'tiktok'];
 const ITEM_KEYS = [
   'discoveredAt',
   'durationSeconds',
@@ -262,6 +267,11 @@ export function validateMedia(feed, profileId) {
     if (item.source === 'youtube') {
       if (!VIDEO_ID_PATTERN.test(item.videoId ?? '')) invalid(`videoId: ${item.id}`);
       if (!['youtube-embed', 'external'].includes(item.playback)) invalid(`playback: ${item.id}`);
+    } else if (item.source === 'soundcloud') {
+      if ('videoId' in item) invalid(`${item.id} must not carry a videoId`);
+      if (!['soundcloud-widget', 'external'].includes(item.playback)) {
+        invalid(`playback: ${item.id}`);
+      }
     } else {
       if ('videoId' in item) invalid(`${item.id} must not carry a videoId`);
       if (item.playback !== 'external') invalid(`playback: ${item.id}`);
@@ -513,6 +523,34 @@ async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
   return next;
 }
 
+async function refreshSoundCloudSource(profileId, profileUrl, feed, request, now, outputDir) {
+  const { fetchSoundCloud } = await import('./refresh-soundcloud.mjs');
+  const incoming = await fetchSoundCloud(profileUrl, request).catch(() => []);
+  if (incoming.length === 0) {
+    console.warn(`${profileId} soundcloud: no usable records, keeping the previous cache`);
+    return feed;
+  }
+
+  const items = mergeSource(feed.items, incoming, 'soundcloud', now);
+  if (sameItems(feed.items, items)) {
+    console.log(`${profileId} soundcloud: unchanged`);
+    return feed;
+  }
+
+  const next = validateMedia(
+    {
+      ...feed,
+      generatedAt: now,
+      items,
+      refreshedAt: { ...feed.refreshedAt, soundcloud: now },
+    },
+    profileId,
+  );
+  await replaceAtomically(fileURLToPath(outputDir), new Map([[profileId, next]]), renameTarget);
+  console.log(`${profileId} soundcloud: ${incoming.length} records`);
+  return next;
+}
+
 async function main(argv) {
   if (argv.includes('--validate-cache')) {
     for (const summary of await validateGeneratedCache()) {
@@ -537,6 +575,33 @@ async function main(argv) {
     for (const [profileId, channel] of Object.entries(channels)) {
       const feed = feeds.get(profileId);
       if (feed) feeds.set(profileId, await refreshSocialSources(profileId, channel, feed, now, defaultOutputDir));
+    }
+  }
+
+  if (argv.includes('--with-soundcloud')) {
+    const clientId = process.env.SOUNDCLOUD_CLIENT_ID;
+    const clientSecret = process.env.SOUNDCLOUD_CLIENT_SECRET;
+    if (clientId && clientSecret) {
+      const { createSoundCloudRequest } = await import('./refresh-soundcloud.mjs');
+      const request = await createSoundCloudRequest(clientId, clientSecret);
+      for (const [profileId, channel] of Object.entries(channels)) {
+        const feed = feeds.get(profileId);
+        if (feed && channel.soundcloud) {
+          feeds.set(
+            profileId,
+            await refreshSoundCloudSource(
+              profileId,
+              channel.soundcloud,
+              feed,
+              request,
+              now,
+              defaultOutputDir,
+            ),
+          );
+        }
+      }
+    } else {
+      console.warn('soundcloud: credentials are not set, keeping the previous cache');
     }
   }
 

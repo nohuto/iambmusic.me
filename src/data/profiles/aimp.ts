@@ -12,8 +12,8 @@ export const aimpProfile: AimpProfile = {
       en: 'Cinematic electronic music, produced in collaboration with AI.',
     },
     music: {
-      de: 'Hier findest du meine neuesten Uploads von AiMP.',
-      en: 'Find my latest AiMP uploads here.',
+      de: 'Hier findest du meine neuesten Uploads von AiMP auf YouTube und SoundCloud.',
+      en: 'Find my latest AiMP uploads on YouTube and SoundCloud here.',
     },
     social: {
       de: 'Meine Kanäle auf Social Media für das AiMP Music Project.',
