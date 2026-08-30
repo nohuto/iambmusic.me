@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { aimpProfile } from '../../data/profiles/aimp.ts';
+import { aimbProfile } from '../../data/profiles/aimb.ts';
 import { iambProfile } from '../../data/profiles/iamb.ts';
 import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
 import { routePath } from '../../lib/routes.ts';
@@ -15,7 +15,7 @@ interface Props {
 
 const { lang, profile, page, ui } = Astro.props;
 
-const entries = [iambProfile, aimpProfile];
+const entries = [iambProfile, aimbProfile];
 const active = entries.find((entry) => entry.id === profile) ?? iambProfile;
 const menuId = 'profile-menu';
 ---

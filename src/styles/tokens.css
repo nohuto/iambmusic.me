@@ -57,7 +57,7 @@
   --scrollbar-thumb-hover: var(--ink);
 }
 
-:root[data-profile='aimp'] {
+:root[data-profile='aimb'] {
   --ink: #1d3a6b;
   --ink-field: #1d3a6b;
   --ink-on-field: #f2f4f5;
@@ -85,7 +85,7 @@
   --shadow-plate: 0 1px 2px rgb(0 0 0 / 0.6);
 }
 
-:root[data-theme='dark'][data-profile='aimp'] {
+:root[data-theme='dark'][data-profile='aimb'] {
   --ink: #7fa5e3;
   --ink-field: #2c5aa8;
   --ink-on-field: #f2f4f5;

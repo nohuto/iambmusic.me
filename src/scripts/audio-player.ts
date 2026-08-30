@@ -514,8 +514,11 @@ if (dock && audio) {
 
   function bindSoundCloud(api: SoundCloudApi, widget: SoundCloudWidget): void {
     const events = api.Widget.Events;
+    const isCurrentSound = (): boolean =>
+      mode === 'soundcloud' && sound !== null && sound.url === soundcloudLoadedUrl;
+
     widget.bind(events.READY, () => {
-      if (mode !== 'soundcloud' || sound?.url !== soundcloudLoadedUrl) return;
+      if (!isCurrentSound()) return;
       applyVolume();
       widget.getDuration((milliseconds) => {
         soundcloudDuration = milliseconds / 1000 || sound?.durationSeconds || 0;
@@ -525,23 +528,23 @@ if (dock && audio) {
       if (soundcloudShouldPlay) widget.play();
     });
     widget.bind(events.PLAY, () => {
-      if (mode === 'soundcloud') setState(true);
+      if (isCurrentSound()) setState(true);
     });
     widget.bind(events.PAUSE, () => {
-      if (mode !== 'soundcloud') return;
+      if (!isCurrentSound() || soundcloudShouldPlay) return;
       setState(false);
       remember();
     });
     widget.bind(events.PLAY_PROGRESS, (data) => {
-      if (mode !== 'soundcloud' || typeof data?.currentPosition !== 'number') return;
+      if (!isCurrentSound() || typeof data?.currentPosition !== 'number') return;
       soundcloudPosition = data.currentPosition / 1000;
       setProgress(soundcloudPosition, soundcloudDuration || sound?.durationSeconds || 0);
     });
     widget.bind(events.FINISH, () => {
-      if (mode === 'soundcloud') advance();
+      if (isCurrentSound()) advance();
     });
     widget.bind(events.ERROR, () => {
-      if (mode !== 'soundcloud') return;
+      if (!isCurrentSound()) return;
       setState(false);
       showError(error?.dataset['track']);
     });
@@ -564,13 +567,15 @@ if (dock && audio) {
         return;
       }
 
-      soundcloudLoadedUrl = item.url;
+      const targetUrl = item.url;
       soundcloudPlayer.load(
-        item.url,
+        targetUrl,
         soundcloudOptions(true, () => {
           if (mode !== 'soundcloud' || sound !== item || !soundcloudPlayer) return;
+          soundcloudLoadedUrl = targetUrl;
+          soundcloudPosition = startSeconds;
           applyVolume();
-          if (soundcloudPosition > 0) soundcloudPlayer.seekTo(soundcloudPosition * 1000);
+          if (startSeconds > 0) soundcloudPlayer.seekTo(startSeconds * 1000);
           soundcloudPlayer.play();
         }),
       );

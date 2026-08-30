@@ -3,3 +3,9 @@
 /de/ /de/iamb/ 301
 /en /en/iamb/ 301
 /en/ /en/iamb/ 301
+/de/aimp /de/aimb/ 301
+/de/aimp/ /de/aimb/ 301
+/de/aimp/* /de/aimb/:splat 301
+/en/aimp /en/aimb/ 301
+/en/aimp/ /en/aimb/ 301
+/en/aimp/* /en/aimb/:splat 301

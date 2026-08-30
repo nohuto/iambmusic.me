@@ -10,7 +10,7 @@ const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const HANDLE_PATTERN = /^@[A-Za-z0-9_.-]{3,30}$/;
 const CHANNEL_ID_PATTERN = /^UC[A-Za-z0-9_-]{22}$/;
 const THUMBNAIL_PREFERENCE = ['high', 'medium', 'standard', 'maxres', 'default'];
-const KNOWN_PROFILES = ['aimp', 'iamb'];
+const KNOWN_PROFILES = ['aimb', 'iamb'];
 
 const projectRoot = new URL('../', import.meta.url);
 const channelsPath = new URL('src/data/media-channels.json', projectRoot);

@@ -1,27 +1,27 @@
-import logo from '../../assets/profiles/aimp/logo.png';
+import logo from '../../assets/profiles/aimb/logo.png';
 import channels from '../media-channels.json';
-import type { AimpProfile } from '../types.ts';
+import type { AimbProfile } from '../types.ts';
 
-export const aimpProfile: AimpProfile = {
-  id: 'aimp',
-  name: 'AiMP Music Project',
-  shortName: 'AiMP',
+export const aimbProfile: AimbProfile = {
+  id: 'aimb',
+  name: 'AIMB Music Project',
+  shortName: 'AIMB',
   meta: {
     home: {
       de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
       en: 'Cinematic electronic music, produced in collaboration with AI.',
     },
     music: {
-      de: 'Hier findest du meine neuesten Uploads von AiMP auf YouTube und SoundCloud.',
-      en: 'Find my latest AiMP uploads on YouTube and SoundCloud here.',
+      de: 'Hier findest du meine neuesten Uploads von AIMB auf YouTube und SoundCloud.',
+      en: 'Find my latest AIMB uploads on YouTube and SoundCloud here.',
     },
     social: {
-      de: 'Meine Kanäle auf Social Media für das AiMP Music Project.',
-      en: 'My social media channels for the AiMP Music Project.',
+      de: 'Meine Kanäle auf Social Media für das AIMB Music Project.',
+      en: 'My social media channels for the AIMB Music Project.',
     },
     contact: {
-      de: 'So erreichst du mich für das AiMP Music Project.',
-      en: 'Get in touch with me about the AiMP Music Project.',
+      de: 'So erreichst du mich für das AIMB Music Project.',
+      en: 'Get in touch with me about the AIMB Music Project.',
     },
     about: {
       de: 'Ich bin Markus B., hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
@@ -37,33 +37,33 @@ export const aimpProfile: AimpProfile = {
   },
   images: {
     logo,
-    logoAlt: { de: 'Logo des AiMP Music Project', en: 'AiMP Music Project logo' },
+    logoAlt: { de: 'Logo des AIMB Music Project', en: 'AIMB Music Project logo' },
   },
   tracks: [
     {
-      profile: 'aimp',
+      profile: 'aimb',
       id: 'last-in-space',
       title: 'Last in Space',
       durationSeconds: 48,
-      sources: [{ format: 'wav', src: '/audio/aimp/last-in-space.wav', mimeType: 'audio/wav' }],
+      sources: [{ format: 'wav', src: '/audio/aimb/last-in-space.wav', mimeType: 'audio/wav' }],
     },
   ],
   platforms: [
     {
-      profile: 'aimp',
+      profile: 'aimb',
       id: 'youtube',
       name: 'YouTube',
       url: 'https://www.youtube.com/@AiMP-Musicproject',
       category: 'social',
     },
     {
-      profile: 'aimp',
+      profile: 'aimb',
       id: 'soundcloud',
       name: 'SoundCloud',
       url: 'https://soundcloud.com/aimp-musicproject',
       category: 'listening',
     },
   ],
-  youtube: { profile: 'aimp', ...channels.aimp.youtube },
+  youtube: { profile: 'aimb', ...channels.aimb.youtube },
   contact: { email: 'iamb.synthmusic@gmail.com' },
 };

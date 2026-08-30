@@ -1,7 +1,7 @@
 export const languages = ['de', 'en'] as const;
 export type Language = (typeof languages)[number];
 
-export const profileIds = ['iamb', 'aimp'] as const;
+export const profileIds = ['iamb', 'aimb'] as const;
 export type ProfileId = (typeof profileIds)[number];
 
 export const pageIds = ['home', 'music', 'social', 'about', 'contact'] as const;
@@ -105,7 +105,7 @@ export interface Profile<P extends ProfileId = ProfileId> {
 }
 
 export type IambProfile = Profile<'iamb'>;
-export type AimpProfile = Profile<'aimp'>;
+export type AimbProfile = Profile<'aimb'>;
 
 export interface NavigationItem {
   readonly page: PageId;
