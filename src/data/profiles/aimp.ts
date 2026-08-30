@@ -44,6 +44,7 @@ export const aimpProfile: AimpProfile = {
       profile: 'aimp',
       id: 'last-in-space',
       title: 'Last in Space',
+      durationSeconds: 48,
       sources: [{ format: 'wav', src: '/audio/aimp/last-in-space.wav', mimeType: 'audio/wav' }],
     },
   ],

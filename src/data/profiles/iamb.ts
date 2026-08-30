@@ -44,6 +44,7 @@ export const iambProfile: IambProfile = {
       profile: 'iamb',
       id: 'welcome-1',
       title: 'Welcome 1',
+      durationSeconds: 59,
       sources: [
         { format: 'mp3', src: '/audio/iamb/welcome-1.mp3', mimeType: 'audio/mpeg' },
         { format: 'm4a', src: '/audio/iamb/welcome-1.m4a', mimeType: 'audio/mp4' },
@@ -53,6 +54,7 @@ export const iambProfile: IambProfile = {
       profile: 'iamb',
       id: 'welcome-2',
       title: 'Welcome 2',
+      durationSeconds: 49,
       sources: [
         { format: 'mp3', src: '/audio/iamb/welcome-2.mp3', mimeType: 'audio/mpeg' },
         { format: 'm4a', src: '/audio/iamb/welcome-2.m4a', mimeType: 'audio/mp4' },

@@ -21,6 +21,7 @@ export interface Track<P extends ProfileId = ProfileId> {
   readonly profile: P;
   readonly id: string;
   readonly title: string;
+  readonly durationSeconds: number;
   readonly sources: readonly AudioSource[];
 }
 

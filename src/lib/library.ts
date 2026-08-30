@@ -37,7 +37,7 @@ export function getMusicRows(profile: Profile, profileId: ProfileId): readonly L
     source: 'local',
     title: track.title,
     publishedAt: null,
-    durationSeconds: null,
+    durationSeconds: track.durationSeconds,
     thumbnail: null,
     url: null,
     videoId: null,

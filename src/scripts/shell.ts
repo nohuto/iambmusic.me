@@ -76,8 +76,47 @@ function repositionOpenMenus(): void {
   }
 }
 
+let lockedScrollX = 0;
+let lockedScrollY = 0;
+
+function setContextMenuScrollLock(locked: boolean): void {
+  if (locked && !root.hasAttribute('data-context-menu-open')) {
+    lockedScrollX = scrollX;
+    lockedScrollY = scrollY;
+  }
+  root.toggleAttribute('data-context-menu-open', locked);
+}
+
+function syncContextMenuScrollLock(): void {
+  setContextMenuScrollLock(document.querySelector('.row-menu:popover-open') !== null);
+}
+
+function blockContextMenuScroll(event: Event): void {
+  if (root.hasAttribute('data-context-menu-open')) event.preventDefault();
+}
+
+function handleScroll(): void {
+  if (!root.hasAttribute('data-context-menu-open')) {
+    repositionOpenMenus();
+    return;
+  }
+  if (scrollX !== lockedScrollX || scrollY !== lockedScrollY) {
+    scrollTo(lockedScrollX, lockedScrollY);
+  }
+}
+
 addEventListener('resize', repositionOpenMenus);
-addEventListener('scroll', repositionOpenMenus, { passive: true });
+addEventListener('scroll', handleScroll, { passive: true });
+addEventListener('wheel', blockContextMenuScroll, { passive: false });
+addEventListener('touchmove', blockContextMenuScroll, { passive: false });
+
+document.addEventListener('keydown', (event) => {
+  if (!root.hasAttribute('data-context-menu-open')) return;
+  const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'];
+  if (keys.includes(event.key) || (event.key === ' ' && !(event.target as Element).closest('button, a'))) {
+    event.preventDefault();
+  }
+});
 
 function anchorMenus(): void {
   for (const menu of document.querySelectorAll<HTMLElement>('[data-anchored-menu]')) {
@@ -86,12 +125,14 @@ function anchorMenus(): void {
 
     menu.addEventListener('beforetoggle', (event) => {
       if ((event as ToggleEvent).newState !== 'open') return;
+      if (menu.classList.contains('row-menu')) setContextMenuScrollLock(true);
       menu.style.insetBlockStart = '0px';
       menu.style.insetInlineStart = '0px';
       menu.style.visibility = 'hidden';
     });
 
     menu.addEventListener('toggle', (event) => {
+      if (menu.classList.contains('row-menu')) queueMicrotask(syncContextMenuScrollLock);
       if ((event as ToggleEvent).newState !== 'open') return;
       repositionOpenMenus();
       menu.style.visibility = '';
@@ -120,6 +161,7 @@ function setup(): void {
   ].some((link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'));
   applySources(railSource || root.dataset['sources'] !== 'collapsed');
   anchorMenus();
+  syncContextMenuScrollLock();
   watchHeader();
 }
 
