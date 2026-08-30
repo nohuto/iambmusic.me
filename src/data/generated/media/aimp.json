@@ -1,10 +1,41 @@
 {
   "profile": "aimp",
-  "generatedAt": "2026-08-29T01:45:50.751Z",
+  "generatedAt": "2026-08-30T18:07:56.182Z",
   "refreshedAt": {
-    "youtube": "2026-08-29T01:45:50.751Z"
+    "youtube": "2026-08-29T01:45:50.751Z",
+    "soundcloud": "2026-08-30T18:07:56.182Z"
   },
   "items": [
+    {
+      "id": "soundcloud:2390542308",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/nobody-like-you?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Nobody like you",
+      "publishedAt": "2026-08-28T22:34:22.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 221,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-CbF25V66UFmkFjG5-S3jPmA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2386899042",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/oh-god-its-monday?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Oh god, it's Monday",
+      "publishedAt": "2026-08-23T20:39:53.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 126,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-CkjLZNS7XZyOAjkH-bE8iBA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
     {
       "id": "youtube:wRA8dRqqIS4",
       "source": "youtube",
@@ -22,6 +53,81 @@
       "playback": "youtube-embed"
     },
     {
+      "id": "soundcloud:2382167520",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/summernight-feelings?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Summernight feelings",
+      "publishedAt": "2026-08-15T12:28:44.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 234,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-AHcvs0Mi0bIhCfP9-ITn4lw-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2373594101",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/blurred-traces?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Blurred Traces",
+      "publishedAt": "2026-08-02T08:16:07.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 302,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-aeeqNGNx8YBsM9dy-NDivLw-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2367888164",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/push-or-pull?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Push or Pull",
+      "publishedAt": "2026-07-25T19:37:04.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 193,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-85fYcO8FJGcQyb1s-7RdHOw-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2362342007",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/when-the-day-ends?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "When the day ends",
+      "publishedAt": "2026-07-16T21:08:27.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 254,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-YgkRuAHHzFG1HxsW-4uzQ6w-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2359127969",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/funky-day?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Funky day",
+      "publishedAt": "2026-07-12T14:05:14.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 157,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-zE8a9QFtr7bp7mVf-xARkDA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
       "id": "youtube:IoN9fDviLWg",
       "source": "youtube",
       "url": "https://www.youtube.com/watch?v=IoN9fDviLWg",
@@ -36,6 +142,36 @@
       },
       "videoId": "IoN9fDviLWg",
       "playback": "youtube-embed"
+    },
+    {
+      "id": "soundcloud:2349031610",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/have-a-break?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Have a break !",
+      "publishedAt": "2026-06-27T21:50:20.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 153,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-Jtlvz8zVqEnAcfVq-yFi2EQ-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2343843203",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/coffee-in-the-morning?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Coffee in the morning",
+      "publishedAt": "2026-06-22T07:15:43.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 244,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-ScFPFzj3nOIn9ql8-dKa3BQ-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "external"
     },
     {
       "id": "youtube:HAVF9nEwV-c",
@@ -70,6 +206,21 @@
       "playback": "youtube-embed"
     },
     {
+      "id": "soundcloud:2338900094",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/united-as-one?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "United as one",
+      "publishedAt": "2026-06-13T23:17:53.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 256,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-389Pmzd8YAwV2B8a-YYPc7w-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
       "id": "youtube:Ep8wlEL12X4",
       "source": "youtube",
       "url": "https://www.youtube.com/watch?v=Ep8wlEL12X4",
@@ -100,6 +251,141 @@
       },
       "videoId": "1RLguwxJOSQ",
       "playback": "youtube-embed"
+    },
+    {
+      "id": "soundcloud:2335257740",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/waiting-for?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Waiting for …",
+      "publishedAt": "2026-06-08T05:53:17.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 163,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-1boknMihPBUae4wD-zNn2rg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2333988053",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/dark-signal-part-i?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Dark Signal - Part I",
+      "publishedAt": "2026-06-05T15:34:21.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 317,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-sObxuXhVdxgbtKX8-uGzPzg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2329833560",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/a-night-we-wont-forget?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "A night we won‘t forget",
+      "publishedAt": "2026-05-29T19:25:42.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 215,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-M4hFjKuXsYfwhYXF-JVm4zA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326954133",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/middle-of-the-universe?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Middle of the Universe",
+      "publishedAt": "2026-05-25T08:42:13.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 164,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-SgR9g3zKrMhWR9cu-rny4PA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326257170",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/beautiful-funky-remix?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Beautiful Funky",
+      "publishedAt": "2026-05-23T19:44:52.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 166,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-sZ0N4FTVah7Rg8Ko-ir2Ozg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326248665",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/space-club?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Space Club",
+      "publishedAt": "2026-05-23T19:32:23.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 213,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-s06vCxA2rOwtoZre-dO6iqg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326242344",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/nordic-story-nebula-remix?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Nordic Story - Nebula Remix",
+      "publishedAt": "2026-05-23T19:13:40.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 244,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-oeEWC4xz6g8SqPiS-erPblQ-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326229264",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/nordic-lights?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Nordic Lights",
+      "publishedAt": "2026-05-23T18:37:14.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 348,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-gaRwbUrYs7idZPYH-DnPiMA-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2326217636",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/a-new-music-project?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "A New Music Project",
+      "publishedAt": "2026-05-23T18:14:28.000Z",
+      "discoveredAt": "2026-08-30T18:07:56.182Z",
+      "durationSeconds": 293,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-PvglbssGdzWGOyDm-qyJAwg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
     },
     {
       "id": "youtube:JoYXLlZUtjU",
