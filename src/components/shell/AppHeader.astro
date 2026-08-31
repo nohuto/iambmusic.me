@@ -27,12 +27,24 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     <span>{activeProfile.shortName}</span>
   </a>
 
-  <button class="search-field" type="button" data-search-open aria-label={ui.search.open}>
+  <button
+    class="search-field"
+    type="button"
+    data-search-open
+    aria-label={ui.search.open}
+    aria-keyshortcuts="Control+K Meta+K"
+  >
     <Icon name="magnifying-glass" size="1rem" />
     <span>{ui.search.placeholder}</span>
   </button>
 
-  <button class="search-icon icon-action" type="button" data-search-open aria-label={ui.search.open}>
+  <button
+    class="search-icon icon-action"
+    type="button"
+    data-search-open
+    aria-label={ui.search.open}
+    aria-keyshortcuts="Control+K Meta+K"
+  >
     <Icon name="magnifying-glass" size="1.05rem" />
   </button>
 

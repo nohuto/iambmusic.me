@@ -89,7 +89,13 @@ const hasQueue = playables.length > 1;
             <Icon name="shuffle" size="1rem" />
           </button>
           {hasQueue && (
-            <button class="icon-action" type="button" data-player-previous aria-label={ui.player.previous}>
+            <button
+              class="icon-action"
+              type="button"
+              data-player-previous
+              aria-label={ui.player.previous}
+              aria-keyshortcuts="Control+ArrowLeft Meta+ArrowLeft"
+            >
               <Icon name="skip-back" weight="fill" size="1.05rem" />
             </button>
           )}
@@ -100,12 +106,19 @@ const hasQueue = playables.length > 1;
             data-play={ui.player.play}
             data-pause={ui.player.pause}
             aria-label={ui.player.play}
+            aria-keyshortcuts="Space"
           >
             <span data-player-icon="play"><Icon name="play" weight="fill" size="1.15rem" /></span>
             <span data-player-icon="pause"><Icon name="pause" weight="fill" size="1.15rem" /></span>
           </button>
           {hasQueue && (
-            <button class="icon-action" type="button" data-player-next aria-label={ui.player.next}>
+            <button
+              class="icon-action"
+              type="button"
+              data-player-next
+              aria-label={ui.player.next}
+              aria-keyshortcuts="Control+ArrowRight Meta+ArrowRight"
+            >
               <Icon name="skip-forward" weight="fill" size="1.05rem" />
             </button>
           )}
@@ -160,6 +173,7 @@ const hasQueue = playables.length > 1;
             data-mute={ui.player.mute}
             data-unmute={ui.player.unmute}
             aria-label={ui.player.mute}
+            aria-keyshortcuts="M"
           >
             <span data-player-icon="unmuted"><Icon name="speaker-simple-high" size="1.05rem" /></span>
             <span data-player-icon="muted"><Icon name="speaker-simple-x" size="1.05rem" /></span>
@@ -172,6 +186,7 @@ const hasQueue = playables.length > 1;
             value="0.5"
             data-player-volume
             aria-label={ui.player.volume}
+            aria-keyshortcuts="Control+ArrowUp Control+ArrowDown Meta+ArrowUp Meta+ArrowDown"
           />
         </div>
       </div>

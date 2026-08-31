@@ -24,9 +24,13 @@ const musicPath = routePath(lang, profile, 'music');
     <Icon name="magnifying-glass" size="1.05rem" />
     <input
       type="search"
+      role="combobox"
       data-search-input
       placeholder={ui.search.placeholder}
       aria-label={ui.search.label}
+      aria-controls="search-results"
+      aria-expanded="false"
+      aria-autocomplete="list"
       autocomplete="off"
     />
     <button class="icon-action" type="button" data-search-close aria-label={ui.search.close}>
@@ -34,7 +38,7 @@ const musicPath = routePath(lang, profile, 'music');
     </button>
   </form>
 
-  <ul class="results" data-search-results aria-live="polite"></ul>
+  <ul id="search-results" class="results" data-search-results role="listbox" aria-live="polite"></ul>
 </dialog>
 
 <style>
@@ -105,7 +109,7 @@ const musicPath = routePath(lang, profile, 'music');
     margin-block-start: var(--space-2);
   }
 
-  .results :global(button) {
+  .results :global([role='option']) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
@@ -122,8 +126,15 @@ const musicPath = routePath(lang, profile, 'music');
     cursor: pointer;
   }
 
-  .results :global(button:hover) {
+  .results :global([role='option']:hover),
+  .results :global([role='option'][aria-selected='true']) {
     background: var(--panel-hover);
+  }
+
+  .results :global(.empty) {
+    display: block;
+    padding: var(--space-3);
+    cursor: default;
   }
 
   .results :global(.art) {
@@ -145,7 +156,7 @@ const musicPath = routePath(lang, profile, 'music');
   }
 
   .results :global(.side) {
-    color: var(--legend-faint);
+    color: var(--legend-quiet);
     font-size: var(--step-0);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
