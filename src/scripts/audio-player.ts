@@ -194,6 +194,7 @@ if (dock && audio) {
   let repeatMode: 'off' | 'all' | 'one' = 'off';
   let sequence: number[] = playables.map((_, position) => position);
   let order: number[] = [...sequence];
+  let queueContextLocked = false;
   let queueMove = false;
   let manualQueue: string[] = [];
   let selectedId: string | null = null;
@@ -325,6 +326,7 @@ if (dock && audio) {
           time: currentTime(),
           shuffled,
           repeatMode,
+          sequence: queueContextLocked ? sequence : undefined,
           order,
           manualQueue,
         }),
@@ -683,8 +685,10 @@ if (dock && audio) {
         player?.pauseVideo();
         setState(false);
       } else if (!player || !youtubeReady) {
+        adoptVisibleSequence(index);
         void playVideo(video, false, resumeAt);
       } else {
+        adoptVisibleSequence(index);
         playbackWanted = true;
         youtubeStarting = true;
         error?.setAttribute('hidden', '');
@@ -701,8 +705,10 @@ if (dock && audio) {
         soundcloudPlayer?.pause();
         setState(false);
       } else if (!soundcloudPlayer || soundcloudLoadedUrl !== sound.url) {
+        adoptVisibleSequence(index);
         void playSoundCloud(sound, soundcloudPosition);
       } else {
+        adoptVisibleSequence(index);
         playbackWanted = true;
         soundcloudStarting = true;
         error?.setAttribute('hidden', '');
@@ -715,6 +721,7 @@ if (dock && audio) {
       audio.pause();
       setState(false);
     } else {
+      adoptVisibleSequence(index);
       playbackWanted = true;
       playLocal();
     }
@@ -739,14 +746,29 @@ if (dock && audio) {
     setSkipAvailable(order.length > 1);
   }
 
-  function syncSequence(): void {
-    const visible = [...document.querySelectorAll<HTMLElement>('[data-row-id][data-playable]')]
+  function visibleSequence(): number[] {
+    return [...document.querySelectorAll<HTMLElement>('[data-row-id][data-playable]')]
       .filter((row) => !row.closest<HTMLElement>('[data-media-row]')?.hidden)
       .map((row) => queueIndexOf(row.dataset['rowId'] ?? ''))
       .filter((position, at, positions) => position >= 0 && positions.indexOf(position) === at);
+  }
+
+  function syncSequence(): void {
+    if (queueContextLocked) return;
+    const visible = visibleSequence();
     if (visible.length === 0) return;
     sequence = visible;
     rebuildOrder();
+  }
+
+  function adoptVisibleSequence(position: number, replace = false): void {
+    if (queueContextLocked && !replace) return;
+    const visible = visibleSequence();
+    if (!visible.includes(position)) return;
+    sequence = visible;
+    queueContextLocked = true;
+    rebuildOrder();
+    remember();
   }
 
   function neighbour(delta: number): number | undefined {
@@ -975,6 +997,7 @@ if (dock && audio) {
     if (at < 0) return;
     selectedId = id;
     selectAt(at, true);
+    adoptVisibleSequence(at, true);
   }
 
   function setArt(expanded: boolean): void {
@@ -1051,12 +1074,19 @@ if (dock && audio) {
 
   let restored: Playable | undefined;
   let savedTime = 0;
+  let savedSequence: number[] | null = null;
   let savedOrder: number[] | null = null;
   try {
     const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null');
     savedTime = Number(saved?.time) || 0;
     if (saved?.shuffled === true) shuffled = true;
     if (saved?.repeatMode === 'all' || saved?.repeatMode === 'one') repeatMode = saved.repeatMode;
+    if (Array.isArray(saved?.sequence)) {
+      savedSequence = saved.sequence.filter(
+        (position: unknown): position is number =>
+          typeof position === 'number' && Number.isInteger(position) && position >= 0,
+      );
+    }
     if (Array.isArray(saved?.order)) {
       savedOrder = saved.order.filter(
         (position: unknown): position is number =>
@@ -1078,6 +1108,18 @@ if (dock && audio) {
     }
   } catch {
     // ignore an unreadable session value
+  }
+
+  const restoredIndex = restored ? queueIndexOf(restored.id) : -1;
+  if (
+    savedSequence &&
+    restoredIndex >= 0 &&
+    savedSequence.includes(restoredIndex) &&
+    new Set(savedSequence).size === savedSequence.length &&
+    savedSequence.every((position) => position < playables.length)
+  ) {
+    sequence = savedSequence;
+    queueContextLocked = true;
   }
 
   setState(false);
