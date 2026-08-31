@@ -20,9 +20,9 @@ interface Props {
 const { lang, profile: profileId } = Astro.props;
 const { profile } = resolveProfile(profileId);
 const ui = getDictionary(lang);
-const videos = getMusicRows(profile, profileId)
-  .filter((row) => row.source === 'youtube')
-  .slice(0, 4);
+const latest = getMusicRows(profile, profileId)
+  .filter((row) => row.source === 'youtube' || row.source === 'soundcloud')
+  .slice(0, 5);
 ---
 
 <AppLayout
@@ -36,7 +36,7 @@ const videos = getMusicRows(profile, profileId)
   <ProfileSpotlight profile={profile} profileId={profileId} lang={lang} ui={ui} />
 
   <VideoDeck
-    rows={videos}
+    rows={latest}
     lang={lang}
     profile={profile}
     profileId={profileId}

@@ -19,7 +19,7 @@ export const de: UiDictionary = {
     seeMore: 'Mehr ansehen',
   },
   sections: {
-    latestVideos: 'Neueste Videos',
+    latestVideos: 'Neueste Videos/Songs',
     platforms: 'Plattformen',
     listeningPlatforms: 'Zum Anhören',
     socialPlatforms: 'Videos & Social',
@@ -56,8 +56,8 @@ export const de: UiDictionary = {
   },
   search: {
     open: 'Suche öffnen',
-    label: 'Suchen',
-    placeholder: 'Suchen',
+    label: 'Songs suchen',
+    placeholder: 'Songs suchen',
     none: 'Keine passenden Ergebnisse',
     close: 'Suche schließen',
   },

@@ -19,7 +19,7 @@ export const en: UiDictionary = {
     seeMore: 'See more',
   },
   sections: {
-    latestVideos: 'Latest videos',
+    latestVideos: 'Latest Videos/Songs',
     platforms: 'Platforms',
     listeningPlatforms: 'Where to listen',
     socialPlatforms: 'Video & social',

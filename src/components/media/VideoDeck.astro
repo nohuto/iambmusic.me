@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { rows, lang, profile, profileId, ui, heading } = Astro.props;
-const moreHref = `${routePath(lang, profileId, 'music')}?source=youtube`;
+const moreHref = routePath(lang, profileId, 'music');
 ---
 
 <section class="panel deck" data-sortable aria-labelledby="deck-heading">

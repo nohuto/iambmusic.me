@@ -5,7 +5,7 @@ import path from 'node:path';
 const API_ROOT = 'https://www.googleapis.com/youtube/v3';
 const PAGE_SIZE = 50;
 const STATUS_BATCH = 50;
-const HOME_COUNT = 4;
+const HOME_COUNT = 5;
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const HANDLE_PATTERN = /^@[A-Za-z0-9_.-]{3,30}$/;
 const CHANNEL_ID_PATTERN = /^UC[A-Za-z0-9_-]{22}$/;
@@ -200,9 +200,11 @@ export function normalizeCandidates(items) {
   return normalized;
 }
 
-export function selectLatestVideos(items, limit = HOME_COUNT) {
+export function selectLatestMusic(items, limit = HOME_COUNT) {
   return items
-    .filter((item) => item.source === 'youtube' && item.playback === 'youtube-embed')
+    .filter(
+      (item) => item.playback === 'youtube-embed' || item.playback === 'soundcloud-widget',
+    )
     .slice(0, limit);
 }
 
@@ -485,7 +487,7 @@ export async function validateGeneratedCache(outputDir = defaultOutputDir) {
       profile: feed.profile,
       items: feed.items.length,
       counts,
-      home: selectLatestVideos(feed.items).length,
+      home: selectLatestMusic(feed.items).length,
     });
   }
   return summaries;

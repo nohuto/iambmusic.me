@@ -41,8 +41,13 @@ const length =
     : `${Math.floor(row.durationSeconds / 60)}:${String(Math.floor(row.durationSeconds % 60)).padStart(2, '0')}`;
 const released = row.publishedAt ? dateFormat.format(new Date(row.publishedAt)) : '-';
 const watch = row.videoId ? watchUrl(row.videoId) : null;
-const sourceLink = row.source === 'soundcloud' ? row.url : watch;
-const sourceLinkLabel = row.source === 'soundcloud' ? ui.music.openSoundCloud : ui.music.openYouTube;
+const sourceLink = isLocal ? null : row.source === 'youtube' ? watch : row.url;
+const sourceLinkLabel =
+  row.source === 'youtube'
+    ? ui.music.openYouTube
+    : row.source === 'soundcloud'
+      ? ui.music.openSoundCloud
+      : ui.music.openExternal;
 const share = `${new URL(routePath(lang, profile.id, 'music'), Astro.site ?? 'https://iambmusic.me').href}?focus=${encodeURIComponent(row.id)}`;
 const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
 ---
@@ -100,14 +105,31 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
       </span>
     </span>
 
-    <span class="source">
-      <Icon name={glyphs[row.source]} size="1rem" />
-      <span>{names[row.source]}</span>
-    </span>
+    <span class="source-slot" aria-hidden="true"></span>
 
     <span class="released">{released}</span>
     <span class="length">{length}</span>
   </button>
+
+  {
+    sourceLink ? (
+      <a
+        class="source source-link"
+        href={sourceLink}
+        aria-label={sourceLinkLabel}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name={glyphs[row.source]} size="1rem" />
+        <span>{names[row.source]}</span>
+      </a>
+    ) : (
+      <span class="source">
+        <Icon name={glyphs[row.source]} size="1rem" />
+        <span>{names[row.source]}</span>
+      </span>
+    )
+  }
 
   {
     playable && (
@@ -171,6 +193,7 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     display: grid;
     grid-template-columns: subgrid;
     grid-column: 2 / -2;
+    grid-row: 1;
     align-items: center;
     gap: var(--space-3);
     min-inline-size: 0;
@@ -242,11 +265,24 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
   }
 
   .source {
+    z-index: 1;
+    grid-column: 3;
+    grid-row: 1;
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    min-inline-size: 0;
     color: var(--legend-quiet);
     font-size: var(--step-0);
+  }
+
+  .source-link {
+    text-decoration: none;
+  }
+
+  .source-link:hover,
+  .source-link:focus-visible {
+    color: var(--legend);
   }
 
   .released,
@@ -259,6 +295,8 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
 
   .overflow {
     position: relative;
+    grid-column: -2 / -1;
+    grid-row: 1;
   }
 
   .row-menu {

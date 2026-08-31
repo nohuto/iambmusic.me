@@ -50,6 +50,9 @@ const icons = {
 
 const rail = variant === 'rail';
 const items = rail ? primaryNavigation : [...primaryNavigation, ...secondaryNavigation];
+const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
+  musicSources.includes(source),
+);
 ---
 
 <nav class={`panel-nav panel-nav-${variant}`} aria-label={ui.navigationLabel}>
@@ -58,7 +61,12 @@ const items = rail ? primaryNavigation : [...primaryNavigation, ...secondaryNavi
   <ul>
     {
       items.map((item) => {
-        const sources = item.page === 'music' ? musicSources : item.page === 'social' ? socialSources : [];
+        const sources =
+          item.page === 'music'
+            ? railMusicSources
+            : item.page === 'social'
+              ? socialSources
+              : [];
         const sourceListId = `${item.page}-sources`;
         return <li>
           <div class="row">
