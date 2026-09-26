@@ -11,7 +11,7 @@ function restoreOverride(): void {
   document.documentElement.classList.add('has-js');
   let theme: string | null = null;
   try {
-    theme = sessionStorage.getItem('theme_override');
+    theme = localStorage.getItem('theme_override');
   } catch {}
   if (theme === 'dark' || theme === 'light')
     document.documentElement.dataset.theme = theme;
@@ -40,8 +40,8 @@ document.addEventListener('click', (event) => {
   if (override) document.documentElement.dataset.theme = override;
   else delete document.documentElement.dataset.theme;
   try {
-    if (override) sessionStorage.setItem('theme_override', override);
-    else sessionStorage.removeItem('theme_override');
+    if (override) localStorage.setItem('theme_override', override);
+    else localStorage.removeItem('theme_override');
   } catch {}
   syncControls();
 });
