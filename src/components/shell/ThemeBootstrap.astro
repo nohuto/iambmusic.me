@@ -1,0 +1,8 @@
+<script is:inline>
+  document.documentElement.classList.add('has-js');
+  try {
+    const theme = sessionStorage.getItem('theme_override');
+    if (theme === 'dark' || theme === 'light')
+      document.documentElement.dataset.theme = theme;
+  } catch {}
+</script>

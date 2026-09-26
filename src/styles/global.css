@@ -33,7 +33,7 @@ html {
   background: var(--panel-ground);
   -webkit-text-size-adjust: 100%;
   accent-color: var(--ink);
-  color-scheme: light;
+  color-scheme: light dark;
 }
 
 * {
@@ -69,6 +69,10 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-track,
 body::-webkit-scrollbar-thumb {
   border: 0;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
 }
 
 html[data-theme='dark'] {
@@ -189,7 +193,7 @@ html.has-js .theme-control {
     rotate 200ms ease;
 }
 
-html[data-theme='light'] .theme-control .icon[data-theme-icon='dark'],
+html:not([data-theme='dark']) .theme-control .icon[data-theme-icon='dark'],
 html[data-theme='dark'] .theme-control .icon[data-theme-icon='light'] {
   opacity: 1;
   rotate: 0deg;
@@ -202,6 +206,22 @@ html[data-theme='dark'] .theme-control .icon[data-theme-icon='light'] {
 
 html[data-theme='dark'] .theme-control .thumb {
   translate: 1.4375rem 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme='light']) .theme-control .icon[data-theme-icon='dark'] {
+    opacity: 0;
+    rotate: -60deg;
+  }
+
+  html:not([data-theme='light']) .theme-control .icon[data-theme-icon='light'] {
+    opacity: 1;
+    rotate: 0deg;
+  }
+
+  html:not([data-theme='light']) .theme-control .thumb {
+    translate: 1.4375rem 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,20 +1,20 @@
 :root {
-  --panel-ground: #d7dad6;
-  --panel-plate: #eceeea;
-  --panel-recess: #c5c9c4;
-  --panel-rule: #a9aeaa;
-  --legend: #23262a;
-  --legend-quiet: #3f4346;
-  --legend-faint: #4f5356;
-  --screw: #b3b8b3;
-  --panel-hover: #dfe2de;
+  --panel-ground: light-dark(#d7dad6, #0b0b0e);
+  --panel-plate: light-dark(#eceeea, #161619);
+  --panel-recess: light-dark(#c5c9c4, #111114);
+  --panel-rule: light-dark(#a9aeaa, #ffffff1a);
+  --legend: light-dark(#23262a, #f0f0f2);
+  --legend-quiet: light-dark(#3f4346, #9898a2);
+  --legend-faint: light-dark(#4f5356, #83838d);
+  --screw: light-dark(#b3b8b3, #2a2a31);
+  --panel-hover: light-dark(#dfe2de, #212128);
 
-  --ink: #7e5804;
+  --ink: light-dark(#7e5804, #d3a02b);
   --ink-field: #b07d12;
   --ink-on-field: #16181a;
 
-  --focus: #1b3ea8;
-  --tint: #ddd0b0;
+  --focus: light-dark(#1b3ea8, #8fb4ff);
+  --tint: light-dark(#ddd0b0, #241c07);
 
   --radius: 6px;
   --radius-inner: 4px;
@@ -50,7 +50,7 @@
   --measure: 62ch;
 
   --legend-tracking: 0.14em;
-  --shadow-plate: 0 1px 2px rgb(16 18 20 / 0.08);
+  --shadow-plate: 0 1px 2px light-dark(rgb(16 18 20 / 0.08), rgb(0 0 0 / 0.6));
 
   --scrollbar-track: var(--panel-recess);
   --scrollbar-thumb: var(--screw);
@@ -58,36 +58,8 @@
 }
 
 :root[data-profile='aimb'] {
-  --ink: #1d3a6b;
-  --ink-field: #1d3a6b;
+  --ink: light-dark(#1d3a6b, #7fa5e3);
+  --ink-field: light-dark(#1d3a6b, #2c5aa8);
   --ink-on-field: #f2f4f5;
-  --tint: #c8d2e2;
-}
-
-:root[data-theme='dark'] {
-  --panel-ground: #0b0b0e;
-  --panel-plate: #161619;
-  --panel-recess: #111114;
-  --panel-rule: #ffffff1a;
-  --panel-hover: #212128;
-  --legend: #f0f0f2;
-  --legend-quiet: #9898a2;
-  --legend-faint: #83838d;
-  --screw: #2a2a31;
-
-  --ink: #d3a02b;
-  --ink-field: #b07d12;
-  --ink-on-field: #16181a;
-
-  --focus: #8fb4ff;
-  --tint: #241c07;
-
-  --shadow-plate: 0 1px 2px rgb(0 0 0 / 0.6);
-}
-
-:root[data-theme='dark'][data-profile='aimb'] {
-  --ink: #7fa5e3;
-  --ink-field: #2c5aa8;
-  --ink-on-field: #f2f4f5;
-  --tint: #0d1526;
+  --tint: light-dark(#c8d2e2, #0d1526);
 }

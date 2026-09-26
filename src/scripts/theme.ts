@@ -1,25 +1,26 @@
 type Theme = 'light' | 'dark';
 
-const STORAGE_KEY = 'iambmusic-theme';
-const root = document.documentElement;
+const system = matchMedia('(prefers-color-scheme: dark)');
+const systemTheme = (): Theme => (system.matches ? 'dark' : 'light');
+const activeTheme = (): Theme => {
+  const theme = document.documentElement.dataset.theme;
+  return theme === 'dark' || theme === 'light' ? theme : systemTheme();
+};
 
-function saved(): Theme | null {
+function restoreOverride(): void {
+  document.documentElement.classList.add('has-js');
+  let theme: string | null = null;
   try {
-    const value = localStorage.getItem(STORAGE_KEY);
-    return value === 'dark' || value === 'light' ? value : null;
-  } catch {
-    return null;
-  }
+    theme = sessionStorage.getItem('theme_override');
+  } catch {}
+  if (theme === 'dark' || theme === 'light')
+    document.documentElement.dataset.theme = theme;
+  else delete document.documentElement.dataset.theme;
+  syncControls();
 }
 
-function resolve(): Theme {
-  return (
-    saved() ??
-    (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-  );
-}
-
-function syncControls(theme: Theme): void {
+function syncControls(): void {
+  const theme = activeTheme();
   for (const button of document.querySelectorAll<HTMLButtonElement>(
     '[data-theme-toggle]',
   )) {
@@ -32,28 +33,22 @@ function syncControls(theme: Theme): void {
   }
 }
 
-function apply(theme: Theme): void {
-  root.classList.add('has-js');
-  root.dataset['theme'] = theme;
-  syncControls(theme);
-}
-
 document.addEventListener('click', (event) => {
-  const button = (event.target as Element | null)?.closest(
-    '[data-theme-toggle]',
-  );
-  if (!button) return;
-  const next: Theme = root.dataset['theme'] === 'dark' ? 'light' : 'dark';
+  if (!(event.target as Element | null)?.closest('[data-theme-toggle]')) return;
+  const next = activeTheme() === 'dark' ? 'light' : 'dark';
+  const override = next === systemTheme() ? null : next;
+  if (override) document.documentElement.dataset.theme = override;
+  else delete document.documentElement.dataset.theme;
   try {
-    localStorage.setItem(STORAGE_KEY, next);
-  } catch {
-    // a blocked storage API must not break the control
-  }
-  apply(next);
+    if (override) sessionStorage.setItem('theme_override', override);
+    else sessionStorage.removeItem('theme_override');
+  } catch {}
+  syncControls();
 });
 
-apply(resolve());
-document.addEventListener('astro:after-swap', () => apply(resolve()));
-document.addEventListener('astro:page-load', () => syncControls(resolve()));
+system.addEventListener('change', syncControls);
+document.addEventListener('astro:after-swap', restoreOverride);
+document.addEventListener('astro:page-load', syncControls);
+restoreOverride();
 
 export {};

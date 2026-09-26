@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import iambLogo from '../assets/profiles/iamb/logo.png';
+import ThemeBootstrap from '../components/shell/ThemeBootstrap.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -13,7 +14,7 @@ const favicon = await getImage({
 ---
 
 <!doctype html>
-<html lang="de" data-profile="iamb" data-theme="light">
+<html lang="de" data-profile="iamb">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,20 +26,7 @@ const favicon = await getImage({
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
     <link rel="sitemap" href="/sitemap.xml" />
-    <script is:inline>
-      (() => {
-        const root = document.documentElement;
-        let stored = null;
-        try {
-          stored = localStorage.getItem('iambmusic-theme');
-        } catch {}
-        const system = matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light';
-        root.dataset.theme =
-          stored === 'dark' || stored === 'light' ? stored : system;
-      })();
-    </script>
+    <ThemeBootstrap />
   </head>
   <body>
     <main class="missing">
