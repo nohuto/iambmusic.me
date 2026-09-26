@@ -48,7 +48,10 @@ const { name, weight = 'regular', size = '1.25rem' } = Astro.props;
 
 const file = weight === 'regular' ? `${name}.svg` : `${name}-${weight}.svg`;
 const source = await readFile(
-  new URL(`../../../node_modules/@phosphor-icons/core/assets/${weight}/${file}`, import.meta.url),
+  new URL(
+    `../../../node_modules/@phosphor-icons/core/assets/${weight}/${file}`,
+    import.meta.url,
+  ),
   'utf8',
 );
 

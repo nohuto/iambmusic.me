@@ -4,7 +4,9 @@
   font-weight: 400 700;
   font-stretch: 100% 125%;
   font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212, U+FFFD;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212,
+    U+FFFD;
 }
 
 @font-face {
@@ -13,7 +15,8 @@
   font-weight: 400 700;
   font-stretch: 100% 125%;
   font-display: swap;
-  unicode-range: U+0100-02BA, U+1E00-1E9F, U+2020, U+20A0-20AB, U+2113, U+A720-A7FF;
+  unicode-range:
+    U+0100-02BA, U+1E00-1E9F, U+2020, U+20A0-20AB, U+2113, U+A720-A7FF;
 }
 
 *,
@@ -346,19 +349,28 @@ html[data-theme='dark'] .theme-control .thumb {
   font-variant-numeric: tabular-nums;
 }
 
-.media-row[data-playable]:not([data-row-state='playing']):not([data-row-selected]):not(:hover):not(
-    :focus-within
-  )
+.media-row[data-playable]:not([data-row-state='playing']):not(
+    [data-row-selected]
+  ):not(:hover):not(:focus-within)
   .index,
 .media-row:not([data-playable]):not(:hover):not(:focus-within) .index,
-.media-row:not([data-playable]):is(:hover, :focus-within) [data-row-icon='open'],
-.media-row[data-playable]:not([data-row-state='playing']):is([data-row-selected], :hover, :focus-within)
-  [data-row-icon='play'],
-.media-row[data-playable][data-row-state='playing']:is([data-row-selected], :hover, :focus-within)
-  [data-row-icon='pause'],
-.media-row[data-playable][data-row-state='playing']:not([data-row-selected]):not(:hover):not(
+.media-row:not([data-playable]):is(:hover, :focus-within)
+  [data-row-icon='open'],
+.media-row[data-playable]:not([data-row-state='playing']):is(
+    [data-row-selected],
+    :hover,
     :focus-within
   )
+  [data-row-icon='play'],
+.media-row[data-playable][data-row-state='playing']:is(
+    [data-row-selected],
+    :hover,
+    :focus-within
+  )
+  [data-row-icon='pause'],
+.media-row[data-playable][data-row-state='playing']:not(
+    [data-row-selected]
+  ):not(:hover):not(:focus-within)
   [data-row-icon='waveform'] {
   display: block;
 }
@@ -445,7 +457,8 @@ html[data-theme='dark'] .theme-control .thumb {
   }
 
   .stage {
-    padding: var(--intro-gap) var(--space-6) calc(var(--dock-height) + var(--space-7));
+    padding: var(--intro-gap) var(--space-6)
+      calc(var(--dock-height) + var(--space-7));
   }
 }
 

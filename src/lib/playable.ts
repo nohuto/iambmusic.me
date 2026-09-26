@@ -31,17 +31,25 @@ export interface PlayableSoundCloud {
 
 export type Playable = PlayableTrack | PlayableVideo | PlayableSoundCloud;
 
-export function getPlayables(profile: Profile, profileId: ProfileId): Playable[] {
+export function getPlayables(
+  profile: Profile,
+  profileId: ProfileId,
+): Playable[] {
   const local: PlayableTrack[] = profile.tracks.map((track) => ({
     kind: 'local',
     id: `local:${track.id}`,
     title: track.title,
     durationSeconds: track.durationSeconds,
-    sources: track.sources.map((source) => ({ src: source.src, mimeType: source.mimeType })),
+    sources: track.sources.map((source) => ({
+      src: source.src,
+      mimeType: source.mimeType,
+    })),
   }));
 
   const videos: PlayableVideo[] = getProfileMedia(profileId)
-    .items.filter((item) => item.source === 'youtube' && item.playback === 'youtube-embed')
+    .items.filter(
+      (item) => item.source === 'youtube' && item.playback === 'youtube-embed',
+    )
     .map((item) => ({
       kind: 'youtube',
       id: item.id,
@@ -53,7 +61,10 @@ export function getPlayables(profile: Profile, profileId: ProfileId): Playable[]
     }));
 
   const soundcloud: PlayableSoundCloud[] = getProfileMedia(profileId)
-    .items.filter((item) => item.source === 'soundcloud' && item.playback === 'soundcloud-widget')
+    .items.filter(
+      (item) =>
+        item.source === 'soundcloud' && item.playback === 'soundcloud-widget',
+    )
     .map((item) => ({
       kind: 'soundcloud',
       id: item.id,

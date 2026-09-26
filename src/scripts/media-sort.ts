@@ -21,7 +21,10 @@ function renumber(panel: HTMLElement): void {
 
 function sort(panel: HTMLElement, column: string, direction: Direction): void {
   const lang = document.documentElement.lang || 'de';
-  const collator = new Intl.Collator(lang, { numeric: true, sensitivity: 'base' });
+  const collator = new Intl.Collator(lang, {
+    numeric: true,
+    sensitivity: 'base',
+  });
   const list = items(panel)[0]?.parentElement;
   if (!list) return;
 
@@ -29,7 +32,10 @@ function sort(panel: HTMLElement, column: string, direction: Direction): void {
 
   const sorted = items(panel).sort((a, b) => {
     if (column === 'title') {
-      const result = collator.compare(a.dataset['sortTitle'] ?? '', b.dataset['sortTitle'] ?? '');
+      const result = collator.compare(
+        a.dataset['sortTitle'] ?? '',
+        b.dataset['sortTitle'] ?? '',
+      );
       if (result !== 0) return direction === 'asc' ? result : -result;
       return order(a) - order(b);
     }
@@ -49,14 +55,20 @@ function sort(panel: HTMLElement, column: string, direction: Direction): void {
 }
 
 document.addEventListener('click', (event) => {
-  const button = (event.target as Element | null)?.closest<HTMLButtonElement>('[data-sort]');
+  const button = (event.target as Element | null)?.closest<HTMLButtonElement>(
+    '[data-sort]',
+  );
   const panel = button?.closest<HTMLElement>('[data-sortable]');
   if (!button || !panel) return;
 
   const column = button.dataset['sort']!;
   const fallback: Direction = column === 'title' ? 'asc' : 'desc';
   const current = button.dataset['direction'] as Direction | undefined;
-  const direction: Direction = current ? (current === 'asc' ? 'desc' : 'asc') : fallback;
+  const direction: Direction = current
+    ? current === 'asc'
+      ? 'desc'
+      : 'asc'
+    : fallback;
 
   for (const other of panel.querySelectorAll<HTMLElement>('[data-sort]')) {
     if (other !== button) delete other.dataset['direction'];
@@ -67,7 +79,8 @@ document.addEventListener('click', (event) => {
 });
 
 function setup(): void {
-  for (const panel of document.querySelectorAll<HTMLElement>('[data-sortable]')) renumber(panel);
+  for (const panel of document.querySelectorAll<HTMLElement>('[data-sortable]'))
+    renumber(panel);
 }
 
 document.addEventListener('iamb:rows-changed', setup);

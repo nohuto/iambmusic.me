@@ -2,7 +2,12 @@ import type { ProfileId } from '../data/types.ts';
 
 const brandAliases: Record<ProfileId, readonly string[]> = {
   iamb: ['iamb Synthmusic'],
-  aimb: ['AIMB Music Project', 'AiMP Music Project', 'AiMP Music | Project', 'Ai Music | Project'],
+  aimb: [
+    'AIMB Music Project',
+    'AiMP Music Project',
+    'AiMP Music | Project',
+    'Ai Music | Project',
+  ],
 };
 
 const leadingSeparator = /^[\s\-–\u2014:|]+/;

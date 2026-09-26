@@ -33,12 +33,23 @@ const musicPath = routePath(lang, profile, 'music');
       aria-autocomplete="list"
       autocomplete="off"
     />
-    <button class="icon-action" type="button" data-search-close aria-label={ui.search.close}>
+    <button
+      class="icon-action"
+      type="button"
+      data-search-close
+      aria-label={ui.search.close}
+    >
       <Icon name="x" weight="bold" size="1.05rem" />
     </button>
   </form>
 
-  <ul id="search-results" class="results" data-search-results role="listbox" aria-live="polite"></ul>
+  <ul
+    id="search-results"
+    class="results"
+    data-search-results
+    role="listbox"
+    aria-live="polite"
+  ></ul>
 </dialog>
 
 <style>

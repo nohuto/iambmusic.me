@@ -13,10 +13,20 @@ interface Props {
   refreshedFrom?: MediaSource;
 }
 
-const { lang, ui, library, heading, lead, sources, extraCount = 0, refreshedFrom } = Astro.props;
+const {
+  lang,
+  ui,
+  library,
+  heading,
+  lead,
+  sources,
+  extraCount = 0,
+  refreshedFrom,
+} = Astro.props;
 
 const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
-const format = (stamp: string | undefined) => (stamp ? dateFormat.format(new Date(stamp)) : null);
+const format = (stamp: string | undefined) =>
+  stamp ? dateFormat.format(new Date(stamp)) : null;
 
 const inScope = library.items.filter((item) => sources.includes(item.source));
 const overallDate = refreshedFrom
@@ -34,7 +44,8 @@ const facts: Record<string, { count: number; date: string | null }> = {
 };
 for (const source of sources) {
   const count = inScope.filter((item) => item.source === source).length;
-  if (count > 0) facts[source] = { count, date: format(library.refreshedAt[source]) };
+  if (count > 0)
+    facts[source] = { count, date: format(library.refreshedAt[source]) };
 }
 const initial = facts[''];
 ---
@@ -43,10 +54,28 @@ const initial = facts[''];
   <div class="copy">
     <h1>{heading}</h1>
     <p class="lead">{lead}</p>
-    <p class="facts" aria-live="polite" data-banner-facts data-sets={JSON.stringify(facts)}>
-      <span data-facts-count data-label={ui.music.entries}>{initial?.count} {ui.music.entries}</span>
-      <span class="dot" aria-hidden="true" data-facts-dot hidden={!initial?.date}>&#183;</span>
-      <span data-facts-updated data-label={ui.video.updated} hidden={!initial?.date}>
+    <p
+      class="facts"
+      aria-live="polite"
+      data-banner-facts
+      data-sets={JSON.stringify(facts)}
+    >
+      <span data-facts-count data-label={ui.music.entries}>
+        {initial?.count} {ui.music.entries}
+      </span>
+      <span
+        class="dot"
+        aria-hidden="true"
+        data-facts-dot
+        hidden={!initial?.date}
+      >
+        &#183;
+      </span>
+      <span
+        data-facts-updated
+        data-label={ui.video.updated}
+        hidden={!initial?.date}
+      >
         {ui.video.updated} {initial?.date}
       </span>
     </p>

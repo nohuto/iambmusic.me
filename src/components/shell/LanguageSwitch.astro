@@ -1,5 +1,10 @@
 ---
-import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  PageId,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import { languages } from '../../data/types.ts';
 import { dictionaries } from '../../i18n/index.ts';
 import { routePath } from '../../lib/routes.ts';
@@ -18,42 +23,49 @@ const menuId = 'language-menu';
 ---
 
 <div class="language-switch">
-  <button class="trigger" type="button" popovertarget={menuId} aria-label={ui.switches.language}>
-    <span class="flag" aria-hidden="true">{flags[lang]}</span>
+  <button
+    class="trigger"
+    type="button"
+    popovertarget={menuId}
+    aria-label={ui.switches.language}
+  >
+    <span class="flag" aria-hidden="true">
+      {flags[lang]}
+    </span>
     <span class="full">{dictionaries[lang].languageName}</span>
-    <span class="short" aria-hidden="true">{lang.toUpperCase()}</span>
+    <span class="short" aria-hidden="true">
+      {lang.toUpperCase()}
+    </span>
     <Icon name="caret-down" size="0.8rem" />
   </button>
 
   <div class="menu" id={menuId} popover data-anchored-menu>
     <ul>
-      {
-        languages.map((option) => {
-          const current = option === lang;
-          return (
-            <li>
-              <a
-                href={routePath(option, profile, page)}
-                lang={option}
-                hreflang={option}
-                data-astro-reload
-                aria-current={current ? 'true' : undefined}
-              >
-                <span class="flag" aria-hidden="true">
-                  {flags[option]}
+      {languages.map((option) => {
+        const current = option === lang;
+        return (
+          <li>
+            <a
+              href={routePath(option, profile, page)}
+              lang={option}
+              hreflang={option}
+              data-astro-reload
+              aria-current={current ? 'true' : undefined}
+            >
+              <span class="flag" aria-hidden="true">
+                {flags[option]}
+              </span>
+              <span class="name">{dictionaries[option].languageName}</span>
+              {current && (
+                <span class="state">
+                  <Icon name="check" weight="bold" size="0.85rem" />
+                  <span class="sr-only">{ui.switches.active}</span>
                 </span>
-                <span class="name">{dictionaries[option].languageName}</span>
-                {current && (
-                  <span class="state">
-                    <Icon name="check" weight="bold" size="0.85rem" />
-                    <span class="sr-only">{ui.switches.active}</span>
-                  </span>
-                )}
-              </a>
-            </li>
-          );
-        })
-      }
+              )}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </div>
 </div>
@@ -107,7 +119,8 @@ const menuId = 'language-menu';
     box-shadow: var(--shadow-plate);
     block-size: fit-content;
     max-block-size: calc(
-      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--space-5)
+      100dvh - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px) - var(--space-5)
     );
     overflow-y: auto;
     overscroll-behavior: contain;

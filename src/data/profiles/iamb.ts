@@ -29,7 +29,10 @@ export const iambProfile: IambProfile = {
     },
   },
   hero: {
-    title: { de: 'Music from the Space Stage', en: 'Music from the Space Stage' },
+    title: {
+      de: 'Music from the Space Stage',
+      en: 'Music from the Space Stage',
+    },
     lead: {
       de: 'Elektronische Soundtracks, gespielt auf meinem Masterkeyboard und produziert mit Cakewalk Sonar.',
       en: 'Electronic soundtracks, played on my master keyboard and produced with Cakewalk Sonar.',
@@ -46,8 +49,16 @@ export const iambProfile: IambProfile = {
       title: 'Welcome 1',
       durationSeconds: 59,
       sources: [
-        { format: 'mp3', src: '/audio/iamb/welcome-1.mp3', mimeType: 'audio/mpeg' },
-        { format: 'm4a', src: '/audio/iamb/welcome-1.m4a', mimeType: 'audio/mp4' },
+        {
+          format: 'mp3',
+          src: '/audio/iamb/welcome-1.mp3',
+          mimeType: 'audio/mpeg',
+        },
+        {
+          format: 'm4a',
+          src: '/audio/iamb/welcome-1.m4a',
+          mimeType: 'audio/mp4',
+        },
       ],
     },
     {
@@ -56,8 +67,16 @@ export const iambProfile: IambProfile = {
       title: 'Welcome 2',
       durationSeconds: 49,
       sources: [
-        { format: 'mp3', src: '/audio/iamb/welcome-2.mp3', mimeType: 'audio/mpeg' },
-        { format: 'm4a', src: '/audio/iamb/welcome-2.m4a', mimeType: 'audio/mp4' },
+        {
+          format: 'mp3',
+          src: '/audio/iamb/welcome-2.mp3',
+          mimeType: 'audio/mpeg',
+        },
+        {
+          format: 'm4a',
+          src: '/audio/iamb/welcome-2.m4a',
+          mimeType: 'audio/mp4',
+        },
       ],
     },
   ],

@@ -29,7 +29,10 @@ export const aimbProfile: AimbProfile = {
     },
   },
   hero: {
-    title: { de: 'Music created in collab with AI', en: 'Music created in collab with AI' },
+    title: {
+      de: 'Music created in collab with AI',
+      en: 'Music created in collab with AI',
+    },
     lead: {
       de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
       en: 'Cinematic electronic music, produced in collaboration with AI.',
@@ -37,7 +40,10 @@ export const aimbProfile: AimbProfile = {
   },
   images: {
     logo,
-    logoAlt: { de: 'Logo des AIMB Music Project', en: 'AIMB Music Project logo' },
+    logoAlt: {
+      de: 'Logo des AIMB Music Project',
+      en: 'AIMB Music Project logo',
+    },
   },
   tracks: [
     {
@@ -45,7 +51,13 @@ export const aimbProfile: AimbProfile = {
       id: 'last-in-space',
       title: 'Last in Space',
       durationSeconds: 48,
-      sources: [{ format: 'wav', src: '/audio/aimb/last-in-space.wav', mimeType: 'audio/wav' }],
+      sources: [
+        {
+          format: 'wav',
+          src: '/audio/aimb/last-in-space.wav',
+          mimeType: 'audio/wav',
+        },
+      ],
     },
   ],
   platforms: [

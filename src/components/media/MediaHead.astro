@@ -10,27 +10,51 @@ const { ui } = Astro.props;
 ---
 
 <div class="media-head media-grid">
-  <span class="index" aria-hidden="true">#</span>
+  <span class="index" aria-hidden="true">
+    #
+  </span>
 
-  <button class="sort" type="button" data-sort="title" aria-label={ui.music.sortTitle}>
+  <button
+    class="sort"
+    type="button"
+    data-sort="title"
+    aria-label={ui.music.sortTitle}
+  >
     {ui.music.columns.title}
     <span class="caret" aria-hidden="true">
-      <span data-caret="asc"><Icon name="caret-up" weight="bold" size="0.7rem" /></span>
-      <span data-caret="desc"><Icon name="caret-down" weight="bold" size="0.7rem" /></span>
+      <span data-caret="asc">
+        <Icon name="caret-up" weight="bold" size="0.7rem" />
+      </span>
+      <span data-caret="desc">
+        <Icon name="caret-down" weight="bold" size="0.7rem" />
+      </span>
     </span>
   </button>
 
-  <span class="source" aria-hidden="true"><span>{ui.music.columns.source}</span></span>
+  <span class="source" aria-hidden="true">
+    <span>{ui.music.columns.source}</span>
+  </span>
 
-  <button class="sort released" type="button" data-sort="released" aria-label={ui.music.sortReleased}>
+  <button
+    class="sort released"
+    type="button"
+    data-sort="released"
+    aria-label={ui.music.sortReleased}
+  >
     {ui.music.columns.released}
     <span class="caret" aria-hidden="true">
-      <span data-caret="asc"><Icon name="caret-up" weight="bold" size="0.7rem" /></span>
-      <span data-caret="desc"><Icon name="caret-down" weight="bold" size="0.7rem" /></span>
+      <span data-caret="asc">
+        <Icon name="caret-up" weight="bold" size="0.7rem" />
+      </span>
+      <span data-caret="desc">
+        <Icon name="caret-down" weight="bold" size="0.7rem" />
+      </span>
     </span>
   </button>
 
-  <span class="length" aria-hidden="true">{ui.music.columns.length}</span>
+  <span class="length" aria-hidden="true">
+    {ui.music.columns.length}
+  </span>
   <span />
 </div>
 
@@ -48,5 +72,4 @@ const { ui } = Astro.props;
     justify-self: center;
     font-variant-numeric: tabular-nums;
   }
-
 </style>

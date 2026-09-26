@@ -38,60 +38,65 @@ const { Content } = await render(story);
       <h1>{story.data.heading}</h1>
       <p class="lead">{story.data.summary}</p>
 
-      {story.data.status === 'provisional' && <p class="notice">{ui.notices.provisionalContent}</p>}
+      {story.data.status === 'provisional' && (
+        <p class="notice">{ui.notices.provisionalContent}</p>
+      )}
 
       <div class="bio">
         <Content />
       </div>
     </section>
 
-    {
-      artist.studio && (
-        <section aria-labelledby="studio-heading">
-          <h2 id="studio-heading">{ui.sections.studio}</h2>
-          <div class="studio">
-            <p>{localize(artist.studio.software, lang)}</p>
-            <p>{localize(artist.studio.hardware, lang)}</p>
-          </div>
-        </section>
-      )
-    }
+    {artist.studio && (
+      <section aria-labelledby="studio-heading">
+        <h2 id="studio-heading">{ui.sections.studio}</h2>
+        <div class="studio">
+          <p>{localize(artist.studio.software, lang)}</p>
+          <p>{localize(artist.studio.hardware, lang)}</p>
+        </div>
+      </section>
+    )}
 
-    {
-      artist.timeline.length > 0 && (
-        <section aria-labelledby="timeline-heading">
-          <h2 id="timeline-heading">{ui.sections.timeline}</h2>
-          <dl class="timeline">
-            {artist.timeline.map((entry) => (
-              <div class="moment">
-                <dt>{localize(entry.period, lang)}</dt>
-                <dd>{localize(entry.text, lang)}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )
-    }
+    {artist.timeline.length > 0 && (
+      <section aria-labelledby="timeline-heading">
+        <h2 id="timeline-heading">{ui.sections.timeline}</h2>
+        <dl class="timeline">
+          {artist.timeline.map((entry) => (
+            <div class="moment">
+              <dt>{localize(entry.period, lang)}</dt>
+              <dd>{localize(entry.text, lang)}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
 
-    {
-      artist.inspirations.length > 0 && (
-        <section aria-labelledby="inspiration-heading">
-          <h2 id="inspiration-heading">{ui.sections.inspiration}</h2>
-          <ul class="inspirations">
-            {artist.inspirations.map((inspiration) => (
-              <li>
-                <a href={inspiration.url} target="_blank" rel="noopener noreferrer">
-                  <span class="shot">
-                    <Image src={inspiration.image} alt="" width={240} loading="lazy" />
-                  </span>
-                  <span class="name">{inspiration.name}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    {artist.inspirations.length > 0 && (
+      <section aria-labelledby="inspiration-heading">
+        <h2 id="inspiration-heading">{ui.sections.inspiration}</h2>
+        <ul class="inspirations">
+          {artist.inspirations.map((inspiration) => (
+            <li>
+              <a
+                href={inspiration.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="shot">
+                  <Image
+                    src={inspiration.image}
+                    alt=""
+                    width={240}
+                    loading="lazy"
+                  />
+                </span>
+                <span class="name">{inspiration.name}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </div>
 </AppLayout>
 

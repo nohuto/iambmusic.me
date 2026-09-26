@@ -1,5 +1,10 @@
 ---
-import type { Language, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  Profile,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import type { LibraryRow } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
 import MediaHead from './MediaHead.astro';
@@ -28,29 +33,32 @@ const moreHref = routePath(lang, profileId, 'music');
     )}
   </header>
 
-  {
-    rows.length === 0 ? (
-      <p class="empty">{ui.video.empty}</p>
-    ) : (
-      <>
-        <MediaHead ui={ui} />
+  {rows.length === 0 ? (
+    <p class="empty">{ui.video.empty}</p>
+  ) : (
+    <>
+      <MediaHead ui={ui} />
 
-        <ul class="rows">
-          {rows.map((row, position) => (
-            <li
-              data-media-row
-              data-sort-title={row.title}
-              data-sort-date={row.publishedAt ?? ''}
-              data-sort-order={position}
-            >
-              <MediaRow row={row} position={position + 1} profile={profile} lang={lang} ui={ui} />
-            </li>
-          ))}
-        </ul>
-
-      </>
-    )
-  }
+      <ul class="rows">
+        {rows.map((row, position) => (
+          <li
+            data-media-row
+            data-sort-title={row.title}
+            data-sort-date={row.publishedAt ?? ''}
+            data-sort-order={position}
+          >
+            <MediaRow
+              row={row}
+              position={position + 1}
+              profile={profile}
+              lang={lang}
+              ui={ui}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
 </section>
 
 <style>
@@ -66,5 +74,4 @@ const moreHref = routePath(lang, profileId, 'music');
   li + li {
     border-block-start: var(--rule) solid var(--panel-rule);
   }
-
 </style>

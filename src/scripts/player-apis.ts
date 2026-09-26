@@ -23,11 +23,19 @@ export interface YouTubeApi {
       };
     },
   ) => YouTubePlayer;
-  PlayerState: { PLAYING: number; PAUSED: number; ENDED: number; BUFFERING: number };
+  PlayerState: {
+    PLAYING: number;
+    PAUSED: number;
+    ENDED: number;
+    BUFFERING: number;
+  };
 }
 
 export interface SoundCloudWidget {
-  bind(event: string, listener: (data?: { currentPosition?: number }) => void): void;
+  bind(
+    event: string,
+    listener: (data?: { currentPosition?: number }) => void,
+  ): void;
   play(): void;
   pause(): void;
   seekTo(milliseconds: number): void;
@@ -38,7 +46,10 @@ export interface SoundCloudWidget {
 export interface SoundCloudApi {
   Widget: {
     (iframe: HTMLIFrameElement): SoundCloudWidget;
-    Events: Record<'READY' | 'PAUSE' | 'PLAY_PROGRESS' | 'FINISH' | 'ERROR', string>;
+    Events: Record<
+      'READY' | 'PAUSE' | 'PLAY_PROGRESS' | 'FINISH' | 'ERROR',
+      string
+    >;
   };
 }
 

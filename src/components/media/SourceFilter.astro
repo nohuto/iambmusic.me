@@ -1,5 +1,10 @@
 ---
-import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  PageId,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import type { MediaSource } from '../../lib/media.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
@@ -34,24 +39,26 @@ const names = {
 <nav class="sources" aria-label={ui.music.filterLabel}>
   <ul>
     <li>
-      <a href={base} data-source-link="" aria-current={active === null ? 'true' : undefined}>
+      <a
+        href={base}
+        data-source-link=""
+        aria-current={active === null ? 'true' : undefined}
+      >
         {ui.music.all}
       </a>
     </li>
-    {
-      sources.map((source) => (
-        <li>
-          <a
-            href={`${base}?source=${source}`}
-            data-source-link={source}
-            aria-current={active === source ? 'true' : undefined}
-          >
-            <Icon name={glyphs[source]} size="0.95rem" />
-            {names[source]}
-          </a>
-        </li>
-      ))
-    }
+    {sources.map((source) => (
+      <li>
+        <a
+          href={`${base}?source=${source}`}
+          data-source-link={source}
+          aria-current={active === source ? 'true' : undefined}
+        >
+          <Icon name={glyphs[source]} size="0.95rem" />
+          {names[source]}
+        </a>
+      </li>
+    ))}
   </ul>
 </nav>
 

@@ -13,12 +13,20 @@ function saved(): Theme | null {
 }
 
 function resolve(): Theme {
-  return saved() ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  return (
+    saved() ??
+    (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  );
 }
 
 function syncControls(theme: Theme): void {
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    const next = theme === 'dark' ? button.dataset['labelLight'] : button.dataset['labelDark'];
+  for (const button of document.querySelectorAll<HTMLButtonElement>(
+    '[data-theme-toggle]',
+  )) {
+    const next =
+      theme === 'dark'
+        ? button.dataset['labelLight']
+        : button.dataset['labelDark'];
     if (next) button.setAttribute('aria-label', next);
     button.setAttribute('aria-checked', String(theme === 'dark'));
   }
@@ -31,7 +39,9 @@ function apply(theme: Theme): void {
 }
 
 document.addEventListener('click', (event) => {
-  const button = (event.target as Element | null)?.closest('[data-theme-toggle]');
+  const button = (event.target as Element | null)?.closest(
+    '[data-theme-toggle]',
+  );
   if (!button) return;
   const next: Theme = root.dataset['theme'] === 'dark' ? 'light' : 'dark';
   try {

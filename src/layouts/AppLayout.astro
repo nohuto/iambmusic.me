@@ -25,7 +25,15 @@ interface Props {
   activeSource?: string | null;
 }
 
-const { lang, profile, activeProfile, page, title, description, activeSource = null } = Astro.props;
+const {
+  lang,
+  profile,
+  activeProfile,
+  page,
+  title,
+  description,
+  activeSource = null,
+} = Astro.props;
 const musicSources = getMusicSources(activeProfile, profile);
 const socialSources = getSocialSources(profile);
 
@@ -33,28 +41,34 @@ const ui = getDictionary(lang);
 const playbackId = ['playback', lang, profile].join('-');
 const canonical = absoluteUrl(routePath(lang, profile, page), Astro.site);
 const alternates = alternateLinks(profile, page);
-const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: 'png' });
+const favicon = await getImage({
+  src: iambLogo,
+  width: 64,
+  height: 64,
+  format: 'png',
+});
 ---
 
 <!doctype html>
 <html lang={lang} data-profile={profile} data-theme="light">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
     <link rel="sitemap" href="/sitemap.xml" />
-    {
-      alternates.map((alternate) => (
-        <link
-          rel="alternate"
-          hreflang={alternate.hreflang}
-          href={absoluteUrl(alternate.path, Astro.site)}
-        />
-      ))
-    }
+    {alternates.map((alternate) => (
+      <link
+        rel="alternate"
+        hreflang={alternate.hreflang}
+        href={absoluteUrl(alternate.path, Astro.site)}
+      />
+    ))}
     <ClientRouter fallback="swap" />
     <link
       rel="preload"
@@ -71,8 +85,11 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
         try {
           stored = localStorage.getItem('iambmusic-theme');
         } catch {}
-        const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : system;
+        const system = matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+        root.dataset.theme =
+          stored === 'dark' || stored === 'light' ? stored : system;
         let rail = null;
         let musicSources = null;
         let socialSources = null;
@@ -82,14 +99,17 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
           socialSources = localStorage.getItem('iambmusic-social-sources');
         } catch {}
         root.dataset.rail = rail === 'collapsed' ? 'collapsed' : 'expanded';
-        root.dataset.musicSources = musicSources === 'collapsed' ? 'collapsed' : 'expanded';
-        root.dataset.socialSources = socialSources === 'collapsed' ? 'collapsed' : 'expanded';
+        root.dataset.musicSources =
+          musicSources === 'collapsed' ? 'collapsed' : 'expanded';
+        root.dataset.socialSources =
+          socialSources === 'collapsed' ? 'collapsed' : 'expanded';
       })();
     </script>
   </head>
   <body>
-  
-    <a class="skip-link" href="#main">{ui.actions.skipToContent}</a>
+    <a class="skip-link" href="#main">
+      {ui.actions.skipToContent}
+    </a>
 
     <div class="app">
       <ProfileRail

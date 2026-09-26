@@ -1,4 +1,13 @@
-import { access, copyFile, mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import {
+  access,
+  copyFile,
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -9,7 +18,13 @@ const HOME_COUNT = 5;
 const VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 const HANDLE_PATTERN = /^@[A-Za-z0-9_.-]{3,30}$/;
 const CHANNEL_ID_PATTERN = /^UC[A-Za-z0-9_-]{22}$/;
-const THUMBNAIL_PREFERENCE = ['high', 'medium', 'standard', 'maxres', 'default'];
+const THUMBNAIL_PREFERENCE = [
+  'high',
+  'medium',
+  'standard',
+  'maxres',
+  'default',
+];
 const KNOWN_PROFILES = ['aimb', 'iamb'];
 
 const projectRoot = new URL('../', import.meta.url);
@@ -25,7 +40,8 @@ const coverRoot = new URL('public/media/', projectRoot);
 export function createRequest(apiKey, fetchImpl = fetch) {
   return async function request(resource, params) {
     const url = new URL(`${API_ROOT}/${resource}`);
-    for (const [key, value] of Object.entries(params)) url.searchParams.set(key, String(value));
+    for (const [key, value] of Object.entries(params))
+      url.searchParams.set(key, String(value));
     url.searchParams.set('key', apiKey);
 
     let response;
@@ -35,7 +51,9 @@ export function createRequest(apiKey, fetchImpl = fetch) {
       throw new Error(`youtube ${resource}: network request failed`);
     }
     if (!response.ok) {
-      throw new Error(`youtube ${resource}: request rejected with HTTP ${response.status}`);
+      throw new Error(
+        `youtube ${resource}: request rejected with HTTP ${response.status}`,
+      );
     }
     try {
       return await response.json();
@@ -51,7 +69,10 @@ function assert(condition, message) {
 
 function hasExactKeys(value, keys) {
   const actual = Object.keys(value).sort();
-  return actual.length === keys.length && actual.every((key, index) => key === keys[index]);
+  return (
+    actual.length === keys.length &&
+    actual.every((key, index) => key === keys[index])
+  );
 }
 
 function isPlainObject(value) {
@@ -59,15 +80,22 @@ function isPlainObject(value) {
 }
 
 export function validateChannels(channels) {
-  assert(isPlainObject(channels), 'channel identity invalid: file is not an object');
+  assert(
+    isPlainObject(channels),
+    'channel identity invalid: file is not an object',
+  );
   const actual = Object.keys(channels).sort();
   assert(
-    actual.length === KNOWN_PROFILES.length && actual.every((id, i) => id === KNOWN_PROFILES[i]),
+    actual.length === KNOWN_PROFILES.length &&
+      actual.every((id, i) => id === KNOWN_PROFILES[i]),
     `channel identity invalid: expected exactly ${KNOWN_PROFILES.join(', ')}, found ${actual.join(', ') || 'nothing'}`,
   );
 
   for (const [profileId, channel] of Object.entries(channels)) {
-    assert(isPlainObject(channel), `channel identity invalid: ${profileId} is not an object`);
+    assert(
+      isPlainObject(channel),
+      `channel identity invalid: ${profileId} is not an object`,
+    );
     const unexpected = Object.keys(channel).filter(
       (key) => !['youtube', 'soundcloud', 'instagram', 'tiktok'].includes(key),
     );
@@ -77,9 +105,14 @@ export function validateChannels(channels) {
     );
 
     const youtube = channel.youtube;
-    assert(isPlainObject(youtube), `channel identity invalid: ${profileId} has no youtube identity`);
     assert(
-      Object.keys(youtube).every((key) => ['handle', 'channelId'].includes(key)),
+      isPlainObject(youtube),
+      `channel identity invalid: ${profileId} has no youtube identity`,
+    );
+    assert(
+      Object.keys(youtube).every((key) =>
+        ['handle', 'channelId'].includes(key),
+      ),
       `channel identity invalid: ${profileId} youtube has unexpected fields`,
     );
     assert(
@@ -88,19 +121,23 @@ export function validateChannels(channels) {
     );
     assert(
       youtube.channelId === undefined ||
-        (typeof youtube.channelId === 'string' && CHANNEL_ID_PATTERN.test(youtube.channelId)),
+        (typeof youtube.channelId === 'string' &&
+          CHANNEL_ID_PATTERN.test(youtube.channelId)),
       `channel identity invalid: ${profileId} has an invalid channel id`,
     );
 
     for (const social of ['instagram', 'tiktok']) {
       assert(
-        channel[social] === undefined || /^[A-Za-z0-9_.]{2,30}$/.test(channel[social]),
+        channel[social] === undefined ||
+          /^[A-Za-z0-9_.]{2,30}$/.test(channel[social]),
         `channel identity invalid: ${profileId} has an invalid ${social} handle`,
       );
     }
     assert(
       channel.soundcloud === undefined ||
-        /^https:\/\/soundcloud\.com\/[A-Za-z0-9_-]+\/?$/.test(channel.soundcloud),
+        /^https:\/\/soundcloud\.com\/[A-Za-z0-9_-]+\/?$/.test(
+          channel.soundcloud,
+        ),
       `channel identity invalid: ${profileId} has an invalid soundcloud URL`,
     );
   }
@@ -108,8 +145,13 @@ export function validateChannels(channels) {
 }
 
 async function resolveUploadsPlaylist(channel, request) {
-  const selector = channel.channelId ? { id: channel.channelId } : { forHandle: channel.handle };
-  const data = await request('channels', { part: 'contentDetails', ...selector });
+  const selector = channel.channelId
+    ? { id: channel.channelId }
+    : { forHandle: channel.handle };
+  const data = await request('channels', {
+    part: 'contentDetails',
+    ...selector,
+  });
   const items = Array.isArray(data?.items) ? data.items : [];
   const uploads = items[0]?.contentDetails?.relatedPlaylists?.uploads;
   if (typeof uploads !== 'string' || uploads.length === 0) {
@@ -122,22 +164,32 @@ async function fetchCandidates(playlistId, request) {
   const items = [];
   let pageToken;
   do {
-    const params = { part: 'snippet,contentDetails', playlistId, maxResults: PAGE_SIZE };
+    const params = {
+      part: 'snippet,contentDetails',
+      playlistId,
+      maxResults: PAGE_SIZE,
+    };
     if (pageToken) params.pageToken = pageToken;
     const data = await request('playlistItems', params);
     const page = Array.isArray(data?.items) ? data.items : [];
     items.push(...page);
-    pageToken = typeof data?.nextPageToken === 'string' ? data.nextPageToken : undefined;
+    pageToken =
+      typeof data?.nextPageToken === 'string' ? data.nextPageToken : undefined;
   } while (pageToken);
 
-  if (items.length === 0) throw new Error('youtube playlistItems: response contained no items');
+  if (items.length === 0)
+    throw new Error('youtube playlistItems: response contained no items');
   return items;
 }
 
 export function parseIsoDuration(value) {
-  const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(value ?? '');
+  const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(
+    value ?? '',
+  );
   if (!match || match.slice(1).every((part) => part === undefined)) return null;
-  const [days, hours, minutes, seconds] = match.slice(1).map((part) => Number(part ?? 0));
+  const [days, hours, minutes, seconds] = match
+    .slice(1)
+    .map((part) => Number(part ?? 0));
   return days * 86400 + hours * 3600 + minutes * 60 + seconds;
 }
 
@@ -145,7 +197,10 @@ async function fetchVideoDetails(videoIds, request) {
   const details = new Map();
   for (let start = 0; start < videoIds.length; start += STATUS_BATCH) {
     const batch = videoIds.slice(start, start + STATUS_BATCH);
-    const data = await request('videos', { part: 'status,contentDetails', id: batch.join(',') });
+    const data = await request('videos', {
+      part: 'status,contentDetails',
+      id: batch.join(','),
+    });
     for (const item of Array.isArray(data?.items) ? data.items : []) {
       if (typeof item?.id !== 'string') continue;
       const status = item.status;
@@ -168,7 +223,11 @@ function pickThumbnail(thumbnails) {
       Number.isInteger(candidate.width) &&
       Number.isInteger(candidate.height)
     ) {
-      return { url: candidate.url, width: candidate.width, height: candidate.height };
+      return {
+        url: candidate.url,
+        width: candidate.width,
+        height: candidate.height,
+      };
     }
   }
   return null;
@@ -184,14 +243,16 @@ export function normalizeCandidates(items) {
   const normalized = [];
   for (const item of items) {
     const snippet = item?.snippet;
-    const videoId = item?.contentDetails?.videoId ?? snippet?.resourceId?.videoId;
+    const videoId =
+      item?.contentDetails?.videoId ?? snippet?.resourceId?.videoId;
     const publishedAt = toIsoTimestamp(
       item?.contentDetails?.videoPublishedAt ?? snippet?.publishedAt,
     );
     const thumbnail = pickThumbnail(snippet?.thumbnails);
     const title = snippet?.title;
 
-    if (typeof videoId !== 'string' || !VIDEO_ID_PATTERN.test(videoId)) continue;
+    if (typeof videoId !== 'string' || !VIDEO_ID_PATTERN.test(videoId))
+      continue;
     if (typeof title !== 'string' || title.trim().length === 0) continue;
     if (publishedAt === null || thumbnail === null) continue;
 
@@ -203,7 +264,9 @@ export function normalizeCandidates(items) {
 export function selectLatestMusic(items, limit = HOME_COUNT) {
   return items
     .filter(
-      (item) => item.playback === 'youtube-embed' || item.playback === 'soundcloud-widget',
+      (item) =>
+        item.playback === 'youtube-embed' ||
+        item.playback === 'soundcloud-widget',
     )
     .slice(0, limit);
 }
@@ -221,26 +284,40 @@ const ITEM_KEYS = [
   'url',
 ];
 
-const canonical = (item) => JSON.stringify(Object.keys(item).sort().map((key) => [key, item[key]]));
+const canonical = (item) =>
+  JSON.stringify(
+    Object.keys(item)
+      .sort()
+      .map((key) => [key, item[key]]),
+  );
 
 export function sameItems(before, after) {
-  return before.length === after.length && before.every((item, at) => canonical(item) === canonical(after[at]));
+  return (
+    before.length === after.length &&
+    before.every((item, at) => canonical(item) === canonical(after[at]))
+  );
 }
 
 export function validateMedia(feed, profileId) {
-  const invalid = (message) => assert(false, `generated media invalid: ${message}`);
+  const invalid = (message) =>
+    assert(false, `generated media invalid: ${message}`);
   if (!isPlainObject(feed)) invalid('feed is not an object');
   if (!hasExactKeys(feed, ['generatedAt', 'items', 'profile', 'refreshedAt'])) {
     invalid('feed has unexpected keys');
   }
-  if (feed.profile !== profileId) invalid(`feed belongs to ${feed.profile}, expected ${profileId}`);
-  if (toIsoTimestamp(feed.generatedAt) !== feed.generatedAt) invalid('generatedAt is not ISO');
+  if (feed.profile !== profileId)
+    invalid(`feed belongs to ${feed.profile}, expected ${profileId}`);
+  if (toIsoTimestamp(feed.generatedAt) !== feed.generatedAt)
+    invalid('generatedAt is not ISO');
   if (!isPlainObject(feed.refreshedAt)) invalid('refreshedAt is missing');
   for (const [source, stamp] of Object.entries(feed.refreshedAt)) {
-    if (!SOURCES.includes(source)) invalid(`unknown refreshed source: ${source}`);
-    if (toIsoTimestamp(stamp) !== stamp) invalid(`refreshedAt.${source} is not ISO`);
+    if (!SOURCES.includes(source))
+      invalid(`unknown refreshed source: ${source}`);
+    if (toIsoTimestamp(stamp) !== stamp)
+      invalid(`refreshedAt.${source} is not ISO`);
   }
-  if (!Array.isArray(feed.items) || feed.items.length === 0) invalid('items is empty');
+  if (!Array.isArray(feed.items) || feed.items.length === 0)
+    invalid('items is empty');
 
   const seen = new Set();
   let previous = Number.POSITIVE_INFINITY;
@@ -249,17 +326,25 @@ export function validateMedia(feed, profileId) {
     const keys = Object.keys(item)
       .filter((key) => key !== 'videoId')
       .sort();
-    if (keys.length !== ITEM_KEYS.length || keys.some((key, i) => key !== ITEM_KEYS[i])) {
+    if (
+      keys.length !== ITEM_KEYS.length ||
+      keys.some((key, i) => key !== ITEM_KEYS[i])
+    ) {
       invalid(`item ${item.id} has unexpected keys`);
     }
-    if (!SOURCES.includes(item.source)) invalid(`unknown source: ${item.source}`);
-    if (!String(item.id).startsWith(`${item.source}:`)) invalid(`id is not source-scoped: ${item.id}`);
+    if (!SOURCES.includes(item.source))
+      invalid(`unknown source: ${item.source}`);
+    if (!String(item.id).startsWith(`${item.source}:`))
+      invalid(`id is not source-scoped: ${item.id}`);
     if (seen.has(item.id)) invalid(`duplicate id: ${item.id}`);
     seen.add(item.id);
-    if (typeof item.title !== 'string' || item.title.trim().length === 0) invalid('title is empty');
+    if (typeof item.title !== 'string' || item.title.trim().length === 0)
+      invalid('title is empty');
     if (!/^https:\/\//.test(item.url)) invalid(`url is not https: ${item.id}`);
-    if (toIsoTimestamp(item.publishedAt) !== item.publishedAt) invalid(`publishedAt: ${item.id}`);
-    if (toIsoTimestamp(item.discoveredAt) !== item.discoveredAt) invalid(`discoveredAt: ${item.id}`);
+    if (toIsoTimestamp(item.publishedAt) !== item.publishedAt)
+      invalid(`publishedAt: ${item.id}`);
+    if (toIsoTimestamp(item.discoveredAt) !== item.discoveredAt)
+      invalid(`discoveredAt: ${item.id}`);
     if (
       item.durationSeconds !== null &&
       !(Number.isFinite(item.durationSeconds) && item.durationSeconds >= 0)
@@ -267,8 +352,10 @@ export function validateMedia(feed, profileId) {
       invalid(`durationSeconds: ${item.id}`);
     }
     if (item.source === 'youtube') {
-      if (!VIDEO_ID_PATTERN.test(item.videoId ?? '')) invalid(`videoId: ${item.id}`);
-      if (!['youtube-embed', 'external'].includes(item.playback)) invalid(`playback: ${item.id}`);
+      if (!VIDEO_ID_PATTERN.test(item.videoId ?? ''))
+        invalid(`videoId: ${item.id}`);
+      if (!['youtube-embed', 'external'].includes(item.playback))
+        invalid(`playback: ${item.id}`);
     } else if (item.source === 'soundcloud') {
       if ('videoId' in item) invalid(`${item.id} must not carry a videoId`);
       if (!['soundcloud-widget', 'external'].includes(item.playback)) {
@@ -295,7 +382,13 @@ export function validateMedia(feed, profileId) {
   return feed;
 }
 
-export function mergeSource(previousItems, incoming, source, now, additive = false) {
+export function mergeSource(
+  previousItems,
+  incoming,
+  source,
+  now,
+  additive = false,
+) {
   if (incoming.length === 0) return previousItems;
 
   const others = previousItems.filter((item) => item.source !== source);
@@ -316,13 +409,18 @@ export function mergeSource(previousItems, incoming, source, now, additive = fal
     merged.push(...existing.filter((item) => !seen.has(item.id)));
   }
 
-  return [...others, ...merged].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+  return [...others, ...merged].sort(
+    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+  );
 }
 
 export async function buildYouTubeItems(channel, request) {
   const playlistId = await resolveUploadsPlaylist(channel, request);
-  const candidates = normalizeCandidates(await fetchCandidates(playlistId, request));
-  if (candidates.length === 0) throw new Error('youtube playlistItems: no usable video records');
+  const candidates = normalizeCandidates(
+    await fetchCandidates(playlistId, request),
+  );
+  if (candidates.length === 0)
+    throw new Error('youtube playlistItems: no usable video records');
 
   const details = await fetchVideoDetails(
     candidates.map((video) => video.videoId),
@@ -346,8 +444,11 @@ export async function buildYouTubeItems(channel, request) {
       playback: detail?.embeddable === false ? 'external' : 'youtube-embed',
     });
   }
-  if (items.length === 0) throw new Error('youtube videos: every candidate is private');
-  return items.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
+  if (items.length === 0)
+    throw new Error('youtube videos: every candidate is private');
+  return items.sort(
+    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+  );
 }
 
 export async function readChannels(source = channelsPath) {
@@ -384,7 +485,11 @@ async function replaceAtomically(directory, feeds, renameFile) {
         replaced: false,
       };
       if (entry.existed) await copyFile(target, entry.backup);
-      await writeFile(entry.temporary, `${JSON.stringify(feed, null, 2)}\n`, 'utf8');
+      await writeFile(
+        entry.temporary,
+        `${JSON.stringify(feed, null, 2)}\n`,
+        'utf8',
+      );
       staged.push(entry);
     }
     for (const entry of staged) {
@@ -455,10 +560,13 @@ export async function validateGeneratedCache(outputDir = defaultOutputDir) {
   try {
     entries = (await readdir(directory)).sort();
   } catch {
-    throw new Error('generated cache invalid: the generated media directory does not exist');
+    throw new Error(
+      'generated cache invalid: the generated media directory does not exist',
+    );
   }
   assert(
-    entries.length === expected.length && entries.every((name, i) => name === expected[i]),
+    entries.length === expected.length &&
+      entries.every((name, i) => name === expected[i]),
     `generated cache invalid: expected exactly ${expected.join(', ')}, found ${entries.join(', ') || 'nothing'}`,
   );
 
@@ -476,13 +584,20 @@ export async function validateGeneratedCache(outputDir = defaultOutputDir) {
     for (const item of feed.items) {
       const url = item.thumbnail?.url;
       if (typeof url === 'string' && url.startsWith('/media/')) {
-        const cover = path.join(fileURLToPath(coverRoot), url.slice('/media/'.length));
-        assert(await fileExists(cover), `generated cache invalid: missing cover ${url}`);
+        const cover = path.join(
+          fileURLToPath(coverRoot),
+          url.slice('/media/'.length),
+        );
+        assert(
+          await fileExists(cover),
+          `generated cache invalid: missing cover ${url}`,
+        );
       }
     }
 
     const counts = {};
-    for (const item of feed.items) counts[item.source] = (counts[item.source] ?? 0) + 1;
+    for (const item of feed.items)
+      counts[item.source] = (counts[item.source] ?? 0) + 1;
     summaries.push({
       profile: feed.profile,
       items: feed.items.length,
@@ -505,7 +620,9 @@ async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
     if (!handle) continue;
     const incoming = await fetcher(handle, now).catch(() => []);
     if (incoming.length === 0) {
-      console.warn(`${profileId} ${source}: no usable records, keeping the previous cache`);
+      console.warn(
+        `${profileId} ${source}: no usable records, keeping the previous cache`,
+      );
       continue;
     }
     const merged = mergeSource(items, incoming, source, now, true);
@@ -520,16 +637,32 @@ async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
 
   if (sameItems(feed.items, items)) return feed;
 
-  const next = validateMedia({ ...feed, generatedAt: now, items, refreshedAt }, profileId);
-  await replaceAtomically(fileURLToPath(outputDir), new Map([[profileId, next]]), renameTarget);
+  const next = validateMedia(
+    { ...feed, generatedAt: now, items, refreshedAt },
+    profileId,
+  );
+  await replaceAtomically(
+    fileURLToPath(outputDir),
+    new Map([[profileId, next]]),
+    renameTarget,
+  );
   return next;
 }
 
-async function refreshSoundCloudSource(profileId, profileUrl, feed, request, now, outputDir) {
+async function refreshSoundCloudSource(
+  profileId,
+  profileUrl,
+  feed,
+  request,
+  now,
+  outputDir,
+) {
   const { fetchSoundCloud } = await import('./refresh-soundcloud.mjs');
   const incoming = await fetchSoundCloud(profileUrl, request).catch(() => []);
   if (incoming.length === 0) {
-    console.warn(`${profileId} soundcloud: no usable records, keeping the previous cache`);
+    console.warn(
+      `${profileId} soundcloud: no usable records, keeping the previous cache`,
+    );
     return feed;
   }
 
@@ -548,7 +681,11 @@ async function refreshSoundCloudSource(profileId, profileUrl, feed, request, now
     },
     profileId,
   );
-  await replaceAtomically(fileURLToPath(outputDir), new Map([[profileId, next]]), renameTarget);
+  await replaceAtomically(
+    fileURLToPath(outputDir),
+    new Map([[profileId, next]]),
+    renameTarget,
+  );
   console.log(`${profileId} soundcloud: ${incoming.length} records`);
   return next;
 }
@@ -559,24 +696,42 @@ async function main(argv) {
       const detail = Object.entries(summary.counts)
         .map(([source, count]) => `${source}=${count}`)
         .join(' ');
-      console.log(`${summary.profile}: ${summary.items} items (${detail}), home uses ${summary.home}`);
+      console.log(
+        `${summary.profile}: ${summary.items} items (${detail}), home uses ${summary.home}`,
+      );
     }
     return;
   }
 
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-    throw new Error('YOUTUBE_API_KEY is not set; generated media was left unchanged');
+    throw new Error(
+      'YOUTUBE_API_KEY is not set; generated media was left unchanged',
+    );
   }
 
   const channels = await readChannels();
   const now = new Date().toISOString();
-  const feeds = await refreshAll({ channels, request: createRequest(apiKey.trim()), now });
+  const feeds = await refreshAll({
+    channels,
+    request: createRequest(apiKey.trim()),
+    now,
+  });
 
   if (argv.includes('--with-social')) {
     for (const [profileId, channel] of Object.entries(channels)) {
       const feed = feeds.get(profileId);
-      if (feed) feeds.set(profileId, await refreshSocialSources(profileId, channel, feed, now, defaultOutputDir));
+      if (feed)
+        feeds.set(
+          profileId,
+          await refreshSocialSources(
+            profileId,
+            channel,
+            feed,
+            now,
+            defaultOutputDir,
+          ),
+        );
     }
   }
 
@@ -584,7 +739,8 @@ async function main(argv) {
     const clientId = process.env.SOUNDCLOUD_CLIENT_ID;
     const clientSecret = process.env.SOUNDCLOUD_CLIENT_SECRET;
     if (clientId && clientSecret) {
-      const { createSoundCloudRequest } = await import('./refresh-soundcloud.mjs');
+      const { createSoundCloudRequest } =
+        await import('./refresh-soundcloud.mjs');
       const request = await createSoundCloudRequest(clientId, clientSecret);
       for (const [profileId, channel] of Object.entries(channels)) {
         const feed = feeds.get(profileId);
@@ -603,18 +759,24 @@ async function main(argv) {
         }
       }
     } else {
-      console.warn('soundcloud: credentials are not set, keeping the previous cache');
+      console.warn(
+        'soundcloud: credentials are not set, keeping the previous cache',
+      );
     }
   }
 
   for (const [profileId, feed] of feeds) {
     const counts = {};
-    for (const item of feed.items) counts[item.source] = (counts[item.source] ?? 0) + 1;
+    for (const item of feed.items)
+      counts[item.source] = (counts[item.source] ?? 0) + 1;
     console.log(`${profileId}: ${feed.items.length} items`, counts);
   }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
   main(process.argv.slice(2)).catch((error) => {
     console.error(`refresh-media failed: ${error.message}`);
     process.exitCode = 1;

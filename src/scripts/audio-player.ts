@@ -26,7 +26,9 @@ if (dock && audio) {
   const payload = dock.querySelector('[data-playables]')?.textContent ?? '[]';
   const playables: Playable[] = JSON.parse(payload);
   const items = new Map(playables.map((item) => [item.id, item]));
-  const tracks = playables.filter((item): item is PlayableTrack => item.kind === 'local');
+  const tracks = playables.filter(
+    (item): item is PlayableTrack => item.kind === 'local',
+  );
 
   const titleEl = pick('[data-player-title]');
   const artEl = pick('[data-player-art]');
@@ -42,7 +44,8 @@ if (dock && audio) {
   const duration = pick('[data-player-duration]');
   const error = pick('[data-player-error]');
   const stageToggle = pick<HTMLButtonElement>('[data-player-stage]');
-  const stageClose = document.querySelector<HTMLButtonElement>('[data-video-close]');
+  const stageClose =
+    document.querySelector<HTMLButtonElement>('[data-video-close]');
   const shuffle = pick<HTMLButtonElement>('[data-player-shuffle]');
   const repeat = pick<HTMLButtonElement>('[data-player-repeat]');
   const status = pick('[data-player-status]');
@@ -115,14 +118,23 @@ if (dock && audio) {
     sourceEl?.toggleAttribute('hidden', source === null);
     if (sourceEl instanceof HTMLAnchorElement && source) {
       sourceEl.href = item.url ?? '#';
-      const label = sourceEl.querySelector<HTMLElement>('[data-player-source-label]');
-      if (label) label.textContent = source === 'youtube' ? 'YouTube' : 'SoundCloud';
-      for (const icon of sourceEl.querySelectorAll<HTMLElement>('[data-player-source-icon]')) {
-        icon.style.display = icon.dataset['playerSourceIcon'] === source ? 'block' : 'none';
+      const label = sourceEl.querySelector<HTMLElement>(
+        '[data-player-source-label]',
+      );
+      if (label)
+        label.textContent = source === 'youtube' ? 'YouTube' : 'SoundCloud';
+      for (const icon of sourceEl.querySelectorAll<HTMLElement>(
+        '[data-player-source-icon]',
+      )) {
+        icon.style.display =
+          icon.dataset['playerSourceIcon'] === source ? 'block' : 'none';
       }
     }
     if (artEl) {
-      artEl.innerHTML = source && item.thumbnail ? `<img src="${item.thumbnail}" alt="">` : artHtml;
+      artEl.innerHTML =
+        source && item.thumbnail
+          ? `<img src="${item.thumbnail}" alt="">`
+          : artHtml;
     }
   }
 
@@ -175,7 +187,8 @@ if (dock && audio) {
   }
 
   function currentTime(): number {
-    if (current.kind === 'youtube') return player ? player.getCurrentTime() : remotePosition;
+    if (current.kind === 'youtube')
+      return player ? player.getCurrentTime() : remotePosition;
     if (current.kind === 'soundcloud') return remotePosition;
     return audio!.currentTime;
   }
@@ -256,7 +269,8 @@ if (dock && audio) {
     playbackWanted = false;
     starting = false;
     const at = player?.getCurrentTime();
-    if (typeof at === 'number' && Number.isFinite(at) && at >= 0) remotePosition = at;
+    if (typeof at === 'number' && Number.isFinite(at) && at >= 0)
+      remotePosition = at;
     releasePlayer();
     hideStage();
     setState(false);
@@ -264,7 +278,11 @@ if (dock && audio) {
     remember();
   }
 
-  function setCurrent(item: Playable, startSeconds: number, shouldPlay: boolean): void {
+  function setCurrent(
+    item: Playable,
+    startSeconds: number,
+    shouldPlay: boolean,
+  ): void {
     current = item;
     playbackWanted = shouldPlay;
     starting = shouldPlay && item.kind !== 'local';
@@ -317,17 +335,27 @@ if (dock && audio) {
       document.documentElement.style.overflow = '';
       stage.show();
     }
-    const label = expanded ? stageToggle?.dataset['collapse'] : stageToggle?.dataset['expand'];
+    const label = expanded
+      ? stageToggle?.dataset['collapse']
+      : stageToggle?.dataset['expand'];
     if (label) stageToggle?.setAttribute('aria-label', label);
   }
 
-  function selectVideo(item: PlayableVideo, startSeconds: number, shouldPlay = false): void {
+  function selectVideo(
+    item: PlayableVideo,
+    startSeconds: number,
+    shouldPlay = false,
+  ): void {
     audio!.pause();
     clearSoundCloud();
     setCurrent(item, startSeconds, shouldPlay);
   }
 
-  async function playVideo(item: PlayableVideo, expanded = false, startSeconds = 0): Promise<void> {
+  async function playVideo(
+    item: PlayableVideo,
+    expanded = false,
+    startSeconds = 0,
+  ): Promise<void> {
     if (!stage || !frame) return;
     releasePlayer();
     selectVideo(item, startSeconds, true);
@@ -339,7 +367,8 @@ if (dock && audio) {
     iframe.src = embedUrl(item.videoId, location.origin);
     iframe.title = item.title;
     iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-    iframe.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share';
+    iframe.allow =
+      'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share';
     iframe.allowFullscreen = true;
     frame.append(iframe);
 
@@ -421,7 +450,10 @@ if (dock && audio) {
     return embed.href;
   }
 
-  function waitForSoundCloudProgress(widget: SoundCloudWidget, url: string): void {
+  function waitForSoundCloudProgress(
+    widget: SoundCloudWidget,
+    url: string,
+  ): void {
     window.clearTimeout(soundcloudStartTimer);
     soundcloudStartTimer = window.setTimeout(() => {
       if (
@@ -429,16 +461,23 @@ if (dock && audio) {
         current.kind !== 'soundcloud' ||
         current.url !== url ||
         playing()
-      ) return;
+      )
+        return;
       widget.pause();
       failPlayback(undefined);
     }, 5000);
   }
 
-  function bindSoundCloud(api: SoundCloudApi, widget: SoundCloudWidget, url: string): void {
+  function bindSoundCloud(
+    api: SoundCloudApi,
+    widget: SoundCloudWidget,
+    url: string,
+  ): void {
     const events = api.Widget.Events;
     const isCurrentSound = (): boolean =>
-      current.kind === 'soundcloud' && current.url === url && soundcloudPlayer === widget;
+      current.kind === 'soundcloud' &&
+      current.url === url &&
+      soundcloudPlayer === widget;
 
     widget.bind(events.READY, () => {
       if (!isCurrentSound()) return;
@@ -459,14 +498,18 @@ if (dock && audio) {
       remember();
     });
     widget.bind(events.PLAY_PROGRESS, (data) => {
-      if (!isCurrentSound() || typeof data?.currentPosition !== 'number') return;
+      if (!isCurrentSound() || typeof data?.currentPosition !== 'number')
+        return;
       window.clearTimeout(soundcloudStartTimer);
       if (playbackWanted) {
         starting = false;
         if (!playing()) setState(true);
       }
       remotePosition = data.currentPosition / 1000;
-      setProgress(remotePosition, remoteDuration || current.durationSeconds || 0);
+      setProgress(
+        remotePosition,
+        remoteDuration || current.durationSeconds || 0,
+      );
     });
     widget.bind(events.FINISH, () => {
       if (!isCurrentSound()) return;
@@ -481,18 +524,25 @@ if (dock && audio) {
     });
   }
 
-  function requestSoundCloudPlayback(widget: SoundCloudWidget, url: string): void {
+  function requestSoundCloudPlayback(
+    widget: SoundCloudWidget,
+    url: string,
+  ): void {
     if (
       !playbackWanted ||
       soundcloudPlayer !== widget ||
       current.kind !== 'soundcloud' ||
       current.url !== url
-    ) return;
+    )
+      return;
     widget.play();
     waitForSoundCloudProgress(widget, url);
   }
 
-  async function playSoundCloud(item: PlayableSoundCloud, startSeconds = 0): Promise<void> {
+  async function playSoundCloud(
+    item: PlayableSoundCloud,
+    startSeconds = 0,
+  ): Promise<void> {
     if (!soundcloudFrame) return;
     selectSoundCloud(item, startSeconds, true);
 
@@ -532,7 +582,8 @@ if (dock && audio) {
     starting = current.kind !== 'local';
     error?.setAttribute('hidden', '');
     if (current.kind === 'youtube') {
-      if (!player || !youtubeReady) void playVideo(current, false, remotePosition);
+      if (!player || !youtubeReady)
+        void playVideo(current, false, remotePosition);
       else player.playVideo();
     } else if (current.kind === 'soundcloud') {
       if (!soundcloudPlayer) void playSoundCloud(current, remotePosition);
@@ -567,7 +618,9 @@ if (dock && audio) {
   }
 
   function visibleSequence(): string[] {
-    return [...document.querySelectorAll<HTMLElement>('[data-row-id][data-playable]')]
+    return [
+      ...document.querySelectorAll<HTMLElement>('[data-row-id][data-playable]'),
+    ]
       .filter((row) => !row.closest<HTMLElement>('[data-media-row]')?.hidden)
       .map((row) => row.dataset['rowId'] ?? '')
       .filter((id, at, ids) => items.has(id) && ids.indexOf(id) === at);
@@ -689,7 +742,10 @@ if (dock && audio) {
     }
     const target = neighbour(1);
     if (target === undefined) return;
-    if (repeatMode === 'off' && order.indexOf(current.id) === order.length - 1) {
+    if (
+      repeatMode === 'off' &&
+      order.indexOf(current.id) === order.length - 1
+    ) {
       playbackWanted = false;
       setState(false);
       return;
@@ -702,7 +758,9 @@ if (dock && audio) {
 
   shuffle?.addEventListener('click', () => setShuffle(!shuffled));
   repeat?.addEventListener('click', () => {
-    setRepeat(repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off');
+    setRepeat(
+      repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off',
+    );
   });
 
   stageToggle?.addEventListener('click', () => {
@@ -710,9 +768,11 @@ if (dock && audio) {
     showStage(stage?.dataset['mode'] !== 'expanded');
   });
 
-  document.querySelector('[data-video-collapse]')?.addEventListener('click', () => {
-    if (current.kind === 'youtube') showStage(false);
-  });
+  document
+    .querySelector('[data-video-collapse]')
+    ?.addEventListener('click', () => {
+      if (current.kind === 'youtube') showStage(false);
+    });
 
   stageClose?.addEventListener('click', () => {
     closeVideo();
@@ -779,7 +839,12 @@ if (dock && audio) {
     }
   });
 
-  for (const event of ['pointerup', 'pointercancel', 'keyup', 'blur'] as const) {
+  for (const event of [
+    'pointerup',
+    'pointercancel',
+    'keyup',
+    'blur',
+  ] as const) {
     seek?.addEventListener(event, () => {
       scrubbing = false;
     });
@@ -796,7 +861,8 @@ if (dock && audio) {
   });
 
   function blocksPlayerShortcut(target: EventTarget | null): boolean {
-    if (document.querySelector('[data-search-dialog][open], :popover-open')) return true;
+    if (document.querySelector('[data-search-dialog][open], :popover-open'))
+      return true;
     return (
       target instanceof Element &&
       target.closest(
@@ -807,11 +873,16 @@ if (dock && audio) {
 
   function changeVolume(delta: number): void {
     if (!volume) return;
-    const level = Math.max(0, Math.min(1, Math.round((Number(volume.value) + delta) * 20) / 20));
+    const level = Math.max(
+      0,
+      Math.min(1, Math.round((Number(volume.value) + delta) * 20) / 20),
+    );
     volume.value = String(level);
     if (level > 0) muted = false;
     applyVolume();
-    announce(`${volume.getAttribute('aria-label') ?? ''}: ${Math.round(level * 100)}%`);
+    announce(
+      `${volume.getAttribute('aria-label') ?? ''}: ${Math.round(level * 100)}%`,
+    );
   }
 
   document.addEventListener('keydown', (event) => {
@@ -829,7 +900,8 @@ if (dock && audio) {
       return;
     }
 
-    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey)
+      return;
     if (event.code === 'Space') {
       event.preventDefault();
       if (!event.repeat) toggle?.click();
@@ -861,11 +933,15 @@ if (dock && audio) {
   function setArt(expanded: boolean): void {
     dock!.dataset['art'] = expanded ? 'expanded' : 'compact';
     artToggle?.setAttribute('aria-expanded', String(expanded));
-    const label = expanded ? artToggle?.dataset['collapse'] : artToggle?.dataset['expand'];
+    const label = expanded
+      ? artToggle?.dataset['collapse']
+      : artToggle?.dataset['expand'];
     if (label) artToggle?.setAttribute('aria-label', label);
   }
 
-  artToggle?.addEventListener('click', () => setArt(dock.dataset['art'] !== 'expanded'));
+  artToggle?.addEventListener('click', () =>
+    setArt(dock.dataset['art'] !== 'expanded'),
+  );
 
   const wideShell = matchMedia('(min-width: 60rem)');
   wideShell.addEventListener('change', (event) => {
@@ -873,7 +949,8 @@ if (dock && audio) {
   });
 
   document.addEventListener('click', (event) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0)
+      return;
     const target = event.target as Element | null;
 
     const play = target?.closest<HTMLElement>('[data-row-play]');
@@ -915,7 +992,9 @@ if (dock && audio) {
   });
 
   document.addEventListener('dblclick', (event) => {
-    const select = (event.target as Element | null)?.closest<HTMLElement>('[data-row-select]');
+    const select = (event.target as Element | null)?.closest<HTMLElement>(
+      '[data-row-select]',
+    );
     if (!select) return;
     event.preventDefault();
     startById(select.dataset['rowSelect']!);
@@ -923,7 +1002,9 @@ if (dock && audio) {
 
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    const select = (event.target as Element | null)?.closest<HTMLElement>('[data-row-select]');
+    const select = (event.target as Element | null)?.closest<HTMLElement>(
+      '[data-row-select]',
+    );
     if (!select) return;
     event.preventDefault();
     selectedId = select.dataset['rowSelect']!;
@@ -932,7 +1013,8 @@ if (dock && audio) {
 
   function readId(value: unknown): string | null {
     if (typeof value === 'string' && items.has(value)) return value;
-    if (typeof value === 'number' && Number.isInteger(value)) return playables[value]?.id ?? null;
+    if (typeof value === 'number' && Number.isInteger(value))
+      return playables[value]?.id ?? null;
     return null;
   }
 
@@ -950,14 +1032,14 @@ if (dock && audio) {
   let savedSequence: string[] | null = null;
   let savedOrder: string[] | null = null;
   try {
-    const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null') as Record<
-      string,
-      unknown
-    > | null;
+    const saved = JSON.parse(
+      sessionStorage.getItem(storageKey) ?? 'null',
+    ) as Record<string, unknown> | null;
     savedTime = Number(saved?.['time']) || 0;
     shuffled = saved?.['shuffled'] === true;
     const savedRepeat = saved?.['repeatMode'];
-    if (savedRepeat === 'all' || savedRepeat === 'one') repeatMode = savedRepeat;
+    if (savedRepeat === 'all' || savedRepeat === 'one')
+      repeatMode = savedRepeat;
     savedSequence = readIds(saved?.['sequence']);
     savedOrder = readIds(saved?.['order']);
     if (Array.isArray(saved?.['manualQueue'])) {

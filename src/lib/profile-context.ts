@@ -10,7 +10,9 @@ export function resolveProfile(id: ProfileId): ProfileContext {
   const context: ProfileContext =
     id === 'iamb' ? { id, profile: iambProfile } : { id, profile: aimbProfile };
   if (context.profile.id !== id) {
-    throw new Error(`profile context mismatch: requested ${id}, resolved ${context.profile.id}`);
+    throw new Error(
+      `profile context mismatch: requested ${id}, resolved ${context.profile.id}`,
+    );
   }
   return context;
 }

@@ -2,7 +2,12 @@
 import { Image } from 'astro:assets';
 import { aimbProfile } from '../../data/profiles/aimb.ts';
 import { iambProfile } from '../../data/profiles/iamb.ts';
-import type { Language, PageId, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  PageId,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
 
@@ -27,36 +32,46 @@ const menuId = 'profile-menu';
     popovertarget={menuId}
     aria-label={ui.switches.profile}
   >
-    <Image class="avatar" src={active.images.logo} alt="" width={28} height={28} />
+    <Image
+      class="avatar"
+      src={active.images.logo}
+      alt=""
+      width={28}
+      height={28}
+    />
     <span class="short">{active.shortName}</span>
     <Icon name="caret-down" size="0.9rem" />
   </button>
 
   <div class="menu" id={menuId} popover data-anchored-menu>
     <ul>
-      {
-        entries.map((entry) => {
-          const current = entry.id === profile;
-          return (
-            <li>
-              <a
-                href={routePath(lang, entry.id, page)}
-                data-astro-reload
-                aria-current={current ? 'true' : undefined}
-              >
-                <Image class="avatar" src={entry.images.logo} alt="" width={28} height={28} />
-                <span class="name">{entry.name}</span>
-                {current && (
-                  <span class="state">
-                    <Icon name="check" weight="bold" size="0.9rem" />
-                    <span class="sr-only">{ui.switches.active}</span>
-                  </span>
-                )}
-              </a>
-            </li>
-          );
-        })
-      }
+      {entries.map((entry) => {
+        const current = entry.id === profile;
+        return (
+          <li>
+            <a
+              href={routePath(lang, entry.id, page)}
+              data-astro-reload
+              aria-current={current ? 'true' : undefined}
+            >
+              <Image
+                class="avatar"
+                src={entry.images.logo}
+                alt=""
+                width={28}
+                height={28}
+              />
+              <span class="name">{entry.name}</span>
+              {current && (
+                <span class="state">
+                  <Icon name="check" weight="bold" size="0.9rem" />
+                  <span class="sr-only">{ui.switches.active}</span>
+                </span>
+              )}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </div>
 </div>
@@ -107,7 +122,8 @@ const menuId = 'profile-menu';
     box-shadow: var(--shadow-plate);
     block-size: fit-content;
     max-block-size: calc(
-      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - var(--space-5)
+      100dvh - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px) - var(--space-5)
     );
     overflow-y: auto;
     overscroll-behavior: contain;

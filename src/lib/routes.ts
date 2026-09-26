@@ -8,8 +8,14 @@ export interface RouteTarget {
 
 export const defaultLanguage: Language = 'de';
 
-export function routePath(lang: Language, profile: ProfileId, page: PageId): string {
-  return page === 'home' ? `/${lang}/${profile}/` : `/${lang}/${profile}/${page}/`;
+export function routePath(
+  lang: Language,
+  profile: ProfileId,
+  page: PageId,
+): string {
+  return page === 'home'
+    ? `/${lang}/${profile}/`
+    : `/${lang}/${profile}/${page}/`;
 }
 
 export const routeTargets: readonly RouteTarget[] = languages.flatMap((lang) =>
@@ -25,7 +31,10 @@ export function profileStaticPaths() {
 
 export function alternateLinks(profile: ProfileId, page: PageId) {
   return [
-    ...languages.map((lang) => ({ hreflang: lang, path: routePath(lang, profile, page) })),
+    ...languages.map((lang) => ({
+      hreflang: lang,
+      path: routePath(lang, profile, page),
+    })),
     { hreflang: 'x-default', path: routePath(defaultLanguage, profile, page) },
   ];
 }

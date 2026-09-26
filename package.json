@@ -11,15 +11,18 @@
     "check": "astro check",
     "validate:media": "node scripts/refresh-media.mjs --validate-cache",
     "verify": "npm run check && npm run validate:media",
-    "build": "astro build",
-    "build:cloudflare": "npm run verify && astro build",
-    "preview": "astro preview"
+    "build": "npm run verify && astro build",
+    "preview": "astro preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@phosphor-icons/core": "^2.1.1",
     "@types/node": "^24.13.3",
     "astro": "^7.2.9",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
     "sharp": "^0.35.4",
     "typescript": "^6.0.3"
   }

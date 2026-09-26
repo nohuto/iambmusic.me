@@ -28,10 +28,13 @@ export interface MediaLibrary {
   readonly items: readonly MediaItem[];
 }
 
-const libraries = import.meta.glob<MediaLibrary>('../data/generated/media/*.json', {
-  eager: true,
-  import: 'default',
-});
+const libraries = import.meta.glob<MediaLibrary>(
+  '../data/generated/media/*.json',
+  {
+    eager: true,
+    import: 'default',
+  },
+);
 
 const empty: MediaLibrary = {
   profile: 'iamb',

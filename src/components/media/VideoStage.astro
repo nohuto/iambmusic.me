@@ -11,10 +11,20 @@ const { ui } = Astro.props;
 
 <dialog class="stage" data-video-dialog aria-label={ui.video.dialogLabel}>
   <div class="controls">
-    <button class="ghost icon-action" type="button" data-video-collapse aria-label={ui.video.collapse}>
+    <button
+      class="ghost icon-action"
+      type="button"
+      data-video-collapse
+      aria-label={ui.video.collapse}
+    >
       <Icon name="youtube-logo" size="1.05rem" />
     </button>
-    <button class="ghost icon-action" type="button" data-video-close aria-label={ui.video.close}>
+    <button
+      class="ghost icon-action"
+      type="button"
+      data-video-close
+      aria-label={ui.video.close}
+    >
       <Icon name="x" weight="bold" size="1.125rem" />
     </button>
   </div>
@@ -32,8 +42,8 @@ const { ui } = Astro.props;
   }
 
   .stage[data-mode='compact'] {
-    inset: auto var(--space-4) calc(var(--dock-height) + var(--bottom-stack, 0px) + var(--space-3))
-      auto;
+    inset: auto var(--space-4)
+      calc(var(--dock-height) + var(--bottom-stack, 0px) + var(--space-3)) auto;
     inline-size: min(100% - 2rem, 22.25rem);
     box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.8);
   }

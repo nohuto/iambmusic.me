@@ -4,7 +4,12 @@ import iambLogo from '../assets/profiles/iamb/logo.png';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
-const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: 'png' });
+const favicon = await getImage({
+  src: iambLogo,
+  width: 64,
+  height: 64,
+  format: 'png',
+});
 ---
 
 <!doctype html>
@@ -13,7 +18,10 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>404 - IAMB Synthmusic</title>
-    <meta name="description" content="Diese Seite gibt es nicht. This page does not exist." />
+    <meta
+      name="description"
+      content="Diese Seite gibt es nicht. This page does not exist."
+    />
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
     <link rel="sitemap" href="/sitemap.xml" />
@@ -24,8 +32,11 @@ const favicon = await getImage({ src: iambLogo, width: 64, height: 64, format: '
         try {
           stored = localStorage.getItem('iambmusic-theme');
         } catch {}
-        const system = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : system;
+        const system = matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+        root.dataset.theme =
+          stored === 'dark' || stored === 'light' ? stored : system;
       })();
     </script>
   </head>

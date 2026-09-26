@@ -1,7 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import cutout from '../../assets/artist/portrait-cutout.png';
-import type { Language, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  Profile,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import { localize } from '../../i18n/index.ts';
 import { routePath } from '../../lib/routes.ts';
 
@@ -14,7 +19,10 @@ interface Props {
 
 const { profile, profileId, lang, ui } = Astro.props;
 
-const cutoutAlt = { de: 'Freigestelltes Porträt von Markus B.', en: 'Cut-out portrait of Markus B.' };
+const cutoutAlt = {
+  de: 'Freigestelltes Porträt von Markus B.',
+  en: 'Cut-out portrait of Markus B.',
+};
 const artworkAlt = cutoutAlt[lang];
 const [titleHead = profile.name, ...titleTail] = profile.name.split(' ');
 const titleRest = titleTail.join(' ');
@@ -32,8 +40,14 @@ const titleRest = titleTail.join(' ');
       )}
     </h1>
     <p class="lead">{localize(profile.hero.lead, lang)}</p>
-    <a class="discover" href={routePath(lang, profileId, 'music')} aria-label={ui.actions.discoverMusic}>
-      <span class="discover-word" aria-hidden="true">{ui.actions.discoverLabel}</span>
+    <a
+      class="discover"
+      href={routePath(lang, profileId, 'music')}
+      aria-label={ui.actions.discoverMusic}
+    >
+      <span class="discover-word" aria-hidden="true">
+        {ui.actions.discoverLabel}
+      </span>
       <span class="discover-frame" aria-hidden="true">
         <span class="discover-corner corner-lt" />
         <span class="discover-corner corner-rt" />
@@ -73,7 +87,6 @@ const titleRest = titleTail.join(' ');
     justify-items: start;
     max-inline-size: 34rem;
   }
-
 
   h1 {
     font-size: var(--step-title);
@@ -125,7 +138,8 @@ const titleRest = titleTail.join(' ');
     inset: 0;
     overflow: hidden;
     border: 4px double var(--ink-field);
-    box-shadow: inset 0 0 15px color-mix(in srgb, var(--ink-field) 30%, transparent);
+    box-shadow: inset 0 0 15px
+      color-mix(in srgb, var(--ink-field) 30%, transparent);
     clip-path: polygon(
       24% 0%,
       76% 0%,
@@ -143,7 +157,8 @@ const titleRest = titleTail.join(' ');
     inline-size: 52px;
     block-size: 52px;
     background: var(--ink-field);
-    box-shadow: inset 1px 1px 8px color-mix(in srgb, var(--ink) 55%, transparent);
+    box-shadow: inset 1px 1px 8px
+      color-mix(in srgb, var(--ink) 55%, transparent);
     transform: scale(1) rotate(45deg);
     transition: transform 200ms ease;
   }
@@ -268,12 +283,12 @@ const titleRest = titleTail.join(' ');
     filter: grayscale(1) contrast(1.05);
   }
 
-
   @media (min-width: 60rem) {
     .spotlight {
       min-block-size: var(--spotlight-height);
       margin-block-start: calc((var(--header-height) + var(--intro-gap)) * -1);
-      padding-block: calc(var(--header-height) + var(--intro-gap)) var(--space-6);
+      padding-block: calc(var(--header-height) + var(--intro-gap))
+        var(--space-6);
     }
 
     .copy {
@@ -304,8 +319,6 @@ const titleRest = titleTail.join(' ');
       inset-block: 0 -2.25rem;
       block-size: auto;
     }
-
-
   }
 
   @media (min-width: 60rem) and (max-width: 80rem) {
@@ -315,4 +328,3 @@ const titleRest = titleTail.join(' ');
     }
   }
 </style>
-

@@ -16,18 +16,18 @@ const { profileId, lang, ui } = Astro.props;
 <section class="panel preview" aria-labelledby="preview-heading">
   <header class="panel-head">
     <h2 id="preview-heading">{ui.sections.artistPreview}</h2>
-    <a class="more" href={routePath(lang, profileId, 'about')}>{ui.actions.readStory}</a>
+    <a class="more" href={routePath(lang, profileId, 'about')}>
+      {ui.actions.readStory}
+    </a>
   </header>
 
   <dl>
-    {
-      artist.glance.slice(0, 2).map((fact) => (
-        <div class="fact">
-          <dt>{localize(fact.label, lang)}</dt>
-          <dd>{localize(fact.value, lang)}</dd>
-        </div>
-      ))
-    }
+    {artist.glance.slice(0, 2).map((fact) => (
+      <div class="fact">
+        <dt>{localize(fact.label, lang)}</dt>
+        <dd>{localize(fact.value, lang)}</dd>
+      </div>
+    ))}
   </dl>
 </section>
 

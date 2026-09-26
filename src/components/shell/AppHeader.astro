@@ -1,6 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import type { Language, PageId, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  PageId,
+  Profile,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import { localize } from '../../i18n/index.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
@@ -23,7 +29,12 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
 
 <header class="app-header" data-app-header>
   <a class="mark" href={routePath(lang, profile, 'home')}>
-    <Image src={activeProfile.images.logo} alt={localize(activeProfile.images.logoAlt, lang)} width={30} height={30} />
+    <Image
+      src={activeProfile.images.logo}
+      alt={localize(activeProfile.images.logoAlt, lang)}
+      width={30}
+      height={30}
+    />
     <span>{activeProfile.shortName}</span>
   </a>
 

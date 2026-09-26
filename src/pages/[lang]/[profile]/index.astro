@@ -33,7 +33,12 @@ const latest = getMusicRows(profile, profileId)
   title={profile.name}
   description={localize(profile.meta.home, lang)}
 >
-  <ProfileSpotlight profile={profile} profileId={profileId} lang={lang} ui={ui} />
+  <ProfileSpotlight
+    profile={profile}
+    profileId={profileId}
+    lang={lang}
+    ui={ui}
+  />
 
   <VideoDeck
     rows={latest}

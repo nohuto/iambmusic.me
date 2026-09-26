@@ -25,21 +25,27 @@ function railToggle(): HTMLButtonElement | null {
 function applyRail(collapsed: boolean): void {
   const button = railToggle();
   root.dataset['rail'] = collapsed ? 'collapsed' : 'expanded';
-  const label = collapsed ? button?.dataset['expand'] : button?.dataset['collapse'];
+  const label = collapsed
+    ? button?.dataset['expand']
+    : button?.dataset['collapse'];
   if (label) button?.setAttribute('aria-label', label);
 }
 
 type SourceGroup = 'music' | 'social';
 
 function disclosure(group: SourceGroup): HTMLButtonElement | null {
-  return document.querySelector<HTMLButtonElement>(`[data-source-disclosure="${group}"]`);
+  return document.querySelector<HTMLButtonElement>(
+    `[data-source-disclosure="${group}"]`,
+  );
 }
 
 function applySources(group: SourceGroup, expanded: boolean): void {
   const button = disclosure(group);
   root.dataset[`${group}Sources`] = expanded ? 'expanded' : 'collapsed';
   button?.setAttribute('aria-expanded', String(expanded));
-  const label = expanded ? button?.dataset['collapse'] : button?.dataset['expand'];
+  const label = expanded
+    ? button?.dataset['collapse']
+    : button?.dataset['expand'];
   if (label) button?.setAttribute('aria-label', label);
 }
 
@@ -51,8 +57,11 @@ document.addEventListener('click', (event) => {
     applyRail(collapsed);
     return;
   }
-  const sourceToggle = target?.closest<HTMLButtonElement>('[data-source-disclosure]');
-  const group = sourceToggle?.dataset['sourceDisclosure'] as SourceGroup | undefined;
+  const sourceToggle = target?.closest<HTMLButtonElement>(
+    '[data-source-disclosure]',
+  );
+  const group = sourceToggle?.dataset['sourceDisclosure'] as
+    SourceGroup | undefined;
   if (group) {
     const expanded = root.dataset[`${group}Sources`] === 'collapsed';
     store(`iambmusic-${group}-sources`, expanded ? 'expanded' : 'collapsed');
@@ -62,7 +71,8 @@ document.addEventListener('click', (event) => {
 
 function place(menu: HTMLElement, trigger: HTMLElement): void {
   const anchor = trigger.getBoundingClientRect();
-  const viewport = window.visualViewport?.height ?? document.documentElement.clientHeight;
+  const viewport =
+    window.visualViewport?.height ?? document.documentElement.clientHeight;
   const room = document.documentElement.clientWidth - menu.offsetWidth - 8;
   const below = anchor.bottom + 4;
   const fits = below + menu.offsetHeight <= viewport - 8;
@@ -73,9 +83,13 @@ function place(menu: HTMLElement, trigger: HTMLElement): void {
 }
 
 function repositionOpenMenus(): void {
-  for (const menu of document.querySelectorAll<HTMLElement>('[data-anchored-menu]')) {
+  for (const menu of document.querySelectorAll<HTMLElement>(
+    '[data-anchored-menu]',
+  )) {
     if (!menu.matches(':popover-open')) continue;
-    const trigger = document.querySelector<HTMLElement>(`[popovertarget="${menu.id}"]`);
+    const trigger = document.querySelector<HTMLElement>(
+      `[popovertarget="${menu.id}"]`,
+    );
     if (trigger) place(menu, trigger);
   }
 }
@@ -92,7 +106,9 @@ function setContextMenuScrollLock(locked: boolean): void {
 }
 
 function syncContextMenuScrollLock(): void {
-  setContextMenuScrollLock(document.querySelector('.row-menu:popover-open') !== null);
+  setContextMenuScrollLock(
+    document.querySelector('.row-menu:popover-open') !== null,
+  );
 }
 
 function blockContextMenuScroll(event: Event): void {
@@ -117,13 +133,18 @@ addEventListener('touchmove', blockContextMenuScroll, { passive: false });
 document.addEventListener('keydown', (event) => {
   if (!root.hasAttribute('data-context-menu-open')) return;
   const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'];
-  if (keys.includes(event.key) || (event.key === ' ' && !(event.target as Element).closest('button, a'))) {
+  if (
+    keys.includes(event.key) ||
+    (event.key === ' ' && !(event.target as Element).closest('button, a'))
+  ) {
     event.preventDefault();
   }
 });
 
 function anchorMenus(): void {
-  for (const menu of document.querySelectorAll<HTMLElement>('[data-anchored-menu]')) {
+  for (const menu of document.querySelectorAll<HTMLElement>(
+    '[data-anchored-menu]',
+  )) {
     if (menu.dataset['anchored'] === 'ready') continue;
     menu.dataset['anchored'] = 'ready';
 
@@ -136,7 +157,8 @@ function anchorMenus(): void {
     });
 
     menu.addEventListener('toggle', (event) => {
-      if (menu.classList.contains('row-menu')) queueMicrotask(syncContextMenuScrollLock);
+      if (menu.classList.contains('row-menu'))
+        queueMicrotask(syncContextMenuScrollLock);
       if ((event as ToggleEvent).newState !== 'open') return;
       repositionOpenMenus();
       menu.style.visibility = '';
@@ -149,7 +171,9 @@ let headerWatch: IntersectionObserver | null = null;
 function watchHeader(): void {
   headerWatch?.disconnect();
   headerWatch = null;
-  const sentinel = document.querySelector<HTMLElement>('[data-header-sentinel]');
+  const sentinel = document.querySelector<HTMLElement>(
+    '[data-header-sentinel]',
+  );
   const header = document.querySelector<HTMLElement>('[data-app-header]');
   if (!sentinel || !header) return;
   headerWatch = new IntersectionObserver(([entry]) => {
@@ -161,10 +185,17 @@ function watchHeader(): void {
 function setup(): void {
   restoreRoot();
   for (const group of ['music', 'social'] as const) {
-    const active = [...document.querySelectorAll<HTMLElement>(`#${group}-sources [data-source-link]`)].some(
+    const active = [
+      ...document.querySelectorAll<HTMLElement>(
+        `#${group}-sources [data-source-link]`,
+      ),
+    ].some(
       (link) => link.dataset['sourceLink'] && link.hasAttribute('aria-current'),
     );
-    applySources(group, active || root.dataset[`${group}Sources`] !== 'collapsed');
+    applySources(
+      group,
+      active || root.dataset[`${group}Sources`] !== 'collapsed',
+    );
   }
   anchorMenus();
   syncContextMenuScrollLock();
@@ -175,7 +206,9 @@ function restoreRoot(): void {
   applyRail(read('iambmusic-rail') === 'collapsed');
   for (const group of ['music', 'social'] as const) {
     root.dataset[`${group}Sources`] =
-      read(`iambmusic-${group}-sources`) === 'collapsed' ? 'collapsed' : 'expanded';
+      read(`iambmusic-${group}-sources`) === 'collapsed'
+        ? 'collapsed'
+        : 'expanded';
   }
 }
 

@@ -20,9 +20,12 @@ const clock = (seconds: number | null | undefined) => {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 };
 
-const dialogNow = () => document.querySelector<HTMLDialogElement>('[data-search-dialog]');
-const inputNow = () => document.querySelector<HTMLInputElement>('[data-search-input]');
-const resultsNow = () => document.querySelector<HTMLUListElement>('[data-search-results]');
+const dialogNow = () =>
+  document.querySelector<HTMLDialogElement>('[data-search-dialog]');
+const inputNow = () =>
+  document.querySelector<HTMLInputElement>('[data-search-input]');
+const resultsNow = () =>
+  document.querySelector<HTMLUListElement>('[data-search-results]');
 
 let invoker: HTMLElement | null = null;
 
@@ -31,10 +34,12 @@ function setup(): void {
   const input = inputNow();
   const results = resultsNow();
   const form = document.querySelector<HTMLFormElement>('[data-search-form]');
-  if (!dialog || !input || !results || dialog.dataset['searchReady'] === 'yes') return;
+  if (!dialog || !input || !results || dialog.dataset['searchReady'] === 'yes')
+    return;
   dialog.dataset['searchReady'] = 'yes';
 
-  const payload = document.querySelector('[data-playables]')?.textContent ?? '[]';
+  const payload =
+    document.querySelector('[data-playables]')?.textContent ?? '[]';
   const entries: Entry[] = JSON.parse(payload);
   const none = dialog.dataset['none'] ?? '';
   const musicPath = dialog.dataset['musicPath'] ?? '';
@@ -48,7 +53,9 @@ function setup(): void {
   function select(entry: Entry): void {
     close();
     const filter = entry.kind === 'local' ? '' : `source=${entry.kind}&`;
-    void navigate(`${musicPath}?${filter}focus=${encodeURIComponent(entry.id)}`);
+    void navigate(
+      `${musicPath}?${filter}focus=${encodeURIComponent(entry.id)}`,
+    );
   }
 
   function setActive(next: number): void {
@@ -65,13 +72,17 @@ function setup(): void {
   }
 
   function moveActive(delta: number): void {
-    setActive(active < 0 ? (delta > 0 ? 0 : matches.length - 1) : active + delta);
+    setActive(
+      active < 0 ? (delta > 0 ? 0 : matches.length - 1) : active + delta,
+    );
   }
 
   function render(query: string): void {
     const needle = normalise(query);
     matches = needle
-      ? entries.filter((entry) => normalise(entry.title).includes(needle)).slice(0, 30)
+      ? entries
+          .filter((entry) => normalise(entry.title).includes(needle))
+          .slice(0, 30)
       : [];
     active = -1;
     input!.removeAttribute('aria-activedescendant');
@@ -110,7 +121,11 @@ function setup(): void {
       side.className = 'side';
       side.textContent =
         clock(entry.durationSeconds) ||
-        (entry.kind === 'local' ? '♪' : entry.kind === 'youtube' ? 'YouTube' : 'SoundCloud');
+        (entry.kind === 'local'
+          ? '♪'
+          : entry.kind === 'youtube'
+            ? 'YouTube'
+            : 'SoundCloud');
 
       row.append(art, name, side);
       row.addEventListener('click', () => select(entry));
@@ -182,8 +197,14 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
-  if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey)) return;
-  if ((event.target as Element | null)?.closest('input, textarea, select, [contenteditable]')) return;
+  if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey))
+    return;
+  if (
+    (event.target as Element | null)?.closest(
+      'input, textarea, select, [contenteditable]',
+    )
+  )
+    return;
   event.preventDefault();
   openSearch();
 });

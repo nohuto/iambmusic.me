@@ -1,6 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import type { Language, PageId, Profile, ProfileId, UiDictionary } from '../../data/types.ts';
+import type {
+  Language,
+  PageId,
+  Profile,
+  ProfileId,
+  UiDictionary,
+} from '../../data/types.ts';
 import { localize } from '../../i18n/index.ts';
 import type { MusicSource, SocialSource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
@@ -34,7 +40,12 @@ const {
   <div class="inner">
     <div class="identity">
       <a class="mark" href={routePath(lang, profile, 'home')}>
-        <Image src={activeProfile.images.logo} alt={localize(activeProfile.images.logoAlt, lang)} width={34} height={34} />
+        <Image
+          src={activeProfile.images.logo}
+          alt={localize(activeProfile.images.logoAlt, lang)}
+          width={34}
+          height={34}
+        />
         <span>{activeProfile.shortName}</span>
       </a>
 

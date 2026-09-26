@@ -4,7 +4,12 @@ import robertMiles from '../assets/profiles/iamb/inspiration/robert-miles.jpg';
 import tangerineDream from '../assets/profiles/iamb/inspiration/tangerine-dream.jpg';
 import theArtOfNoise from '../assets/profiles/iamb/inspiration/the-art-of-noise.jpg';
 import yello from '../assets/profiles/iamb/inspiration/yello.jpg';
-import type { GlanceFact, Inspiration, StudioSetup, TimelineEntry } from './types.ts';
+import type {
+  GlanceFact,
+  Inspiration,
+  StudioSetup,
+  TimelineEntry,
+} from './types.ts';
 
 interface ArtistProfile {
   readonly glance: readonly GlanceFact[];
@@ -43,11 +48,17 @@ export const artist: ArtistProfile = {
     },
     {
       period: { de: '1986', en: '1986' },
-      text: { de: 'Roland TR-505 Drumcomputer', en: 'Roland TR-505 drum machine' },
+      text: {
+        de: 'Roland TR-505 Drumcomputer',
+        en: 'Roland TR-505 drum machine',
+      },
     },
     {
       period: { de: '1987', en: '1987' },
-      text: { de: 'Erster Sequencer C-LAB für C64', en: 'First sequencer, C-LAB for the C64' },
+      text: {
+        de: 'Erster Sequencer C-LAB für C64',
+        en: 'First sequencer, C-LAB for the C64',
+      },
     },
     {
       period: { de: '1990', en: '1990' },
@@ -79,7 +90,10 @@ export const artist: ArtistProfile = {
     },
     {
       period: { de: '2019', en: '2019' },
-      text: { de: 'Umstieg auf VST-Instrumente.', en: 'Switched to VST instruments.' },
+      text: {
+        de: 'Umstieg auf VST-Instrumente.',
+        en: 'Switched to VST instruments.',
+      },
     },
     {
       period: { de: '2021', en: '2021' },
@@ -137,10 +151,22 @@ export const artist: ArtistProfile = {
   ],
   inspirations: [
     { name: 'Yello', url: 'https://www.yello.com', image: yello },
-    { name: 'Robert Miles', url: 'http://www.robertmiles.net', image: robertMiles },
+    {
+      name: 'Robert Miles',
+      url: 'http://www.robertmiles.net',
+      image: robertMiles,
+    },
     { name: 'Boytronic', url: 'http://www.boytronic.de', image: boytronic },
-    { name: 'The Art Of Noise', url: 'https://www.theartofnoiseonline.com', image: theArtOfNoise },
+    {
+      name: 'The Art Of Noise',
+      url: 'https://www.theartofnoiseonline.com',
+      image: theArtOfNoise,
+    },
     { name: 'Eloy', url: 'https://www.eloy-legacy.com', image: eloy },
-    { name: 'Tangerine Dream', url: 'https://www.tangerinedreammusic.com', image: tangerineDream },
+    {
+      name: 'Tangerine Dream',
+      url: 'https://www.tangerinedreammusic.com',
+      image: tangerineDream,
+    },
   ],
 };
