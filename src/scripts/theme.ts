@@ -47,6 +47,13 @@ document.addEventListener('click', (event) => {
 });
 
 system.addEventListener('change', syncControls);
+document.addEventListener('astro:before-swap', (event) => {
+  const incoming = event.newDocument;
+  const current = document.documentElement.dataset.theme;
+  if (current === 'dark' || current === 'light')
+    incoming.documentElement.dataset.theme = current;
+  else delete incoming.documentElement.dataset.theme;
+});
 document.addEventListener('astro:after-swap', restoreOverride);
 document.addEventListener('astro:page-load', syncControls);
 restoreOverride();

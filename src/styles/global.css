@@ -248,6 +248,7 @@ html[data-theme='dark'] .theme-control .thumb {
   display: grid;
   grid-template-rows: auto 1fr;
   align-content: start;
+  padding-block-start: var(--header-height);
   background:
     linear-gradient(180deg, var(--tint) 0, transparent var(--spotlight-height)),
     var(--panel-ground);

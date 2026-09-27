@@ -76,8 +76,9 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
   }
 
   .app-header {
-    position: sticky;
+    position: fixed;
     inset-block-start: 0;
+    inset-inline: 0;
     z-index: 4;
     display: flex;
     flex-wrap: wrap;
@@ -164,6 +165,10 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
   }
 
   @media (max-width: 22.5rem) {
+    .mark {
+      display: none;
+    }
+
     .app-header {
       padding-inline: var(--space-2);
     }
@@ -171,6 +176,7 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
 
   @media (min-width: 60rem) {
     .app-header {
+      inset-inline-start: var(--rail-width);
       display: grid;
       grid-template-columns: minmax(0, min(22rem, 34%)) minmax(0, 1fr);
       padding-inline: var(--space-6);

@@ -58,6 +58,7 @@ const favicon = await getImage({
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <ThemeBootstrap />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -71,7 +72,6 @@ const favicon = await getImage({
       />
     ))}
     <ClientRouter fallback="swap" />
-    <ThemeBootstrap />
     <link
       rel="preload"
       href="/fonts/archivo-latin.woff2"
