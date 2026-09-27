@@ -81,20 +81,26 @@ const {
 
   @media (min-width: 60rem) {
     .rail {
+      position: fixed;
+      inset-block: 0;
+      inset-inline-start: 0;
+      z-index: 5;
       display: block;
+      inline-size: var(--rail-width);
       background: var(--panel-recess);
       border-inline-end: var(--rule) solid var(--panel-rule);
     }
 
     .inner {
-      position: sticky;
-      inset-block-start: 0;
       display: grid;
       grid-template-rows: auto 1fr;
       gap: var(--space-5);
-      block-size: 100dvh;
-      padding: var(--space-5) var(--space-3);
+      block-size: 100%;
+      padding: var(--space-5) var(--space-3)
+        calc(var(--footer-height) + var(--space-5));
       align-content: start;
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
   }
 

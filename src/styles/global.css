@@ -31,6 +31,8 @@
 
 html {
   background: var(--panel-ground);
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+  scroll-padding-bottom: var(--footer-height);
   -webkit-text-size-adjust: 100%;
   accent-color: var(--ink);
   color-scheme: light dark;
@@ -82,7 +84,6 @@ html[data-theme='dark'] {
 body {
   min-block-size: 100vh;
   min-block-size: 100svh;
-  background: var(--panel-ground);
   color: var(--legend);
   font-family: 'Archivo', system-ui, sans-serif;
   font-size: var(--step-1);
@@ -240,7 +241,15 @@ html[data-theme='dark'] .theme-control .thumb {
   min-block-size: 100vh;
   min-block-size: 100svh;
   grid-template-rows: auto 1fr auto;
-  background: var(--panel-ground);
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(var(--tint) 50%, var(--panel-ground) 50%);
+  pointer-events: none;
 }
 
 .main {
@@ -257,7 +266,7 @@ html[data-theme='dark'] .theme-control .thumb {
 .stage {
   container: stage / inline-size;
   padding: var(--space-5) var(--space-4)
-    calc(var(--dock-height) + var(--bottom-stack, 0px) + var(--space-6));
+    calc(var(--footer-height) + var(--space-6));
   display: grid;
   gap: var(--space-5);
   align-content: start;
@@ -458,18 +467,10 @@ html[data-theme='dark'] .theme-control .thumb {
 }
 
 @media (min-width: 60rem) {
-  html,
-  body {
-    background: linear-gradient(
-      to right,
-      var(--panel-recess) var(--rail-width),
-      var(--panel-ground) var(--rail-width)
-    );
-  }
-
   :root {
     --bottom-nav: 0px;
     --bottom-stack: 0px;
+    --footer-height: calc(var(--dock-height) + var(--safe-bottom));
   }
 
   .app {
@@ -488,7 +489,7 @@ html[data-theme='dark'] .theme-control .thumb {
 
   .stage {
     padding: var(--intro-gap) var(--space-6)
-      calc(var(--dock-height) + var(--space-7));
+      calc(var(--footer-height) + var(--space-7));
   }
 }
 
@@ -504,6 +505,7 @@ html[data-social-sources='collapsed'] #social-sources {
 
   html[data-rail='collapsed'] .rail .inner {
     padding-inline: var(--space-2);
+    overflow: visible;
   }
 
   html[data-rail='collapsed'] .rail .identity {

@@ -429,6 +429,13 @@ const hasQueue = playables.length > 1;
     color: var(--legend-quiet);
   }
 
+  @media (max-width: 22.5rem) {
+    [data-player-shuffle],
+    [data-player-repeat] {
+      display: none;
+    }
+  }
+
   [data-player-shuffle][aria-pressed='true'],
   [data-player-repeat]:not([data-repeat='off']) {
     color: var(--ink);
@@ -601,9 +608,8 @@ const hasQueue = playables.length > 1;
 
   @media (min-width: 60rem) {
     .dock {
-      inset-block-start: calc(100dvh - var(--dock-height));
-      inset-block-end: auto;
-      block-size: var(--dock-height);
+      min-block-size: var(--footer-height);
+      padding-block-end: calc(var(--space-2) + var(--safe-bottom));
     }
   }
 
