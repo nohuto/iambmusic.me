@@ -249,6 +249,15 @@ const hasQueue = playables.length > 1;
     border-block-start: var(--rule) solid var(--panel-rule);
   }
 
+  .dock::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    block-size: 100vh;
+    background: inherit;
+  }
+
   .identity {
     display: flex;
     align-items: center;

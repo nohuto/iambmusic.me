@@ -33,6 +33,15 @@ const { lang, profile, page, ui } = Astro.props;
     border-block-start: var(--rule) solid var(--panel-rule);
   }
 
+  .bottom::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    block-size: 100vh;
+    background: inherit;
+  }
+
   @media (min-width: 60rem) {
     .bottom {
       display: none;
