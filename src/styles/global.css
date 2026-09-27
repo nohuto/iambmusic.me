@@ -473,6 +473,10 @@ html[data-theme='dark'] .theme-control .thumb {
     --footer-height: calc(var(--dock-height) + var(--safe-bottom));
   }
 
+  html {
+    background: var(--panel-recess);
+  }
+
   .app {
     grid-template-columns: var(--rail-width) minmax(0, 1fr);
     grid-template-rows: 1fr;
