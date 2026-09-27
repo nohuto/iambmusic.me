@@ -82,7 +82,7 @@ html[data-theme='dark'] {
 body {
   min-block-size: 100vh;
   min-block-size: 100svh;
-  background: var(--panel-recess);
+  background: var(--panel-ground);
   color: var(--legend);
   font-family: 'Archivo', system-ui, sans-serif;
   font-size: var(--step-1);
@@ -458,6 +458,15 @@ html[data-theme='dark'] .theme-control .thumb {
 }
 
 @media (min-width: 60rem) {
+  html,
+  body {
+    background: linear-gradient(
+      to right,
+      var(--panel-recess) var(--rail-width),
+      var(--panel-ground) var(--rail-width)
+    );
+  }
+
   :root {
     --bottom-nav: 0px;
     --bottom-stack: 0px;
