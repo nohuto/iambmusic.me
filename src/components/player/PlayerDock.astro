@@ -26,7 +26,7 @@ const hasQueue = playables.length > 1;
     data-queued={ui.music.queued}
     data-copied={ui.music.copied}
   >
-    <audio preload="metadata" data-player-audio />
+    <audio preload="none" data-player-audio />
     <iframe
       class="soundcloud-engine"
       data-soundcloud-frame
@@ -220,7 +220,7 @@ const hasQueue = playables.length > 1;
       </div>
     </div>
 
-    <p class="status" data-player-status role="status" aria-live="polite" />
+    <p class="sr-only" data-player-status role="status" aria-live="polite" />
 
     <p
       class="error"
@@ -344,15 +344,6 @@ const hasQueue = playables.length > 1;
     .dock[data-art='expanded'] .art-image {
       border-radius: 0;
     }
-  }
-
-  .status {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 
   .soundcloud-engine {
@@ -626,7 +617,3 @@ const hasQueue = playables.length > 1;
     display: none;
   }
 </style>
-
-<script>
-  import '../../scripts/audio-player.ts';
-</script>

@@ -53,9 +53,14 @@ export const aimbProfile: AimbProfile = {
       durationSeconds: 48,
       sources: [
         {
-          format: 'wav',
-          src: '/audio/aimb/last-in-space.wav',
-          mimeType: 'audio/wav',
+          format: 'mp3',
+          src: '/audio/aimb/last-in-space.mp3',
+          mimeType: 'audio/mpeg',
+        },
+        {
+          format: 'm4a',
+          src: '/audio/aimb/last-in-space.m4a',
+          mimeType: 'audio/mp4',
         },
       ],
     },

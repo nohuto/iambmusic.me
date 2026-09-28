@@ -70,7 +70,10 @@ export function youtubeApi(): Promise<YouTubeApi> {
       resolve(window.YT);
       return;
     }
-    window.onYouTubeIframeAPIReady = () => resolve(window.YT!);
+    window.onYouTubeIframeAPIReady = () => {
+      if (window.YT) resolve(window.YT);
+      else reject(new Error('YouTube'));
+    };
     const script = document.createElement('script');
     script.src = 'https://www.youtube.com/iframe_api';
     script.onerror = () => {

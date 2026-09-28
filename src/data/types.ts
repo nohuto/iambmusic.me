@@ -9,7 +9,7 @@ export type PageId = (typeof pageIds)[number];
 
 export type LocalizedText = Readonly<Record<Language, string>>;
 
-export type AudioFormat = 'mp3' | 'm4a' | 'wav';
+export type AudioFormat = 'mp3' | 'm4a';
 
 export interface AudioSource {
   readonly format: AudioFormat;

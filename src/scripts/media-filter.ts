@@ -1,12 +1,15 @@
-export {};
+import { eventElement } from './dom.ts';
 
 interface Facts {
   count: number;
   date: string | null;
 }
 
-function apply(source: string): void {
+function apply(requested: string): void {
   const rows = [...document.querySelectorAll<HTMLElement>('[data-media-row]')];
+  const source = rows.some((row) => row.dataset['source'] === requested)
+    ? requested
+    : '';
   const empty = document.querySelector<HTMLElement>('[data-media-empty]');
   const links = [
     ...document.querySelectorAll<HTMLAnchorElement>('[data-source-link]'),
@@ -32,7 +35,8 @@ function apply(source: string): void {
   }
   empty?.toggleAttribute('hidden', visible > 0);
 
-  const facts = sets[source] ?? { count: visible, date: null };
+  const known = Object.hasOwn(sets, source) ? sets[source] : undefined;
+  const facts = known ?? { count: visible, date: null };
   if (countEl)
     countEl.textContent = `${facts.count} ${countEl.dataset['label'] ?? ''}`;
   if (updatedEl) {
@@ -77,23 +81,27 @@ function setup(): void {
   if (focus) focusRow(focus);
 }
 
-document.addEventListener('click', (event) => {
-  if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0)
-    return;
-  const link = (event.target as Element | null)?.closest<HTMLAnchorElement>(
-    '[data-source-link]',
-  );
-  if (!link) return;
-  if (new URL(link.href).pathname !== location.pathname) return;
-  event.preventDefault();
-  const source = link.dataset['sourceLink'] ?? '';
-  history.replaceState(
-    null,
-    '',
-    source ? `?source=${source}` : location.pathname,
-  );
-  apply(source);
-});
+document.addEventListener(
+  'click',
+  (event) => {
+    if (
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button !== 0
+    )
+      return;
+    const link =
+      eventElement(event)?.closest<HTMLAnchorElement>('[data-source-link]');
+    if (!link || new URL(link.href).pathname !== location.pathname) return;
+    event.preventDefault();
+    const source = link.dataset['sourceLink'] ?? '';
+    history.replaceState(history.state, '', link.href);
+    apply(source);
+  },
+  { capture: true },
+);
 
 setup();
 document.addEventListener('astro:page-load', setup);

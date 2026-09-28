@@ -12,23 +12,25 @@ import {
   type SoundCloudWidget,
   type YouTubePlayer,
 } from './player-apis.ts';
+import { sourceNames } from '../lib/sources.ts';
+import { eventElement } from './dom.ts';
 
-const dock = document.querySelector<HTMLElement>('[data-player]');
-const audio = document.querySelector<HTMLAudioElement>('[data-player-audio]');
-const stage = document.querySelector<HTMLDialogElement>('[data-video-dialog]');
-const frame = document.querySelector<HTMLElement>('[data-video-frame]');
+function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
+  const stage = document.querySelector<HTMLDialogElement>(
+    '[data-video-dialog]',
+  );
+  const frame = document.querySelector<HTMLElement>('[data-video-frame]');
+  const pick = <T extends HTMLElement>(selector: string): T | null =>
+    dock.querySelector<T>(selector);
 
-function pick<T extends HTMLElement>(selector: string): T | null {
-  return dock?.querySelector<T>(selector) ?? null;
-}
-
-if (dock && audio) {
   const payload = dock.querySelector('[data-playables]')?.textContent ?? '[]';
   const playables: Playable[] = JSON.parse(payload);
   const items = new Map(playables.map((item) => [item.id, item]));
   const tracks = playables.filter(
     (item): item is PlayableTrack => item.kind === 'local',
   );
+  const firstTrack = tracks[0];
+  if (!firstTrack) return;
 
   const titleEl = pick('[data-player-title]');
   const artEl = pick('[data-player-art]');
@@ -53,7 +55,7 @@ if (dock && audio) {
   const artHtml = artEl?.innerHTML ?? '';
 
   const storageKey = `iambmusic-player-${dock.dataset['profile'] ?? ''}`;
-  let current: Playable = tracks[0]!;
+  let current: Playable = firstTrack;
   let player: YouTubePlayer | null = null;
   let soundcloudPlayer: SoundCloudWidget | null = null;
   let remotePosition = 0;
@@ -89,7 +91,7 @@ if (dock && audio) {
   }
 
   function setState(playing: boolean): void {
-    dock!.dataset['state'] = playing ? 'playing' : 'paused';
+    dock.dataset['state'] = playing ? 'playing' : 'paused';
     const label = playing ? toggle?.dataset['pause'] : toggle?.dataset['play'];
     if (label) toggle?.setAttribute('aria-label', label);
     syncRows();
@@ -121,8 +123,7 @@ if (dock && audio) {
       const label = sourceEl.querySelector<HTMLElement>(
         '[data-player-source-label]',
       );
-      if (label)
-        label.textContent = source === 'youtube' ? 'YouTube' : 'SoundCloud';
+      if (label) label.textContent = sourceNames[source];
       for (const icon of sourceEl.querySelectorAll<HTMLElement>(
         '[data-player-source-icon]',
       )) {
@@ -130,11 +131,14 @@ if (dock && audio) {
           icon.dataset['playerSourceIcon'] === source ? 'block' : 'none';
       }
     }
-    if (artEl) {
-      artEl.innerHTML =
-        source && item.thumbnail
-          ? `<img src="${item.thumbnail}" alt="">`
-          : artHtml;
+    if (!artEl) return;
+    if (source && item.thumbnail) {
+      const image = document.createElement('img');
+      image.src = item.thumbnail;
+      image.alt = '';
+      artEl.replaceChildren(image);
+    } else {
+      artEl.innerHTML = artHtml;
     }
   }
 
@@ -144,7 +148,7 @@ if (dock && audio) {
   }
 
   function syncRows(): void {
-    const playingId = dock!.dataset['state'] === 'playing' ? current.id : null;
+    const playingId = dock.dataset['state'] === 'playing' ? current.id : null;
     for (const row of document.querySelectorAll<HTMLElement>('[data-row-id]')) {
       const id = row.dataset['rowId'];
       const active = id === playingId;
@@ -158,15 +162,15 @@ if (dock && audio) {
 
   function applyVolume(): void {
     const level = Number(volume?.value ?? 0.5);
-    audio!.volume = level;
-    audio!.muted = muted;
+    audio.volume = level;
+    audio.muted = muted;
     if (player) {
       player.setVolume(Math.round(level * 100));
       if (muted) player.mute();
       else player.unMute();
     }
     soundcloudPlayer?.setVolume(muted ? 0 : Math.round(level * 100));
-    dock!.dataset['muted'] = String(muted);
+    dock.dataset['muted'] = String(muted);
     const label = muted ? mute?.dataset['unmute'] : mute?.dataset['mute'];
     if (label) mute?.setAttribute('aria-label', label);
     setFill(volume);
@@ -190,7 +194,7 @@ if (dock && audio) {
     if (current.kind === 'youtube')
       return player ? player.getCurrentTime() : remotePosition;
     if (current.kind === 'soundcloud') return remotePosition;
-    return audio!.currentTime;
+    return resumeLocal || audio.currentTime;
   }
 
   function remember(): void {
@@ -295,11 +299,15 @@ if (dock && audio) {
     remember();
   }
 
-  function loadTrack(track: PlayableTrack, play: boolean): void {
+  function loadTrack(
+    track: PlayableTrack,
+    play: boolean,
+    startSeconds = 0,
+  ): void {
     clearVideo();
     clearSoundCloud();
 
-    audio!.replaceChildren(
+    audio.replaceChildren(
       ...track.sources.map((source) => {
         const element = document.createElement('source');
         element.src = source.src;
@@ -307,15 +315,16 @@ if (dock && audio) {
         return element;
       }),
     );
-    audio!.load();
-    setCurrent(track, 0, play);
+    audio.load();
+    resumeLocal = startSeconds;
+    setCurrent(track, startSeconds, play);
     if (play) playLocal();
   }
 
   function playLocal(): void {
     const id = current.id;
     error?.setAttribute('hidden', '');
-    void audio!.play().catch(() => {
+    void audio.play().catch(() => {
       if (current.kind !== 'local' || current.id !== id) return;
       failPlayback(error?.dataset['track']);
     });
@@ -346,7 +355,7 @@ if (dock && audio) {
     startSeconds: number,
     shouldPlay = false,
   ): void {
-    audio!.pause();
+    audio.pause();
     clearSoundCloud();
     setCurrent(item, startSeconds, shouldPlay);
   }
@@ -427,7 +436,7 @@ if (dock && audio) {
     startSeconds: number,
     shouldPlay = false,
   ): void {
-    audio!.pause();
+    audio.pause();
     clearVideo();
     clearSoundCloud();
     setCurrent(item, startSeconds, shouldPlay);
@@ -572,7 +581,7 @@ if (dock && audio) {
     window.clearTimeout(soundcloudStartTimer);
     if (current.kind === 'youtube') player?.pauseVideo();
     else if (current.kind === 'soundcloud') soundcloudPlayer?.pause();
-    else audio!.pause();
+    else audio.pause();
     setState(false);
   }
 
@@ -599,7 +608,7 @@ if (dock && audio) {
   });
 
   function playing(): boolean {
-    return dock!.dataset['state'] === 'playing';
+    return dock.dataset['state'] === 'playing';
   }
 
   function rebuildOrder(): void {
@@ -611,7 +620,11 @@ if (dock && audio) {
     const rest = sequence.filter((id) => id !== current.id);
     for (let i = rest.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
-      [rest[i], rest[j]] = [rest[j]!, rest[i]!];
+      const here = rest[i];
+      const there = rest[j];
+      if (here === undefined || there === undefined) continue;
+      rest[i] = there;
+      rest[j] = here;
     }
     order = sequence.includes(current.id) ? [current.id, ...rest] : rest;
     setSkipAvailable(order.length > 1);
@@ -709,8 +722,11 @@ if (dock && audio) {
   }
 
   function takeQueued(): string | undefined {
-    while (manualQueue.length > 0) {
-      const id = manualQueue.shift()!;
+    for (
+      let id = manualQueue.shift();
+      id !== undefined;
+      id = manualQueue.shift()
+    ) {
       if (items.has(id)) {
         remember();
         return id;
@@ -827,7 +843,10 @@ if (dock && audio) {
     scrubbing = true;
     setFill(seek);
     if (elapsed) elapsed.textContent = clock(Number(seek.value));
-    if (current.kind === 'local') audio.currentTime = Number(seek.value);
+    if (current.kind !== 'local') return;
+    if (audio.readyState === HTMLMediaElement.HAVE_NOTHING)
+      resumeLocal = Number(seek.value);
+    else audio.currentTime = Number(seek.value);
   });
 
   seek?.addEventListener('change', () => {
@@ -931,7 +950,7 @@ if (dock && audio) {
   }
 
   function setArt(expanded: boolean): void {
-    dock!.dataset['art'] = expanded ? 'expanded' : 'compact';
+    dock.dataset['art'] = expanded ? 'expanded' : 'compact';
     artToggle?.setAttribute('aria-expanded', String(expanded));
     const label = expanded
       ? artToggle?.dataset['collapse']
@@ -951,12 +970,12 @@ if (dock && audio) {
   document.addEventListener('click', (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0)
       return;
-    const target = event.target as Element | null;
+    const target = eventElement(event);
 
-    const play = target?.closest<HTMLElement>('[data-row-play]');
-    if (play) {
+    const id =
+      target?.closest<HTMLElement>('[data-row-play]')?.dataset['rowPlay'];
+    if (id) {
       event.preventDefault();
-      const id = play.dataset['rowPlay']!;
       selectedId = id;
       syncRows();
       if (id === current.id) toggle?.click();
@@ -965,8 +984,9 @@ if (dock && audio) {
     }
 
     const enqueue = target?.closest<HTMLElement>('[data-row-enqueue]');
-    if (enqueue) {
-      manualQueue.push(enqueue.dataset['rowEnqueue']!);
+    const queuedId = enqueue?.dataset['rowEnqueue'];
+    if (enqueue && queuedId) {
+      manualQueue.push(queuedId);
       remember();
       announce(dock.dataset['queued']);
       enqueue.closest<HTMLElement>('[popover]')?.hidePopover();
@@ -974,40 +994,43 @@ if (dock && audio) {
     }
 
     const copy = target?.closest<HTMLElement>('[data-row-copy]');
-    if (copy) {
-      void navigator.clipboard.writeText(copy.dataset['rowCopy']!).then(() => {
+    const link = copy?.dataset['rowCopy'];
+    if (copy && link) {
+      void navigator.clipboard.writeText(link).then(() => {
         announce(dock.dataset['copied']);
       });
       copy.closest<HTMLElement>('[popover]')?.hidePopover();
       return;
     }
 
-    const select = target?.closest<HTMLElement>('[data-row-select]');
-    if (select) {
+    const selected =
+      target?.closest<HTMLElement>('[data-row-select]')?.dataset['rowSelect'];
+    if (selected) {
       event.preventDefault();
-      selectedId = select.dataset['rowSelect']!;
+      selectedId = selected;
       syncRows();
-      return;
     }
   });
 
   document.addEventListener('dblclick', (event) => {
-    const select = (event.target as Element | null)?.closest<HTMLElement>(
-      '[data-row-select]',
-    );
-    if (!select) return;
+    const selected =
+      eventElement(event)?.closest<HTMLElement>('[data-row-select]')?.dataset[
+        'rowSelect'
+      ];
+    if (!selected) return;
     event.preventDefault();
-    startById(select.dataset['rowSelect']!);
+    startById(selected);
   });
 
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    const select = (event.target as Element | null)?.closest<HTMLElement>(
-      '[data-row-select]',
-    );
-    if (!select) return;
+    const selected =
+      eventElement(event)?.closest<HTMLElement>('[data-row-select]')?.dataset[
+        'rowSelect'
+      ];
+    if (!selected) return;
     event.preventDefault();
-    selectedId = select.dataset['rowSelect']!;
+    selectedId = selected;
     syncRows();
   });
 
@@ -1073,15 +1096,16 @@ if (dock && audio) {
   applyVolume();
   syncSequence();
 
-  const first = tracks[0];
   if (restored?.kind === 'youtube') {
     selectVideo(restored, savedTime);
   } else if (restored?.kind === 'soundcloud') {
     selectSoundCloud(restored, savedTime);
   } else {
-    resumeLocal = savedTime;
-    const start = restored?.kind === 'local' ? restored : first;
-    if (start) loadTrack(start, false);
+    loadTrack(
+      restored?.kind === 'local' ? restored : firstTrack,
+      false,
+      savedTime,
+    );
   }
 
   setShuffle(shuffled);
@@ -1103,3 +1127,9 @@ if (dock && audio) {
     syncRows();
   });
 }
+
+const playerDock = document.querySelector<HTMLElement>('[data-player]');
+const playerAudio = document.querySelector<HTMLAudioElement>(
+  '[data-player-audio]',
+);
+if (playerDock && playerAudio) initPlayer(playerDock, playerAudio);

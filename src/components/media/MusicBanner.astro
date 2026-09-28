@@ -1,5 +1,6 @@
 ---
 import type { Language, UiDictionary } from '../../data/types.ts';
+import type { LibraryRow } from '../../lib/library.ts';
 import type { MediaLibrary, MediaSource } from '../../lib/media.ts';
 
 interface Props {
@@ -8,42 +9,29 @@ interface Props {
   library: MediaLibrary;
   heading: string;
   lead: string;
+  rows: readonly LibraryRow[];
   sources: readonly MediaSource[];
-  extraCount?: number;
-  refreshedFrom?: MediaSource;
 }
 
-const {
-  lang,
-  ui,
-  library,
-  heading,
-  lead,
-  sources,
-  extraCount = 0,
-  refreshedFrom,
-} = Astro.props;
+const { lang, ui, library, heading, lead, rows, sources } = Astro.props;
 
 const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
 const format = (stamp: string | undefined) =>
   stamp ? dateFormat.format(new Date(stamp)) : null;
 
-const inScope = library.items.filter((item) => sources.includes(item.source));
-const overallDate = refreshedFrom
-  ? format(library.refreshedAt[refreshedFrom])
-  : format(
-      sources
-        .map((source) => library.refreshedAt[source])
-        .filter((value): value is string => Boolean(value))
-        .sort()
-        .at(-1),
-    );
+const overallDate = format(
+  sources
+    .map((source) => library.refreshedAt[source])
+    .filter((value): value is string => Boolean(value))
+    .sort()
+    .at(-1),
+);
 
 const facts: Record<string, { count: number; date: string | null }> = {
-  '': { count: inScope.length + extraCount, date: overallDate },
+  '': { count: rows.length, date: overallDate },
 };
 for (const source of sources) {
-  const count = inScope.filter((item) => item.source === source).length;
+  const count = rows.filter((row) => row.source === source).length;
   if (count > 0)
     facts[source] = { count, date: format(library.refreshedAt[source]) };
 }
@@ -94,13 +82,6 @@ const initial = facts[''];
     display: grid;
     gap: var(--space-2);
     max-inline-size: 44rem;
-  }
-
-  h1 {
-    font-size: clamp(2.2rem, 5vw, 3.25rem);
-    font-stretch: 118%;
-    line-height: 1;
-    letter-spacing: -0.03em;
   }
 
   .lead {

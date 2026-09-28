@@ -1,5 +1,6 @@
 ---
 import { getImage } from 'astro:assets';
+import archivoLatin from '../assets/fonts/archivo-latin.woff2?url';
 import iambLogo from '../assets/profiles/iamb/logo.png';
 import AppHeader from '../components/shell/AppHeader.astro';
 import ThemeBootstrap from '../components/shell/ThemeBootstrap.astro';
@@ -23,18 +24,9 @@ interface Props {
   page: PageId;
   title: string;
   description: string;
-  activeSource?: string | null;
 }
 
-const {
-  lang,
-  profile,
-  activeProfile,
-  page,
-  title,
-  description,
-  activeSource = null,
-} = Astro.props;
+const { lang, profile, activeProfile, page, title, description } = Astro.props;
 const musicSources = getMusicSources(activeProfile, profile);
 const socialSources = getSocialSources(profile);
 
@@ -74,7 +66,7 @@ const favicon = await getImage({
     <ClientRouter fallback="swap" />
     <link
       rel="preload"
-      href="/fonts/archivo-latin.woff2"
+      href={archivoLatin}
       as="font"
       type="font/woff2"
       crossorigin
@@ -112,7 +104,6 @@ const favicon = await getImage({
         ui={ui}
         musicSources={musicSources}
         socialSources={socialSources}
-        activeSource={activeSource}
       />
 
       <div class="main">
@@ -140,6 +131,7 @@ const favicon = await getImage({
     <SearchDialog lang={lang} profile={profile} ui={ui} />
 
     <script>
+      import '../scripts/audio-player.ts';
       import '../scripts/section-swap.ts';
       import '../scripts/theme.ts';
       import '../scripts/search.ts';

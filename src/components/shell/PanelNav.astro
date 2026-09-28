@@ -11,6 +11,7 @@ import type {
 } from '../../data/types.ts';
 import type { MusicSource, SocialSource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
+import { sourceIcons, sourceNames } from '../../lib/sources.ts';
 import Icon from '../ui/Icon.astro';
 
 interface Props {
@@ -21,7 +22,6 @@ interface Props {
   variant: 'rail' | 'bar';
   musicSources?: readonly MusicSource[];
   socialSources?: readonly SocialSource[];
-  activeSource?: string | null;
 }
 
 const {
@@ -32,21 +32,7 @@ const {
   variant,
   musicSources = [],
   socialSources = [],
-  activeSource = null,
 } = Astro.props;
-
-const sourceGlyphs = {
-  youtube: 'youtube-logo',
-  soundcloud: 'soundcloud-logo',
-  tiktok: 'tiktok-logo',
-  instagram: 'instagram-logo',
-} as const;
-const sourceNames = {
-  youtube: 'YouTube',
-  soundcloud: 'SoundCloud',
-  tiktok: 'TikTok',
-  instagram: 'Instagram',
-} as const;
 
 const icons = {
   home: 'house',
@@ -131,14 +117,9 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
                   <a
                     href={`${routePath(lang, profile, item.page)}?source=${source}`}
                     data-source-link={source}
-                    aria-current={
-                      page === item.page && activeSource === source
-                        ? 'true'
-                        : undefined
-                    }
                   >
                     <span class="indicator" aria-hidden="true" />
-                    <Icon name={sourceGlyphs[source]} size="0.95rem" />
+                    <Icon name={sourceIcons[source]} size="0.95rem" />
                     <span class="label">{sourceNames[source]}</span>
                   </a>
                 </li>
@@ -196,15 +177,6 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
 
   a[aria-current] {
     color: var(--legend);
-  }
-
-  .sr-only {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
   }
 
   .panel-nav-rail {
@@ -282,8 +254,7 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
   }
 
   @media (min-width: 60rem) {
-    :global(html[data-rail='collapsed']) .panel-nav-rail a,
-    :global(html[data-rail='collapsed']) .panel-nav-rail .search-row {
+    :global(html[data-rail='collapsed']) .panel-nav-rail a {
       grid-template-columns: minmax(0, 1fr);
       justify-items: center;
       gap: 0;

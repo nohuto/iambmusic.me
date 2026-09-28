@@ -1,7 +1,5 @@
 import { swapFunctions } from 'astro:transitions/client';
 
-export {};
-
 function isInternalSection(from: URL, to: URL): boolean {
   const own = (path: string) => path.split('/').filter(Boolean);
   const a = own(from.pathname);
@@ -10,27 +8,25 @@ function isInternalSection(from: URL, to: URL): boolean {
 }
 
 document.addEventListener('astro:before-swap', (event) => {
-  const swap = event as unknown as {
-    from: URL;
-    to: URL;
-    newDocument: Document;
-    swap: () => void;
-  };
-  if (!isInternalSection(swap.from, swap.to)) return;
+  if (!isInternalSection(event.from, event.to)) return;
+  const incoming = event.newDocument;
+  const playback = document.body.querySelector(':scope > .playback');
+  const placeholder = incoming.body.querySelector(':scope > .playback');
+  if (!playback || !placeholder) return;
 
-  swap.swap = () => {
-    swapFunctions.deselectScripts(swap.newDocument);
-    swapFunctions.swapRootAttributes(swap.newDocument);
-    swapFunctions.swapHeadElements(swap.newDocument);
+  event.swap = () => {
+    swapFunctions.deselectScripts(incoming);
+    swapFunctions.swapRootAttributes(incoming);
+    swapFunctions.swapHeadElements(incoming);
 
-    const playback = document.querySelector('.playback');
-    swap.newDocument.querySelector('.playback')?.remove();
-
+    const nodes = [...incoming.body.childNodes];
+    const split = nodes.indexOf(placeholder);
     const focus = swapFunctions.saveFocus();
     for (const node of [...document.body.childNodes]) {
       if (node !== playback) node.remove();
     }
-    document.body.prepend(...swap.newDocument.body.childNodes);
+    playback.before(...nodes.slice(0, split));
+    playback.after(...nodes.slice(split + 1));
     focus();
   };
 });

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { Language, Profile, UiDictionary } from '../../data/types.ts';
 import type { LibraryRow, LibrarySource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
+import { sourceIcons, sourceNames } from '../../lib/sources.ts';
 import { watchUrl } from '../../lib/youtube.ts';
 import Icon from '../ui/Icon.astro';
 
@@ -18,19 +19,13 @@ const { row, position, profile, lang, ui } = Astro.props;
 const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
 
 const glyphs = {
+  ...sourceIcons,
   local: 'music-notes',
-  youtube: 'youtube-logo',
-  soundcloud: 'soundcloud-logo',
-  tiktok: 'tiktok-logo',
-  instagram: 'instagram-logo',
 } as const satisfies Record<LibrarySource, string>;
 
 const names: Record<LibrarySource, string> = {
+  ...sourceNames,
   local: ui.music.local,
-  youtube: 'YouTube',
-  soundcloud: 'SoundCloud',
-  tiktok: 'TikTok',
-  instagram: 'Instagram',
 };
 
 const isLocal = row.source === 'local';
@@ -84,7 +79,7 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
   ) : (
     <a
       class="transport icon-action"
-      href={row.url!}
+      href={row.url ?? undefined}
       aria-label={ui.music.openExternal}
       target="_blank"
       rel="noopener noreferrer"
@@ -322,29 +317,9 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
   }
 
   .row-menu {
-    position: fixed;
-    inset: auto auto auto 0;
-    margin: 0;
     inline-size: 14rem;
     max-inline-size: calc(100vw - 1rem);
     padding: var(--space-1) 0;
-    border: var(--rule) solid var(--panel-rule);
-    border-radius: var(--radius);
-    background: var(--panel-plate);
-    color: var(--legend);
-    box-shadow: var(--shadow-plate);
-    block-size: fit-content;
-    max-block-size: calc(
-      100dvh - env(safe-area-inset-top, 0px) -
-        env(safe-area-inset-bottom, 0px) - var(--space-5)
-    );
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .row-menu:popover-open {
-    display: grid;
-    align-content: start;
   }
 
   .row-menu ul {

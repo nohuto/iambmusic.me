@@ -1,12 +1,7 @@
 import { navigate } from 'astro:transitions/client';
-
-interface Entry {
-  kind: 'local' | 'youtube' | 'soundcloud';
-  id: string;
-  title: string;
-  thumbnail?: string | null;
-  durationSeconds?: number | null;
-}
+import type { Playable } from '../lib/playable.ts';
+import { sourceNames } from '../lib/sources.ts';
+import { eventElement } from './dom.ts';
 
 const normalise = (value: string) =>
   value
@@ -33,24 +28,32 @@ function setup(): void {
   const dialog = dialogNow();
   const input = inputNow();
   const results = resultsNow();
-  const form = document.querySelector<HTMLFormElement>('[data-search-form]');
   if (!dialog || !input || !results || dialog.dataset['searchReady'] === 'yes')
     return;
   dialog.dataset['searchReady'] = 'yes';
+  bind(dialog, input, results);
+}
+
+function bind(
+  dialog: HTMLDialogElement,
+  input: HTMLInputElement,
+  results: HTMLUListElement,
+): void {
+  const form = document.querySelector<HTMLFormElement>('[data-search-form]');
 
   const payload =
     document.querySelector('[data-playables]')?.textContent ?? '[]';
-  const entries: Entry[] = JSON.parse(payload);
+  const entries: Playable[] = JSON.parse(payload);
   const none = dialog.dataset['none'] ?? '';
   const musicPath = dialog.dataset['musicPath'] ?? '';
-  let matches: Entry[] = [];
+  let matches: Playable[] = [];
   let active = -1;
 
   function close(): void {
-    if (dialog!.open) dialog!.close();
+    if (dialog.open) dialog.close();
   }
 
-  function select(entry: Entry): void {
+  function select(entry: Playable): void {
     close();
     const filter = entry.kind === 'local' ? '' : `source=${entry.kind}&`;
     void navigate(
@@ -61,13 +64,13 @@ function setup(): void {
   function setActive(next: number): void {
     if (matches.length === 0) return;
     active = Math.max(0, Math.min(next, matches.length - 1));
-    const options = results!.querySelectorAll<HTMLElement>('[role="option"]');
+    const options = results.querySelectorAll<HTMLElement>('[role="option"]');
     for (const [index, option] of options.entries()) {
       option.setAttribute('aria-selected', String(index === active));
     }
     const option = options[active];
     if (!option) return;
-    input!.setAttribute('aria-activedescendant', option.id);
+    input.setAttribute('aria-activedescendant', option.id);
     option.scrollIntoView({ block: 'nearest' });
   }
 
@@ -85,9 +88,9 @@ function setup(): void {
           .slice(0, 30)
       : [];
     active = -1;
-    input!.removeAttribute('aria-activedescendant');
-    input!.setAttribute('aria-expanded', String(matches.length > 0));
-    results!.replaceChildren();
+    input.removeAttribute('aria-activedescendant');
+    input.setAttribute('aria-expanded', String(matches.length > 0));
+    results.replaceChildren();
     if (!needle) return;
 
     if (matches.length === 0) {
@@ -96,7 +99,7 @@ function setup(): void {
       empty.className = 'empty side';
       empty.setAttribute('role', 'option');
       empty.setAttribute('aria-disabled', 'true');
-      results!.append(empty);
+      results.append(empty);
       return;
     }
 
@@ -106,10 +109,11 @@ function setup(): void {
       row.setAttribute('role', 'option');
       row.setAttribute('aria-selected', 'false');
 
-      const art = document.createElement(entry.thumbnail ? 'img' : 'span');
+      const thumbnail = entry.kind === 'local' ? null : entry.thumbnail;
+      const art = document.createElement(thumbnail ? 'img' : 'span');
       art.className = 'art';
-      if (entry.thumbnail && art instanceof HTMLImageElement) {
-        art.src = entry.thumbnail;
+      if (thumbnail && art instanceof HTMLImageElement) {
+        art.src = thumbnail;
         art.alt = '';
       }
 
@@ -121,16 +125,12 @@ function setup(): void {
       side.className = 'side';
       side.textContent =
         clock(entry.durationSeconds) ||
-        (entry.kind === 'local'
-          ? '♪'
-          : entry.kind === 'youtube'
-            ? 'YouTube'
-            : 'SoundCloud');
+        (entry.kind === 'local' ? '♪' : sourceNames[entry.kind]);
 
       row.append(art, name, side);
       row.addEventListener('click', () => select(entry));
       row.addEventListener('pointermove', () => setActive(index));
-      results!.append(row);
+      results.append(row);
     }
   }
 
@@ -141,9 +141,11 @@ function setup(): void {
       if (matches.length === 0) return;
       event.preventDefault();
       moveActive(event.key === 'ArrowDown' ? 1 : -1);
-    } else if (event.key === 'Enter' && active >= 0) {
+    } else if (event.key === 'Enter') {
+      const match = matches[active];
+      if (!match) return;
       event.preventDefault();
-      select(matches[active]!);
+      select(match);
     } else if (event.key === 'Escape') {
       event.preventDefault();
       close();
@@ -184,7 +186,7 @@ function openSearch(trigger = visibleTrigger()): void {
 }
 
 document.addEventListener('click', (event) => {
-  const target = event.target as Element | null;
+  const target = eventElement(event);
   if (target?.closest('[data-search-close]')) {
     dialogNow()?.close();
     return;
@@ -200,9 +202,7 @@ document.addEventListener('keydown', (event) => {
   if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey))
     return;
   if (
-    (event.target as Element | null)?.closest(
-      'input, textarea, select, [contenteditable]',
-    )
+    eventElement(event)?.closest('input, textarea, select, [contenteditable]')
   )
     return;
   event.preventDefault();
@@ -211,5 +211,3 @@ document.addEventListener('keydown', (event) => {
 
 setup();
 document.addEventListener('astro:page-load', setup);
-
-export {};

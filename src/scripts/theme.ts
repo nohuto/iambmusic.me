@@ -1,3 +1,5 @@
+import { eventElement } from './dom.ts';
+
 type Theme = 'light' | 'dark';
 
 const system = matchMedia('(prefers-color-scheme: dark)');
@@ -34,7 +36,7 @@ function syncControls(): void {
 }
 
 document.addEventListener('click', (event) => {
-  if (!(event.target as Element | null)?.closest('[data-theme-toggle]')) return;
+  if (!eventElement(event)?.closest('[data-theme-toggle]')) return;
   const next = activeTheme() === 'dark' ? 'light' : 'dark';
   const override = next === systemTheme() ? null : next;
   if (override) document.documentElement.dataset.theme = override;
@@ -57,5 +59,3 @@ document.addEventListener('astro:before-swap', (event) => {
 document.addEventListener('astro:after-swap', restoreOverride);
 document.addEventListener('astro:page-load', syncControls);
 restoreOverride();
-
-export {};

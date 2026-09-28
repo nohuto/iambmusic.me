@@ -7,12 +7,13 @@ import sharp from 'sharp';
 
 const run = promisify(execFile);
 const coverRoot = fileURLToPath(new URL('../public/media/', import.meta.url));
-const COVER_WIDTH = 320;
+const COVER_WIDTH = 160;
+const COVER_HEIGHT = 90;
 const COVER_QUALITY = 78;
 
 function optimizeCover(bytes) {
   return sharp(bytes)
-    .resize({ width: COVER_WIDTH, withoutEnlargement: true })
+    .resize({ width: COVER_WIDTH, height: COVER_HEIGHT, fit: 'cover' })
     .jpeg({ quality: COVER_QUALITY, mozjpeg: true })
     .toBuffer();
 }

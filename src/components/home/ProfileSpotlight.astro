@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import cutout from '../../assets/artist/portrait-cutout.png';
 import type {
   Language,
@@ -26,6 +26,13 @@ const cutoutAlt = {
 const artworkAlt = cutoutAlt[lang];
 const [titleHead = profile.name, ...titleTail] = profile.name.split(' ');
 const titleRest = titleTail.join(' ');
+const artwork = await getImage({
+  src: cutout,
+  widths: [380, 640, 900],
+  format: 'webp',
+});
+const placeholder =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 ---
 
 <section class="spotlight">
@@ -60,12 +67,21 @@ const titleRest = titleTail.join(' ');
   </div>
 
   <div class="artwork cutout">
-    <Image
-      src={cutout}
-      alt={artworkAlt}
-      widths={[380, 640, 900]}
-      sizes="(min-width: 60rem) 30rem, 55vw"
-    />
+    <picture>
+      <source
+        media="(min-width: 60rem)"
+        srcset={artwork.srcSet.attribute}
+        sizes="(max-width: 80rem) 21rem, 28rem"
+        type="image/webp"
+      />
+      <img
+        src={placeholder}
+        alt={artworkAlt}
+        width={artwork.attributes['width']}
+        height={artwork.attributes['height']}
+        fetchpriority="high"
+      />
+    </picture>
   </div>
 </section>
 

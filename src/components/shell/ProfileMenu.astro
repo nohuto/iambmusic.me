@@ -43,7 +43,7 @@ const menuId = 'profile-menu';
     <Icon name="caret-down" size="0.9rem" />
   </button>
 
-  <div class="menu" id={menuId} popover data-anchored-menu>
+  <div class="menu" id={menuId} popover data-anchored-menu="animated">
     <ul>
       {entries.map((entry) => {
         const current = entry.id === profile;
@@ -109,29 +109,12 @@ const menuId = 'profile-menu';
   }
 
   .menu {
-    position: fixed;
-    inset: auto auto auto 0;
-    margin: 0;
     inline-size: max-content;
     min-inline-size: 14rem;
     padding: 4px var(--space-2);
-    border: var(--rule) solid var(--panel-rule);
-    border-radius: var(--radius);
-    background: var(--panel-plate);
-    color: var(--legend);
-    box-shadow: var(--shadow-plate);
-    block-size: fit-content;
-    max-block-size: calc(
-      100dvh - env(safe-area-inset-top, 0px) -
-        env(safe-area-inset-bottom, 0px) - var(--space-5)
-    );
-    overflow-y: auto;
-    overscroll-behavior: contain;
   }
 
   .menu:popover-open {
-    display: grid;
-    align-content: start;
     gap: var(--space-2);
   }
 
@@ -166,27 +149,5 @@ const menuId = 'profile-menu';
   .state {
     display: inline-flex;
     color: var(--ink);
-  }
-
-  .sr-only {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .menu:popover-open {
-      animation: menu-in 120ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-  }
-
-  @keyframes menu-in {
-    from {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
   }
 </style>

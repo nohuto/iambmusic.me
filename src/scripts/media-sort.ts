@@ -1,4 +1,4 @@
-export {};
+import { eventElement } from './dom.ts';
 
 type Direction = 'asc' | 'desc';
 
@@ -55,20 +55,21 @@ function sort(panel: HTMLElement, column: string, direction: Direction): void {
 }
 
 document.addEventListener('click', (event) => {
-  const button = (event.target as Element | null)?.closest<HTMLButtonElement>(
-    '[data-sort]',
-  );
+  const button = eventElement(event)?.closest<HTMLButtonElement>('[data-sort]');
   const panel = button?.closest<HTMLElement>('[data-sortable]');
   if (!button || !panel) return;
 
-  const column = button.dataset['sort']!;
-  const fallback: Direction = column === 'title' ? 'asc' : 'desc';
-  const current = button.dataset['direction'] as Direction | undefined;
-  const direction: Direction = current
-    ? current === 'asc'
+  const column = button.dataset['sort'];
+  if (!column) return;
+  const current = button.dataset['direction'];
+  const direction: Direction =
+    current === 'asc'
       ? 'desc'
-      : 'asc'
-    : fallback;
+      : current === 'desc'
+        ? 'asc'
+        : column === 'title'
+          ? 'asc'
+          : 'desc';
 
   for (const other of panel.querySelectorAll<HTMLElement>('[data-sort]')) {
     if (other !== button) delete other.dataset['direction'];

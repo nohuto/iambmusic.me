@@ -1,4 +1,4 @@
-export {};
+import { eventElement } from './dom.ts';
 
 const root = document.documentElement;
 
@@ -50,7 +50,7 @@ function applySources(group: SourceGroup, expanded: boolean): void {
 }
 
 document.addEventListener('click', (event) => {
-  const target = event.target as Element | null;
+  const target = eventElement(event);
   if (target?.closest('[data-rail-toggle]')) {
     const collapsed = root.dataset['rail'] !== 'collapsed';
     store('iambmusic-rail', collapsed ? 'collapsed' : 'expanded');
@@ -135,7 +135,7 @@ document.addEventListener('keydown', (event) => {
   const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'];
   if (
     keys.includes(event.key) ||
-    (event.key === ' ' && !(event.target as Element).closest('button, a'))
+    (event.key === ' ' && !eventElement(event)?.closest('button, a'))
   ) {
     event.preventDefault();
   }
