@@ -102,6 +102,7 @@ const placeholder =
     align-content: center;
     justify-items: start;
     max-inline-size: 34rem;
+    container-type: inline-size;
   }
 
   h1 {
@@ -128,17 +129,25 @@ const placeholder =
   }
   .discover {
     position: relative;
-    justify-self: center;
+    justify-self: start;
     text-decoration: none;
     display: grid;
     place-items: center;
     inline-size: 188px;
     block-size: 52px;
     margin-block-start: var(--space-2);
+    margin-inline-start: 2rem;
     border: 0;
     background: none;
     color: var(--legend);
     cursor: pointer;
+  }
+
+  @container (max-width: 27.5rem) {
+    .discover {
+      justify-self: center;
+      margin-inline-start: 0;
+    }
   }
 
   .discover-word {
@@ -307,8 +316,8 @@ const placeholder =
         var(--space-6);
     }
 
-    .copy {
-      max-inline-size: 32rem;
+    .spotlight {
+      --artwork-size: clamp(19rem, 44%, 28rem);
     }
 
     .discover {
@@ -316,12 +325,16 @@ const placeholder =
       margin-inline-start: 2rem;
     }
 
+    .copy {
+      max-inline-size: min(32rem, 100% - var(--artwork-size) - var(--space-4));
+    }
+
     .artwork {
       display: block;
       position: absolute;
       inset-block-end: 0;
       inset-inline-end: 0;
-      inline-size: clamp(19rem, 44%, 28rem);
+      inline-size: var(--artwork-size);
       block-size: calc(100% - var(--space-3));
       margin-block-end: 0;
       pointer-events: none;
@@ -338,9 +351,12 @@ const placeholder =
   }
 
   @media (min-width: 60rem) and (max-width: 80rem) {
+    .spotlight {
+      --artwork-size: clamp(15rem, 34%, 21rem);
+    }
+
     .cutout {
       inset-block-end: 0;
-      inline-size: clamp(15rem, 34%, 21rem);
     }
   }
 </style>

@@ -211,7 +211,6 @@ export interface UiDictionary {
   };
   readonly shell: {
     readonly groupMenu: string;
-    readonly groupMore: string;
     readonly expandSources: string;
     readonly collapseSources: string;
     readonly collapseRail: string;

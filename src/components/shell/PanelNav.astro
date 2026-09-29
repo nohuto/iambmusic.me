@@ -1,8 +1,5 @@
 ---
-import {
-  primaryNavigation,
-  secondaryNavigation,
-} from '../../data/navigation.ts';
+import { navigation } from '../../data/navigation.ts';
 import type {
   Language,
   PageId,
@@ -43,9 +40,6 @@ const icons = {
 } as const satisfies Record<PageId, string>;
 
 const rail = variant === 'rail';
-const items = rail
-  ? primaryNavigation
-  : [...primaryNavigation, ...secondaryNavigation];
 const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
   musicSources.includes(source),
 );
@@ -55,7 +49,7 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
   {rail && <p class="group-label">{ui.shell.groupMenu}</p>}
 
   <ul>
-    {items.map((item) => {
+    {navigation.map((item) => {
       const sources =
         item.page === 'music'
           ? railMusicSources
@@ -111,48 +105,27 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
           </div>
 
           {rail && sources.length > 0 && (
-            <ul class="sources" id={sourceListId}>
-              {sources.map((source) => (
-                <li>
-                  <a
-                    href={`${routePath(lang, profile, item.page)}?source=${source}`}
-                    data-source-link={source}
-                  >
-                    <span class="indicator" aria-hidden="true" />
-                    <Icon name={sourceIcons[source]} size="0.95rem" />
-                    <span class="label">{sourceNames[source]}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div class="sources" id={sourceListId}>
+              <ul>
+                {sources.map((source) => (
+                  <li>
+                    <a
+                      href={`${routePath(lang, profile, item.page)}?source=${source}`}
+                      data-source-link={source}
+                    >
+                      <span class="indicator" aria-hidden="true" />
+                      <Icon name={sourceIcons[source]} size="0.95rem" />
+                      <span class="label">{sourceNames[source]}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </li>
       );
     })}
   </ul>
-
-  {rail && (
-    <>
-      <p class="group-label">{ui.shell.groupMore}</p>
-      <ul>
-        {secondaryNavigation.map((item) => (
-          <li>
-            <div class="row">
-              <a
-                href={routePath(lang, profile, item.page)}
-                data-tip={ui.nav[item.labelKey]}
-                aria-current={item.page === page ? 'page' : undefined}
-              >
-                <span class="indicator" aria-hidden="true" />
-                <Icon name={icons[item.page]} size="1.25rem" />
-                <span class="label">{ui.nav[item.labelKey]}</span>
-              </a>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </>
-  )}
 </nav>
 
 <style>
@@ -250,6 +223,17 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
   }
 
   .sources {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 240ms;
+  }
+
+  .sources ul {
+    min-block-size: 0;
+    overflow-y: clip;
     margin-inline-start: var(--space-5);
   }
 

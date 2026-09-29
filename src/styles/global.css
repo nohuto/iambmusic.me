@@ -541,7 +541,9 @@ html[data-theme='dark'] .theme-control .thumb {
 
 html[data-music-sources='collapsed'] #music-sources,
 html[data-social-sources='collapsed'] #social-sources {
-  display: none;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
 }
 
 @property --rail-width {

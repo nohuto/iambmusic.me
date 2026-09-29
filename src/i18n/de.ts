@@ -100,7 +100,6 @@ export const de: UiDictionary = {
   },
   shell: {
     groupMenu: 'Menü',
-    groupMore: 'Weiteres',
     expandSources: 'Quellen einblenden',
     collapseSources: 'Quellen ausblenden',
     collapseRail: 'Seitenleiste einklappen',

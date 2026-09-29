@@ -179,7 +179,8 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
       else player.unMute();
     }
     soundcloudPlayer?.setVolume(muted ? 0 : Math.round(level * 100));
-    dock.dataset['muted'] = String(muted);
+    dock.dataset['volume'] =
+      muted || level === 0 ? 'muted' : level < 0.5 ? 'low' : 'high';
     const label = muted ? mute?.dataset['unmute'] : mute?.dataset['mute'];
     if (label) mute?.setAttribute('aria-label', label);
     setFill(volume);

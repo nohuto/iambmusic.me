@@ -200,8 +200,11 @@ const hasQueue = playables.length > 1;
           aria-label={ui.player.mute}
           aria-keyshortcuts="M"
         >
-          <span data-player-icon="unmuted">
+          <span data-player-icon="high">
             <Icon name="speaker-simple-high" size="1.05rem" />
+          </span>
+          <span data-player-icon="low">
+            <Icon name="speaker-simple-low" size="1.05rem" />
           </span>
           <span data-player-icon="muted">
             <Icon name="speaker-simple-x" size="1.05rem" />
@@ -458,8 +461,10 @@ const hasQueue = playables.length > 1;
 
   .dock:not([data-state='playing']) [data-player-icon='play'],
   .dock[data-state='playing'] [data-player-icon='pause'],
-  .dock:not([data-muted='true']) [data-player-icon='unmuted'],
-  .dock[data-muted='true'] [data-player-icon='muted'] {
+  .dock:not([data-volume='low'], [data-volume='muted'])
+    [data-player-icon='high'],
+  .dock[data-volume='low'] [data-player-icon='low'],
+  .dock[data-volume='muted'] [data-player-icon='muted'] {
     display: block;
   }
 
