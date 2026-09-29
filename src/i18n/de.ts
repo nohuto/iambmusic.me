@@ -29,7 +29,7 @@ export const de: UiDictionary = {
     inspiration: 'Inspirationen',
   },
   music: {
-    lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören.',
+    lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören. Songs von YouTube & SoundCloud laufen über deren eingebettete Player, welche erst beim Abspielen geladen werden, weshalb es ein paar Sekunden dauern kann, bis die Musik startet.',
     all: 'Alle',
     entries: 'Einträge',
     columns: {

@@ -29,7 +29,7 @@ export const en: UiDictionary = {
     inspiration: 'Inspirations',
   },
   music: {
-    lead: 'Here you’ll find my YouTube and SoundCloud uploads, ready to play.',
+    lead: 'Here you’ll find my YouTube and SoundCloud uploads, ready to play. YouTube & SoundCloud songs play through their embedded players, which only load when you press play, so it can take a few seconds before the music starts.',
     all: 'All',
     entries: 'entries',
     columns: {
