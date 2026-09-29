@@ -1,11 +1,41 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-08-30T18:07:56.182Z",
+  "generatedAt": "2026-09-29T10:46:40.151Z",
   "refreshedAt": {
     "youtube": "2026-08-29T01:45:50.751Z",
-    "soundcloud": "2026-08-30T18:07:56.182Z"
+    "soundcloud": "2026-09-29T10:46:40.151Z"
   },
   "items": [
+    {
+      "id": "soundcloud:2403301002",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/end-of-a-summer?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "End of a Summer",
+      "publishedAt": "2026-09-18T22:24:39.000Z",
+      "discoveredAt": "2026-09-29T10:46:40.151Z",
+      "durationSeconds": 240,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-6OcnkaBaZgFmU6ZZ-dlCIqg-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
+    {
+      "id": "soundcloud:2398947300",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/believe-in-yourself?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Believe in yourself",
+      "publishedAt": "2026-09-11T21:59:10.000Z",
+      "discoveredAt": "2026-09-29T10:46:40.151Z",
+      "durationSeconds": 194,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-zo0jjdLMXtrn9s07-FlLA5g-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
     {
       "id": "soundcloud:2390542308",
       "source": "soundcloud",
