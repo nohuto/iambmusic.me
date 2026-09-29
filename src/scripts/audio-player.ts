@@ -9,6 +9,7 @@ import {
   soundcloudApi,
   youtubeApi,
   type SoundCloudApi,
+  type SoundCloudProgress,
   type SoundCloudWidget,
   type YouTubePlayer,
 } from './player-apis.ts';
@@ -477,6 +478,14 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     }, 5000);
   }
 
+  function atSoundEnd(data?: SoundCloudProgress): boolean {
+    const at = data?.currentPosition;
+    const share = data?.relativePosition;
+    if (typeof at !== 'number' || typeof share !== 'number' || share <= 0)
+      return false;
+    return at / share - at < 1000;
+  }
+
   function bindSoundCloud(
     api: SoundCloudApi,
     widget: SoundCloudWidget,
@@ -499,8 +508,8 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
       if (remotePosition > 0) widget.seekTo(remotePosition * 1000);
       requestSoundCloudPlayback(widget, url);
     });
-    widget.bind(events.PAUSE, () => {
-      if (!isCurrentSound()) return;
+    widget.bind(events.PAUSE, (data) => {
+      if (!isCurrentSound() || atSoundEnd(data)) return;
       if (!starting) playbackWanted = false;
       if (!playbackWanted) window.clearTimeout(soundcloudStartTimer);
       setState(false);

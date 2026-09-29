@@ -1,7 +1,7 @@
 import type { Language, PageId, ProfileId } from '../data/types.ts';
 import { languages, profileIds } from '../data/types.ts';
 
-export interface RouteTarget {
+interface RouteTarget {
   readonly lang: Language;
   readonly profile: ProfileId;
 }
@@ -18,7 +18,7 @@ export function routePath(
     : `/${lang}/${profile}/${page}/`;
 }
 
-export const routeTargets: readonly RouteTarget[] = languages.flatMap((lang) =>
+const routeTargets: readonly RouteTarget[] = languages.flatMap((lang) =>
   profileIds.map((profile) => ({ lang, profile })),
 );
 

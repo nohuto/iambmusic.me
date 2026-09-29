@@ -31,11 +31,13 @@ export interface YouTubeApi {
   };
 }
 
+export interface SoundCloudProgress {
+  currentPosition?: number;
+  relativePosition?: number;
+}
+
 export interface SoundCloudWidget {
-  bind(
-    event: string,
-    listener: (data?: { currentPosition?: number }) => void,
-  ): void;
+  bind(event: string, listener: (data?: SoundCloudProgress) => void): void;
   play(): void;
   pause(): void;
   seekTo(milliseconds: number): void;
