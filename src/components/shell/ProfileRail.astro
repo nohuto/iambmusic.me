@@ -84,6 +84,7 @@ const {
       z-index: 5;
       display: block;
       inline-size: var(--rail-width);
+      overflow: clip;
       background: var(--panel-recess);
       border-inline-end: var(--rule) solid var(--panel-rule);
     }
@@ -92,6 +93,7 @@ const {
       display: grid;
       grid-template-rows: auto 1fr;
       gap: var(--space-5);
+      inline-size: calc(var(--rail-size) - var(--rule));
       block-size: 100%;
       padding: var(--space-5) var(--space-3)
         calc(var(--footer-height) + var(--space-5));

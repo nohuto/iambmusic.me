@@ -36,7 +36,8 @@
   --space-6: 2rem;
   --space-7: 3rem;
 
-  --rail-width: 14.5rem;
+  --rail-size: 14.5rem;
+  --rail-width: var(--rail-size);
   --header-height: 3.5rem;
   --intro-gap: 2rem;
   --dock-height: 4.5rem;

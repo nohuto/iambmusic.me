@@ -8,6 +8,7 @@ import type {
 import { languages } from '../../data/types.ts';
 import { dictionaries } from '../../i18n/index.ts';
 import { routePath } from '../../lib/routes.ts';
+import Flag from '../ui/Flag.astro';
 import Icon from '../ui/Icon.astro';
 
 interface Props {
@@ -18,7 +19,6 @@ interface Props {
 }
 
 const { lang, profile, page, ui } = Astro.props;
-const flags: Record<Language, string> = { de: '🇩🇪', en: '🇬🇧' };
 const menuId = 'language-menu';
 ---
 
@@ -29,9 +29,7 @@ const menuId = 'language-menu';
     popovertarget={menuId}
     aria-label={ui.switches.language}
   >
-    <span class="flag" aria-hidden="true">
-      {flags[lang]}
-    </span>
+    <Flag lang={lang} />
     <span class="full">{dictionaries[lang].languageName}</span>
     <span class="short" aria-hidden="true">
       {lang.toUpperCase()}
@@ -52,9 +50,7 @@ const menuId = 'language-menu';
               data-astro-reload
               aria-current={current ? 'true' : undefined}
             >
-              <span class="flag" aria-hidden="true">
-                {flags[option]}
-              </span>
+              <Flag lang={option} />
               <span class="name">{dictionaries[option].languageName}</span>
               {current && (
                 <span class="state">
@@ -93,11 +89,6 @@ const menuId = 'language-menu';
 
   .trigger:hover {
     border-color: var(--legend-faint);
-  }
-
-  .flag {
-    font-size: 0.9rem;
-    line-height: 1;
   }
 
   .short {

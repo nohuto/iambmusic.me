@@ -10,7 +10,6 @@ const profileStories = defineCollection({
   schema: z.object({
     language: z.enum(['de', 'en']),
     heading: z.string(),
-    summary: z.string(),
     status: z.enum(['confirmed', 'provisional']),
     ownerRequirement: z.string().optional(),
   }),

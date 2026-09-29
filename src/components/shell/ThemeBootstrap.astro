@@ -4,5 +4,7 @@
     const theme = localStorage.getItem('theme_override');
     if (theme === 'dark' || theme === 'light')
       document.documentElement.dataset.theme = theme;
+    if (localStorage.getItem('iambmusic-rail') === 'collapsed')
+      document.documentElement.dataset.rail = 'collapsed';
   } catch {}
 </script>

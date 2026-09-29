@@ -55,6 +55,11 @@ document.addEventListener('click', (event) => {
     const collapsed = root.dataset['rail'] !== 'collapsed';
     store('iambmusic-rail', collapsed ? 'collapsed' : 'expanded');
     applyRail(collapsed);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document
+        .querySelector('.rail .inner')
+        ?.animate({ opacity: [0, 1] }, { duration: 200, easing: 'ease-out' });
+    }
     return;
   }
   const sourceToggle = target?.closest<HTMLButtonElement>(
@@ -213,5 +218,11 @@ function restoreRoot(): void {
 }
 
 setup();
-document.addEventListener('astro:after-swap', restoreRoot);
+document.addEventListener('astro:before-swap', (event) => {
+  const incoming = event.newDocument.documentElement.dataset;
+  for (const key of ['rail', 'musicSources', 'socialSources']) {
+    const value = root.dataset[key];
+    if (value) incoming[key] = value;
+  }
+});
 document.addEventListener('astro:page-load', setup);

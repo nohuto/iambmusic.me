@@ -70,7 +70,7 @@ export const aimbProfile: AimbProfile = {
       profile: 'aimb',
       id: 'youtube',
       name: 'YouTube',
-      url: 'https://www.youtube.com/@AiMP-Musicproject',
+      url: 'https://www.youtube.com/@AiMB-Project',
       category: 'social',
     },
     {

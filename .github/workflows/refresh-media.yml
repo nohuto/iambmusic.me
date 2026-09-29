@@ -26,7 +26,7 @@ jobs:
       - run: npm ci
 
       - name: Install yt-dlp
-        run: pipx install yt-dlp
+        run: pipx install "yt-dlp[default,curl-cffi]"
 
       - name: Refresh media
         continue-on-error: true

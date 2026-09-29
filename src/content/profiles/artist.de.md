@@ -1,7 +1,6 @@
 ---
 language: de
 heading: Markus B.
-summary: Ich mache elektronische Soundtracks und spiele seit 1985 Synthesizer.
 status: confirmed
 ---
 

@@ -36,7 +36,6 @@ const { Content } = await render(story);
   <div class="about">
     <section class="intro">
       <h1>{story.data.heading}</h1>
-      <p class="lead">{story.data.summary}</p>
 
       {story.data.status === 'provisional' && (
         <p class="notice">{ui.notices.provisionalContent}</p>
@@ -115,11 +114,6 @@ const { Content } = await render(story);
     gap: var(--space-3);
   }
 
-  .lead {
-    color: var(--legend-quiet);
-    font-size: var(--step-lead);
-  }
-
   .notice {
     color: var(--legend-faint);
     font-size: var(--step-0);
@@ -139,10 +133,6 @@ const { Content } = await render(story);
     display: grid;
     gap: var(--space-3);
     padding-block-start: var(--space-3);
-  }
-
-  .studio p {
-    color: var(--legend-quiet);
   }
 
   .timeline {

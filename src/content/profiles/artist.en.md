@@ -1,7 +1,6 @@
 ---
 language: en
 heading: Markus B.
-summary: I make electronic soundtracks and have played synthesizers since 1985.
 status: confirmed
 ---
 
