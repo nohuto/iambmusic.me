@@ -45,6 +45,9 @@ function apply(requested: string): void {
     updatedEl.toggleAttribute('hidden', !facts.date);
   }
   dotEl?.toggleAttribute('hidden', !facts.date);
+  document
+    .querySelector('[data-lead-note]')
+    ?.toggleAttribute('hidden', source !== '' && source !== 'soundcloud');
 
   sourceRoot?.setAttribute('aria-current', 'page');
 

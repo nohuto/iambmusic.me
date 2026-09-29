@@ -41,7 +41,12 @@ const initial = facts[''];
 <section class="banner">
   <div class="copy">
     <h1>{heading}</h1>
-    <p class="lead">{lead}</p>
+    <p class="lead">
+      {lead}
+      {facts['soundcloud'] && (
+        <span data-lead-note>{ui.music.soundcloudNote}</span>
+      )}
+    </p>
     <p
       class="facts"
       aria-live="polite"

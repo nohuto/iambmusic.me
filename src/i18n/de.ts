@@ -29,7 +29,9 @@ export const de: UiDictionary = {
     inspiration: 'Inspirationen',
   },
   music: {
-    lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören. Songs von YouTube & SoundCloud laufen über deren eingebettete Player, welche erst beim Abspielen geladen werden, weshalb es ein paar Sekunden dauern kann, bis die Musik startet.',
+    lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören.',
+    soundcloudNote:
+      'In WebKit basierenden Browsern startet SoundCloud beim ersten Mal erst nach einem zweiten Tippen (das Laden eines Songs kann ein paar Sekunden dauern).',
     all: 'Alle',
     entries: 'Einträge',
     columns: {

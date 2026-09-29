@@ -32,24 +32,29 @@ export interface YouTubeApi {
 }
 
 export interface SoundCloudProgress {
+  soundId?: number;
   currentPosition?: number;
   relativePosition?: number;
 }
 
 export interface SoundCloudWidget {
   bind(event: string, listener: (data?: SoundCloudProgress) => void): void;
+  load(url: string, options: Record<string, boolean | number>): void;
   play(): void;
+  skip(index: number): void;
   pause(): void;
   seekTo(milliseconds: number): void;
   setVolume(level: number): void;
   getDuration(callback: (milliseconds: number) => void): void;
+  getSounds(callback: (sounds: { id: number }[]) => void): void;
+  getCurrentSound(callback: (sound: { id: number } | null) => void): void;
 }
 
 export interface SoundCloudApi {
   Widget: {
     (iframe: HTMLIFrameElement): SoundCloudWidget;
     Events: Record<
-      'READY' | 'PAUSE' | 'PLAY_PROGRESS' | 'FINISH' | 'ERROR',
+      'READY' | 'PLAY' | 'PAUSE' | 'PLAY_PROGRESS' | 'FINISH' | 'ERROR',
       string
     >;
   };

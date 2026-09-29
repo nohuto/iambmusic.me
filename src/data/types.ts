@@ -142,6 +142,7 @@ export interface UiDictionary {
   };
   readonly music: {
     readonly lead: string;
+    readonly soundcloudNote: string;
     readonly all: string;
     readonly entries: string;
     readonly columns: {

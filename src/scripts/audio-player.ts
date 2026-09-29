@@ -36,7 +36,7 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
   const titleEl = pick('[data-player-title]');
   const artEl = pick('[data-player-art]');
   const sourceEl = pick('[data-player-source]');
-  let soundcloudFrame = pick<HTMLIFrameElement>('[data-soundcloud-frame]');
+  const soundcloudFrame = pick<HTMLIFrameElement>('[data-soundcloud-frame]');
   const toggle = pick<HTMLButtonElement>('[data-player-toggle]');
   const previous = pick<HTMLButtonElement>('[data-player-previous]');
   const next = pick<HTMLButtonElement>('[data-player-next]');
@@ -66,7 +66,13 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
   let starting = false;
   let youtubeReady = false;
   let youtubeStarted = false;
-  let soundcloudStarted = false;
+  let soundcloudSource = '';
+  let soundcloudReady = false;
+  let soundcloudSounds: number[] = [];
+  let soundcloudSound = 0;
+  let soundcloudAt = 0;
+  let soundcloudPlayed = false;
+  let soundcloudSeek: number | null = null;
   let request = 0;
   let ticker = 0;
   let resumeLocal = 0;
@@ -265,9 +271,7 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     const resetProgress = current.kind === 'soundcloud';
     window.clearTimeout(soundcloudStartTimer);
     starting = false;
-    soundcloudStarted = false;
     soundcloudPlayer?.pause();
-    soundcloudPlayer = null;
     if (resetProgress) {
       remotePosition = 0;
       remoteDuration = 0;
@@ -448,37 +452,59 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     setCurrent(item, startSeconds, shouldPlay);
   }
 
-  function soundcloudUrl(url: string): string {
+  const soundcloudOptions = {
+    buying: false,
+    sharing: false,
+    download: false,
+    show_artwork: false,
+    show_playcount: false,
+    show_user: false,
+    auto_play: true,
+  };
+
+  function soundcloudUrl(url: string, startTrack: number): string {
     const embed = new URL('https://w.soundcloud.com/player/');
     embed.searchParams.set('url', url);
-    for (const key of [
-      'buying',
-      'sharing',
-      'download',
-      'show_artwork',
-      'show_playcount',
-      'show_user',
-    ]) {
-      embed.searchParams.set(key, 'false');
-    }
-    embed.searchParams.set('auto_play', 'true');
+    for (const [key, value] of Object.entries(soundcloudOptions))
+      embed.searchParams.set(key, String(value));
+    embed.searchParams.set('start_track', String(startTrack));
     return embed.href;
   }
 
-  function waitForSoundCloudProgress(
-    widget: SoundCloudWidget,
-    url: string,
-  ): void {
+  function soundId(item: PlayableSoundCloud): number {
+    return Number(item.id.slice(item.id.indexOf(':') + 1));
+  }
+
+  function soundcloudProfile(item: PlayableSoundCloud): string {
+    const url = new URL(item.url);
+    return `${url.origin}/${url.pathname.split('/')[1] ?? ''}`;
+  }
+
+  function profileIndex(item: PlayableSoundCloud): number {
+    const profile = soundcloudProfile(item);
+    return playables
+      .filter(
+        (entry): entry is PlayableSoundCloud =>
+          entry.kind === 'soundcloud' && soundcloudProfile(entry) === profile,
+      )
+      .findIndex((entry) => entry.id === item.id);
+  }
+
+  function wantedSound(): number {
+    return current.kind === 'soundcloud' && playbackWanted
+      ? soundId(current)
+      : 0;
+  }
+
+  function isCurrentSound(data?: SoundCloudProgress): boolean {
+    return current.kind === 'soundcloud' && data?.soundId === soundId(current);
+  }
+
+  function waitForSoundCloudProgress(id: number): void {
     window.clearTimeout(soundcloudStartTimer);
     soundcloudStartTimer = window.setTimeout(() => {
-      if (
-        soundcloudPlayer !== widget ||
-        current.kind !== 'soundcloud' ||
-        current.url !== url ||
-        playing()
-      )
-        return;
-      widget.pause();
+      if (wantedSound() !== id || playing()) return;
+      soundcloudPlayer?.pause();
       failPlayback(undefined);
     }, 8000);
   }
@@ -491,40 +517,104 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     return at / share - at < 1000;
   }
 
-  function bindSoundCloud(
-    api: SoundCloudApi,
+  function loadSoundCloud(
     widget: SoundCloudWidget,
     url: string,
+    startTrack: number,
   ): void {
+    soundcloudSource = url;
+    soundcloudReady = false;
+    soundcloudSound = 0;
+    widget.load(url, { ...soundcloudOptions, start_track: startTrack });
+  }
+
+  function cueSoundCloud(widget: SoundCloudWidget): void {
+    const id = wantedSound();
+    if (!id || current.kind !== 'soundcloud') return;
+    waitForSoundCloudProgress(id);
+    if (soundcloudSound === id) {
+      if (
+        soundcloudSeek !== null &&
+        Math.abs(soundcloudSeek - soundcloudAt) <= 1
+      )
+        soundcloudSeek = null;
+      if (soundcloudSeek !== null && soundcloudPlayed) {
+        widget.seekTo(soundcloudSeek * 1000);
+        soundcloudSeek = null;
+      }
+      widget.play();
+      return;
+    }
+    const index = soundcloudSounds.indexOf(id);
+    if (index >= 0) {
+      widget.skip(index);
+      return;
+    }
+    const profile = soundcloudProfile(current);
+    if (soundcloudSource !== profile)
+      loadSoundCloud(widget, profile, Math.max(0, profileIndex(current)));
+    else loadSoundCloud(widget, current.url, 0);
+  }
+
+  function bindSoundCloud(api: SoundCloudApi, widget: SoundCloudWidget): void {
     const events = api.Widget.Events;
-    const isCurrentSound = (): boolean =>
-      current.kind === 'soundcloud' &&
-      current.url === url &&
-      soundcloudPlayer === widget;
 
     widget.bind(events.READY, () => {
-      if (!isCurrentSound()) return;
       applyVolume();
+      widget.getSounds((sounds) => {
+        soundcloudSounds = sounds.map((sound) => sound.id);
+        widget.getCurrentSound((sound) => {
+          soundcloudSound = sound?.id ?? 0;
+          soundcloudAt = 0;
+          soundcloudPlayed = false;
+          soundcloudReady = true;
+          cueSoundCloud(widget);
+        });
+      });
+    });
+    widget.bind(events.PLAY, (data) => {
+      if (data?.soundId !== soundcloudSound) soundcloudPlayed = false;
+      soundcloudSound = data?.soundId ?? 0;
+      soundcloudAt = (data?.currentPosition ?? 0) / 1000;
+      widget.getSounds((sounds) => {
+        soundcloudSounds = sounds.map((sound) => sound.id);
+      });
+      const wanted = wantedSound();
+      if (soundcloudSound !== wanted) {
+        const index = soundcloudSounds.indexOf(wanted);
+        if (wanted && index >= 0) widget.skip(index);
+        else widget.pause();
+        return;
+      }
       widget.getDuration((milliseconds) => {
-        if (!isCurrentSound()) return;
+        if (wantedSound() !== wanted) return;
         remoteDuration = milliseconds / 1000 || current.durationSeconds || 0;
         setProgress(remotePosition, remoteDuration);
       });
-      if (remotePosition > 0) widget.seekTo(remotePosition * 1000);
-      requestSoundCloudPlayback(widget, url);
     });
     widget.bind(events.PAUSE, (data) => {
-      if (!isCurrentSound() || atSoundEnd(data)) return;
+      if (!isCurrentSound(data) || atSoundEnd(data)) return;
       if (!starting) playbackWanted = false;
       if (!playbackWanted) window.clearTimeout(soundcloudStartTimer);
       setState(false);
       remember();
     });
     widget.bind(events.PLAY_PROGRESS, (data) => {
-      if (!isCurrentSound() || typeof data?.currentPosition !== 'number')
-        return;
+      if (typeof data?.currentPosition !== 'number') return;
+      if (data.soundId === soundcloudSound) {
+        soundcloudAt = data.currentPosition / 1000;
+        soundcloudPlayed = true;
+      }
+      if (!isCurrentSound(data)) return;
       window.clearTimeout(soundcloudStartTimer);
-      soundcloudStarted = true;
+      if (soundcloudSeek !== null) {
+        const target = soundcloudSeek;
+        soundcloudSeek = null;
+        if (Math.abs(target - soundcloudAt) > 1) {
+          widget.seekTo(target * 1000);
+          return;
+        }
+      }
       if (playbackWanted) {
         starting = false;
         if (!playing()) setState(true);
@@ -535,58 +625,55 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
         remoteDuration || current.durationSeconds || 0,
       );
     });
-    widget.bind(events.FINISH, () => {
-      if (!isCurrentSound()) return;
+    widget.bind(events.FINISH, (data) => {
+      if (!isCurrentSound(data)) return;
       window.clearTimeout(soundcloudStartTimer);
+      soundcloudSound = 0;
       advance();
     });
     widget.bind(events.ERROR, () => {
-      if (!isCurrentSound()) return;
+      if (current.kind !== 'soundcloud') return;
       window.clearTimeout(soundcloudStartTimer);
-      soundcloudPlayer = null;
+      soundcloudSource = '';
       failPlayback(error?.dataset['track']);
     });
   }
 
-  function requestSoundCloudPlayback(
-    widget: SoundCloudWidget,
-    url: string,
-  ): void {
-    if (
-      !playbackWanted ||
-      soundcloudPlayer !== widget ||
-      current.kind !== 'soundcloud' ||
-      current.url !== url
-    )
+  async function startSoundCloud(
+    item: PlayableSoundCloud,
+    startSeconds: number,
+  ): Promise<void> {
+    soundcloudSeek = startSeconds;
+    if (soundcloudPlayer) {
+      if (soundcloudReady) cueSoundCloud(soundcloudPlayer);
       return;
-    widget.play();
-    waitForSoundCloudProgress(widget, url);
+    }
+    if (!soundcloudFrame || soundcloudSource) return;
+    const profile = soundcloudProfile(item);
+    soundcloudSource = profile;
+    soundcloudFrame.src = soundcloudUrl(
+      profile,
+      Math.max(0, profileIndex(item)),
+    );
+    waitForSoundCloudProgress(soundId(item));
+
+    try {
+      const api = window.SC?.Widget ? window.SC : await soundcloudApi();
+      soundcloudPlayer = api.Widget(soundcloudFrame);
+      bindSoundCloud(api, soundcloudPlayer);
+    } catch {
+      soundcloudSource = '';
+      window.clearTimeout(soundcloudStartTimer);
+      if (current.kind === 'soundcloud') failPlayback(error?.dataset['track']);
+    }
   }
 
   async function playSoundCloud(
     item: PlayableSoundCloud,
     startSeconds = 0,
   ): Promise<void> {
-    if (!soundcloudFrame) return;
     selectSoundCloud(item, startSeconds, true);
-
-    const replacement = soundcloudFrame.cloneNode(false) as HTMLIFrameElement;
-    replacement.src = soundcloudUrl(item.url);
-    soundcloudFrame.replaceWith(replacement);
-    soundcloudFrame = replacement;
-    soundcloudPlayer = null;
-
-    try {
-      const api = window.SC?.Widget ? window.SC : await soundcloudApi();
-      if (current.id !== item.id || soundcloudFrame !== replacement) return;
-
-      soundcloudPlayer = api.Widget(replacement);
-      bindSoundCloud(api, soundcloudPlayer, item.url);
-    } catch {
-      if (current.id !== item.id || soundcloudFrame !== replacement) return;
-      window.clearTimeout(soundcloudStartTimer);
-      failPlayback(error?.dataset['track']);
-    }
+    await startSoundCloud(item, startSeconds);
   }
 
   function pauseCurrent(): void {
@@ -609,9 +696,7 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
         void playVideo(current, false, remotePosition);
       else player.playVideo();
     } else if (current.kind === 'soundcloud') {
-      if (!soundcloudPlayer || !soundcloudStarted)
-        void playSoundCloud(current, remotePosition);
-      else requestSoundCloudPlayback(soundcloudPlayer, current.url);
+      void startSoundCloud(current, remotePosition);
     } else {
       playLocal();
     }
@@ -870,7 +955,10 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     if (current.kind === 'youtube') player?.seekTo(Number(seek.value), true);
     if (current.kind === 'soundcloud') {
       remotePosition = Number(seek.value);
-      soundcloudPlayer?.seekTo(remotePosition * 1000);
+      if (soundcloudPlayed && soundcloudSound === soundId(current)) {
+        soundcloudAt = remotePosition;
+        soundcloudPlayer?.seekTo(remotePosition * 1000);
+      }
     }
   });
 
