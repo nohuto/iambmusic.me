@@ -174,5 +174,4 @@ export const iambProfile: IambProfile = {
     },
   ],
   youtube: { profile: 'iamb', ...channels.iamb.youtube },
-  contact: { email: 'iamb.synthmusic@gmail.com' },
 };

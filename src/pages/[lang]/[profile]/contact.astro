@@ -28,9 +28,17 @@ const ui = getDictionary(lang);
   <section class="intro">
     <h1>{ui.nav.contact}</h1>
     <p class="address">
-      <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
+      <button
+        type="button"
+        data-email
+        data-email-text
+        data-toast={ui.actions.emailCopied}
+        data-failed={ui.actions.copyFailed}
+        aria-label={ui.actions.copyEmail}
+      ></button>
     </p>
   </section>
+  <div class="toast" role="status" aria-live="polite" data-toast-region></div>
 </AppLayout>
 
 <style>
@@ -46,17 +54,45 @@ const ui = getDictionary(lang);
     border-block-start: var(--rule) solid var(--panel-rule);
   }
 
-  .address a {
+  .address button {
     display: inline-block;
+    min-block-size: 1lh;
+    padding: 0;
+    border: 0;
+    background: none;
     color: var(--legend);
+    font: inherit;
     font-size: var(--step-3);
     font-weight: 600;
-    text-decoration: none;
+    text-align: start;
     overflow-wrap: anywhere;
+    cursor: pointer;
+    -webkit-user-select: text;
+    user-select: text;
   }
 
-  .address a:hover,
-  .address a:focus-visible {
+  .address button:hover,
+  .address button:focus-visible {
     color: var(--ink);
+  }
+
+  .toast {
+    position: fixed;
+    inset-inline-end: var(--space-4);
+    inset-block-end: calc(var(--footer-height) + var(--space-3));
+    z-index: 8;
+    padding: var(--space-2) var(--space-3);
+    border: var(--rule) solid var(--panel-rule);
+    border-radius: var(--radius);
+    background: var(--panel-plate);
+    color: var(--legend);
+    font-size: var(--step-1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms ease;
+  }
+
+  .toast.show {
+    opacity: 1;
   }
 </style>

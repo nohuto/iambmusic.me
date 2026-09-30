@@ -17,6 +17,9 @@ export const de: UiDictionary = {
     readStory: 'Erfahre mehr über mich',
     skipToContent: 'Zum Inhalt springen',
     seeMore: 'Mehr ansehen',
+    copyEmail: 'E-Mail-Adresse kopieren',
+    emailCopied: 'E-Mail kopiert',
+    copyFailed: 'Kopieren fehlgeschlagen',
   },
   sections: {
     latestVideos: 'Neueste Videos/Songs',

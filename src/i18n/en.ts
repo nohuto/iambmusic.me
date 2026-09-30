@@ -17,6 +17,9 @@ export const en: UiDictionary = {
     readStory: 'Learn more about me',
     skipToContent: 'Skip to content',
     seeMore: 'See more',
+    copyEmail: 'Copy email address',
+    emailCopied: 'Email copied',
+    copyFailed: 'Copy failed',
   },
   sections: {
     latestVideos: 'Latest Videos/Songs',

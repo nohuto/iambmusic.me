@@ -101,7 +101,6 @@ export interface Profile<P extends ProfileId = ProfileId> {
   readonly tracks: readonly Track<P>[];
   readonly platforms: readonly PlatformLink<P>[];
   readonly youtube: ChannelIdentity<P>;
-  readonly contact: { readonly email: string };
 }
 
 export type IambProfile = Profile<'iamb'>;
@@ -129,6 +128,9 @@ export interface UiDictionary {
     readonly readStory: string;
     readonly skipToContent: string;
     readonly seeMore: string;
+    readonly copyEmail: string;
+    readonly emailCopied: string;
+    readonly copyFailed: string;
   };
   readonly sections: {
     readonly latestVideos: string;

@@ -289,7 +289,7 @@ html[data-theme='dark'] .theme-control .thumb {
   display: grid;
   min-block-size: 100vh;
   min-block-size: 100svh;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr;
 }
 
 .app::before {
@@ -521,7 +521,6 @@ html[data-theme='dark'] .theme-control .thumb {
 
   .app {
     grid-template-columns: var(--rail-width) minmax(0, 1fr);
-    grid-template-rows: 1fr;
     grid-template-areas: 'rail main';
   }
 

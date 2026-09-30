@@ -4,24 +4,24 @@ import type { AimbProfile } from '../types.ts';
 
 export const aimbProfile: AimbProfile = {
   id: 'aimb',
-  name: 'AIMB Music Project',
-  shortName: 'AIMB',
+  name: 'AiMB Project',
+  shortName: 'AiMB',
   meta: {
     home: {
       de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
       en: 'Cinematic electronic music, produced in collaboration with AI.',
     },
     music: {
-      de: 'Hier findest du meine neuesten Uploads von AIMB auf YouTube und SoundCloud.',
-      en: 'Find my latest AIMB uploads on YouTube and SoundCloud here.',
+      de: 'Hier findest du meine neuesten Uploads von AiMB auf YouTube und SoundCloud.',
+      en: 'Find my latest AiMB uploads on YouTube and SoundCloud here.',
     },
     social: {
-      de: 'Meine Kanäle auf Social Media für das AIMB Music Project.',
-      en: 'My social media channels for the AIMB Music Project.',
+      de: 'Meine Kanäle auf Social Media für das AiMB Project.',
+      en: 'My social media channels for the AiMB Project.',
     },
     contact: {
-      de: 'So erreichst du mich für das AIMB Music Project.',
-      en: 'Get in touch with me about the AIMB Music Project.',
+      de: 'So erreichst du mich für das AiMB Project.',
+      en: 'Get in touch with me about the AiMB Project.',
     },
     about: {
       de: 'Ich bin Markus B., hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
@@ -41,8 +41,8 @@ export const aimbProfile: AimbProfile = {
   images: {
     logo,
     logoAlt: {
-      de: 'Logo des AIMB Music Project',
-      en: 'AIMB Music Project logo',
+      de: 'Logo des AiMB Project',
+      en: 'AiMB Project logo',
     },
   },
   tracks: [
@@ -82,5 +82,4 @@ export const aimbProfile: AimbProfile = {
     },
   ],
   youtube: { profile: 'aimb', ...channels.aimb.youtube },
-  contact: { email: 'iamb.synthmusic@gmail.com' },
 };
