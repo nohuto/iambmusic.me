@@ -1178,16 +1178,6 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
 
     const itemId = readId(saved?.['itemId']);
     if (itemId) restored = items.get(itemId);
-    if (!restored && typeof saved?.['videoId'] === 'string') {
-      restored = playables.find(
-        (item) => item.kind === 'youtube' && item.videoId === saved['videoId'],
-      );
-    }
-    if (!restored && saved?.['mode'] === 'local') {
-      const legacyId = readId(saved?.['index']);
-      const legacyItem = legacyId ? items.get(legacyId) : undefined;
-      if (legacyItem?.kind === 'local') restored = legacyItem;
-    }
   } catch {
     // ignore an unreadable session value
   }
