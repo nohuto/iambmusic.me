@@ -95,6 +95,10 @@ const { ui } = Astro.props;
     color: #fff;
   }
 
+  .stage[data-mode='compact'] .ghost {
+    color: var(--legend);
+  }
+
   .stage[data-mode='compact'] [data-video-collapse] {
     display: none;
   }
