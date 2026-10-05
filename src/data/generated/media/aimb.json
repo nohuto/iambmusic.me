@@ -1,11 +1,42 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-09-29T10:46:40.151Z",
+  "generatedAt": "2026-10-05T11:35:47.165Z",
   "refreshedAt": {
-    "youtube": "2026-08-29T01:45:50.751Z",
-    "soundcloud": "2026-09-29T10:46:40.151Z"
+    "youtube": "2026-10-05T11:35:47.165Z",
+    "soundcloud": "2026-10-05T11:35:47.165Z"
   },
   "items": [
+    {
+      "id": "youtube:MlcEX8_CJ2Y",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=MlcEX8_CJ2Y",
+      "title": "Halloween Night IV",
+      "publishedAt": "2026-10-04T17:52:15.000Z",
+      "discoveredAt": "2026-10-05T11:35:47.165Z",
+      "durationSeconds": 186,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/MlcEX8_CJ2Y/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "MlcEX8_CJ2Y",
+      "playback": "youtube-embed"
+    },
+    {
+      "id": "soundcloud:2412978129",
+      "source": "soundcloud",
+      "url": "https://soundcloud.com/aimp-musicproject/halloween-night-iv?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
+      "title": "Halloween Night IV",
+      "publishedAt": "2026-10-04T17:16:01.000Z",
+      "discoveredAt": "2026-10-05T11:35:47.165Z",
+      "durationSeconds": 180,
+      "thumbnail": {
+        "url": "https://i1.sndcdn.com/artworks-zx5zLKd8BkyjqnQS-1jofHQ-large.jpg",
+        "width": null,
+        "height": null
+      },
+      "playback": "soundcloud-widget"
+    },
     {
       "id": "soundcloud:2403301002",
       "source": "soundcloud",
