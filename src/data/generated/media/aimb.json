@@ -1,11 +1,27 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-10-05T11:35:47.165Z",
+  "generatedAt": "2026-10-17T08:38:02.369Z",
   "refreshedAt": {
-    "youtube": "2026-10-05T11:35:47.165Z",
+    "youtube": "2026-10-17T08:38:02.369Z",
     "soundcloud": "2026-10-05T11:35:47.165Z"
   },
   "items": [
+    {
+      "id": "youtube:hdVqbslZmJw",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=hdVqbslZmJw",
+      "title": "Crazy Muppets",
+      "publishedAt": "2026-10-16T20:43:14.000Z",
+      "discoveredAt": "2026-10-17T08:38:02.369Z",
+      "durationSeconds": 141,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/hdVqbslZmJw/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "hdVqbslZmJw",
+      "playback": "youtube-embed"
+    },
     {
       "id": "youtube:MlcEX8_CJ2Y",
       "source": "youtube",
