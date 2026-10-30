@@ -1,11 +1,27 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-10-17T08:38:02.369Z",
+  "generatedAt": "2026-10-30T10:54:29.584Z",
   "refreshedAt": {
-    "youtube": "2026-10-17T08:38:02.369Z",
+    "youtube": "2026-10-30T10:54:29.584Z",
     "soundcloud": "2026-10-05T11:35:47.165Z"
   },
   "items": [
+    {
+      "id": "youtube:AxqN97NSXk8",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=AxqN97NSXk8",
+      "title": "The Creatures 🎶 #electronicmusic #creature #dark #cinematic #halloween",
+      "publishedAt": "2026-10-30T07:52:21.000Z",
+      "discoveredAt": "2026-10-30T10:54:29.584Z",
+      "durationSeconds": 32,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/AxqN97NSXk8/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "AxqN97NSXk8",
+      "playback": "youtube-embed"
+    },
     {
       "id": "youtube:hdVqbslZmJw",
       "source": "youtube",
