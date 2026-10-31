@@ -1,11 +1,27 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-10-30T10:54:29.584Z",
+  "generatedAt": "2026-10-31T10:26:47.302Z",
   "refreshedAt": {
-    "youtube": "2026-10-30T10:54:29.584Z",
+    "youtube": "2026-10-31T10:26:47.302Z",
     "soundcloud": "2026-10-05T11:35:47.165Z"
   },
   "items": [
+    {
+      "id": "youtube:BoJAUt7vZTA",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=BoJAUt7vZTA",
+      "title": "The Creatures",
+      "publishedAt": "2026-10-30T19:27:57.000Z",
+      "discoveredAt": "2026-10-31T10:26:47.302Z",
+      "durationSeconds": 340,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/BoJAUt7vZTA/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "BoJAUt7vZTA",
+      "playback": "youtube-embed"
+    },
     {
       "id": "youtube:AxqN97NSXk8",
       "source": "youtube",
