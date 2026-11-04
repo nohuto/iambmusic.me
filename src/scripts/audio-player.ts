@@ -73,6 +73,7 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
   let remotePosition = 0;
   let remoteDuration = 0;
   let playbackWanted = false;
+  let localRequest = 0;
   let soundcloudStartTimer = 0;
   let starting = false;
   let youtubeReady = false;
@@ -346,9 +347,15 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
 
   function playLocal(): void {
     const id = current.id;
+    const request = ++localRequest;
     error?.setAttribute('hidden', '');
     void audio.play().catch(() => {
-      if (current.kind !== 'local' || current.id !== id || !playbackWanted)
+      if (
+        current.kind !== 'local' ||
+        current.id !== id ||
+        request !== localRequest ||
+        !playbackWanted
+      )
         return;
       failPlayback(error?.dataset['track']);
     });
@@ -1115,10 +1122,12 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     const copy = target?.closest<HTMLElement>('[data-row-copy]');
     const link = copy?.dataset['rowCopy'];
     if (copy && link) {
-      void navigator.clipboard.writeText(link).then(
-        () => announce(dock.dataset['copied']),
-        () => announce(dock.dataset['copyFailed']),
-      );
+      void Promise.resolve(link)
+        .then((text) => navigator.clipboard.writeText(text))
+        .then(
+          () => announce(dock.dataset['copied']),
+          () => announce(dock.dataset['copyFailed']),
+        );
       copy.closest<HTMLElement>('[popover]')?.hidePopover();
       return;
     }

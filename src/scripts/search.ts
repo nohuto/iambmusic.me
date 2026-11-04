@@ -147,10 +147,12 @@ function bind(
       if (!match) return;
       event.preventDefault();
       select(match);
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      close();
     }
+  });
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    close();
   });
   dialog.addEventListener('close', () => {
     matches = [];

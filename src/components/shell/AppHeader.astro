@@ -32,7 +32,6 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
       src={activeProfile.images.logo}
       alt=""
       width={30}
-      height={30}
       densities={[1, 2, 3]}
     />
     <span>{activeProfile.shortName}</span>
@@ -153,7 +152,12 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
 
   @media (max-width: 30rem) {
     .mark span {
-      display: none;
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .app-header {

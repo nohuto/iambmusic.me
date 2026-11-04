@@ -582,13 +582,13 @@ html[data-social-sources='collapsed'] #social-sources {
     padding-inline-start: 0;
   }
 
-  html[data-rail='collapsed'] .rail .mark span,
   html[data-rail='collapsed'] .panel-nav-rail .group-label,
   html[data-rail='collapsed'] .panel-nav-rail .sources,
   html[data-rail='collapsed'] .panel-nav-rail .disclosure {
     display: none;
   }
 
+  html[data-rail='collapsed'] .rail .mark span,
   html[data-rail='collapsed'] .panel-nav-rail .label {
     position: absolute;
     inline-size: 1px;

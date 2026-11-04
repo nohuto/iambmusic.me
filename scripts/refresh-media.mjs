@@ -33,11 +33,6 @@ const channelsPath = new URL('src/data/media-channels.json', projectRoot);
 const defaultOutputDir = new URL('src/data/generated/media/', projectRoot);
 const coverRoot = new URL('public/media/', projectRoot);
 
-/**
- * @typedef {{ ok: boolean; status: number; json: () => Promise<unknown> }} JsonResponse
- * @param {string} apiKey
- * @param {(url: URL) => Promise<JsonResponse>} [fetchImpl]
- */
 export function createRequest(apiKey, fetchImpl = fetch) {
   return async function request(resource, params) {
     const url = new URL(`${API_ROOT}/${resource}`);
@@ -475,7 +470,6 @@ async function fileExists(target) {
   }
 }
 
-/** @type {(from: string, to: string) => Promise<void>} */
 const renameTarget = rename;
 
 async function replaceAtomically(directory, feeds, renameFile) {

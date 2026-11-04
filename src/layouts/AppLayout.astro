@@ -38,13 +38,11 @@ const alternates = alternateLinks(profile, page);
 const favicon = await getImage({
   src: iambLogo,
   width: 64,
-  height: 64,
   format: 'png',
 });
 const touchIcon = await getImage({
   src: iambLogo,
   width: 180,
-  height: 180,
   format: 'png',
 });
 const themeColors = {
@@ -55,7 +53,6 @@ const locales = { de: 'de_DE', en: 'en_US' };
 const shareImage = await getImage({
   src: activeProfile.images.logo,
   width: 500,
-  height: 500,
   format: 'jpeg',
   background: themeColors.dark,
 });
