@@ -11,7 +11,7 @@
     "check": "astro check",
     "validate:media": "node scripts/refresh-media.mjs --validate-cache",
     "verify": "npm run check && npm run validate:media",
-    "build": "npm run verify && astro build",
+    "build": "npm run verify && astro build && node scripts/csp-hashes.mjs",
     "preview": "astro preview",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -25,5 +25,8 @@
     "prettier-plugin-astro": "^1.1.2",
     "sharp": "^0.35.5",
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4"
   }
 }

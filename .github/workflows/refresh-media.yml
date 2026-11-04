@@ -28,6 +28,7 @@ jobs:
         run: pipx install "yt-dlp[default,curl-cffi]"
 
       - name: Refresh media
+        id: refresh
         continue-on-error: true
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -48,3 +49,7 @@ jobs:
           git add src/data/generated/media public/media
           git commit -m 'Refresh generated media'
           git push
+
+      - name: Report refresh failure
+        if: steps.refresh.outcome == 'failure'
+        run: exit 1

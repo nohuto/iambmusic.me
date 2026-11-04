@@ -10,7 +10,7 @@ import {
 } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { toIsoTimestamp } from './timestamps.mjs';
+import { isIsoTimestamp, toIsoTimestamp } from './timestamps.mjs';
 
 const API_ROOT = 'https://www.googleapis.com/youtube/v3';
 const PAGE_SIZE = 50;
@@ -33,7 +33,7 @@ const channelsPath = new URL('src/data/media-channels.json', projectRoot);
 const defaultOutputDir = new URL('src/data/generated/media/', projectRoot);
 const coverRoot = new URL('public/media/', projectRoot);
 
-export function createRequest(apiKey, fetchImpl = fetch) {
+function createRequest(apiKey, fetchImpl = fetch) {
   return async function request(resource, params) {
     const url = new URL(`${API_ROOT}/${resource}`);
     for (const [key, value] of Object.entries(params))
@@ -79,7 +79,7 @@ function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-export function validateChannels(channels) {
+function validateChannels(channels) {
   assert(
     isPlainObject(channels),
     'channel identity invalid: file is not an object',
@@ -182,7 +182,7 @@ async function fetchCandidates(playlistId, request) {
   return items;
 }
 
-export function parseIsoDuration(value) {
+function parseIsoDuration(value) {
   const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(
     value ?? '',
   );
@@ -233,7 +233,7 @@ function pickThumbnail(thumbnails) {
   return null;
 }
 
-export function normalizeCandidates(items) {
+function normalizeCandidates(items) {
   const normalized = [];
   for (const item of items) {
     const snippet = item?.snippet;
@@ -262,7 +262,7 @@ function countBySource(items) {
   return counts;
 }
 
-export function selectLatestMusic(items, limit = HOME_COUNT) {
+function selectLatestMusic(items, limit = HOME_COUNT) {
   return items
     .filter(
       (item) =>
@@ -292,14 +292,14 @@ const canonical = (item) =>
       .map((key) => [key, item[key]]),
   );
 
-export function sameItems(before, after) {
+function sameItems(before, after) {
   return (
     before.length === after.length &&
     before.every((item, at) => canonical(item) === canonical(after[at]))
   );
 }
 
-export function validateMedia(feed, profileId) {
+function validateMedia(feed, profileId) {
   const invalid = (message) =>
     assert(false, `generated media invalid: ${message}`);
   if (!isPlainObject(feed)) invalid('feed is not an object');
@@ -308,14 +308,12 @@ export function validateMedia(feed, profileId) {
   }
   if (feed.profile !== profileId)
     invalid(`feed belongs to ${feed.profile}, expected ${profileId}`);
-  if (toIsoTimestamp(feed.generatedAt) !== feed.generatedAt)
-    invalid('generatedAt is not ISO');
+  if (!isIsoTimestamp(feed.generatedAt)) invalid('generatedAt is not ISO');
   if (!isPlainObject(feed.refreshedAt)) invalid('refreshedAt is missing');
   for (const [source, stamp] of Object.entries(feed.refreshedAt)) {
     if (!SOURCES.includes(source))
       invalid(`unknown refreshed source: ${source}`);
-    if (toIsoTimestamp(stamp) !== stamp)
-      invalid(`refreshedAt.${source} is not ISO`);
+    if (!isIsoTimestamp(stamp)) invalid(`refreshedAt.${source} is not ISO`);
   }
   if (!Array.isArray(feed.items) || feed.items.length === 0)
     invalid('items is empty');
@@ -342,10 +340,8 @@ export function validateMedia(feed, profileId) {
     if (typeof item.title !== 'string' || item.title.trim().length === 0)
       invalid('title is empty');
     if (!/^https:\/\//.test(item.url)) invalid(`url is not https: ${item.id}`);
-    if (toIsoTimestamp(item.publishedAt) !== item.publishedAt)
-      invalid(`publishedAt: ${item.id}`);
-    if (toIsoTimestamp(item.discoveredAt) !== item.discoveredAt)
-      invalid(`discoveredAt: ${item.id}`);
+    if (!isIsoTimestamp(item.publishedAt)) invalid(`publishedAt: ${item.id}`);
+    if (!isIsoTimestamp(item.discoveredAt)) invalid(`discoveredAt: ${item.id}`);
     if (
       item.durationSeconds !== null &&
       !(Number.isFinite(item.durationSeconds) && item.durationSeconds >= 0)
@@ -383,7 +379,7 @@ export function validateMedia(feed, profileId) {
   return feed;
 }
 
-export function mergeSource(
+function mergeSource(
   previousItems,
   incoming,
   source,
@@ -415,7 +411,7 @@ export function mergeSource(
   );
 }
 
-export async function buildYouTubeItems(channel, request) {
+async function buildYouTubeItems(channel, request) {
   const playlistId = await resolveUploadsPlaylist(channel, request);
   const candidates = normalizeCandidates(
     await fetchCandidates(playlistId, request),
@@ -452,11 +448,11 @@ export async function buildYouTubeItems(channel, request) {
   );
 }
 
-export async function readChannels(source = channelsPath) {
+async function readChannels(source = channelsPath) {
   return validateChannels(JSON.parse(await readFile(source, 'utf8')));
 }
 
-export async function readMedia(profileId, outputDir = defaultOutputDir) {
+async function readMedia(profileId, outputDir = defaultOutputDir) {
   const file = path.join(fileURLToPath(outputDir), `${profileId}.json`);
   return JSON.parse(await readFile(file, 'utf8'));
 }
@@ -509,7 +505,7 @@ async function replaceAtomically(directory, feeds, renameFile) {
   }
 }
 
-export async function refreshAll({
+async function refreshAll({
   channels,
   request,
   outputDir = defaultOutputDir,
@@ -548,7 +544,7 @@ export async function refreshAll({
   return feeds;
 }
 
-export async function validateGeneratedCache(outputDir = defaultOutputDir) {
+async function validateGeneratedCache(outputDir = defaultOutputDir) {
   const directory = fileURLToPath(outputDir);
   const expected = KNOWN_PROFILES.map((profileId) => `${profileId}.json`);
 

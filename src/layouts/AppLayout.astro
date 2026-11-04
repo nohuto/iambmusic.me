@@ -49,7 +49,7 @@ const themeColors = {
   iamb: { light: '#ddd0b0', dark: '#241c07' },
   aimb: { light: '#c8d2e2', dark: '#0d1526' },
 }[profile];
-const locales = { de: 'de_DE', en: 'en_US' };
+const locales = { de: 'de_DE', en: 'en_GB' };
 const shareImage = await getImage({
   src: activeProfile.images.logo,
   width: 500,
@@ -194,7 +194,7 @@ const profileData =
       import '../scripts/theme.ts';
       import '../scripts/search.ts';
       import '../scripts/shell.ts';
-      import '../scripts/contact.ts';
+      import '../scripts/clipboard.ts';
       import '../scripts/media-filter.ts';
       import '../scripts/media-sort.ts';
     </script>

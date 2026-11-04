@@ -42,9 +42,15 @@ interface Props {
   name: IconName;
   weight?: 'regular' | 'fill' | 'bold';
   size?: string;
+  class?: string;
 }
 
-const { name, weight = 'regular', size = '1.25rem' } = Astro.props;
+const {
+  name,
+  weight = 'regular',
+  size = '1.25rem',
+  class: className = 'icon-glyph',
+} = Astro.props;
 
 const file = weight === 'regular' ? `${name}.svg` : `${name}-${weight}.svg`;
 const source = await readFile(
@@ -55,9 +61,10 @@ const source = await readFile(
   'utf8',
 );
 
+const dimensions = size ? ` width="${size}" height="${size}"` : '';
 const markup = source.replace(
   '<svg ',
-  `<svg width="${size}" height="${size}" aria-hidden="true" class="icon-glyph" `,
+  `<svg class="${className}"${dimensions} aria-hidden="true" focusable="false" `,
 );
 ---
 

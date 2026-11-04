@@ -126,7 +126,7 @@ function bind(
       side.className = 'side';
       side.textContent =
         clock(entry.durationSeconds) ||
-        (entry.kind === 'local' ? '♪' : sourceNames[entry.kind]);
+        (entry.kind === 'local' ? '-' : sourceNames[entry.kind]);
 
       row.append(art, name, side);
       row.addEventListener('click', () => select(entry));

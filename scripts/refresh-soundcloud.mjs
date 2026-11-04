@@ -62,7 +62,7 @@ export async function createSoundCloudRequest(
   };
 }
 
-export function normalizeSoundCloudTracks(tracks) {
+function normalizeSoundCloudTracks(tracks) {
   const items = [];
   for (const track of tracks) {
     const match = /^soundcloud:tracks:(.+)$/.exec(track?.urn ?? '');

@@ -9,13 +9,13 @@ interface Facts {
 
 function apply(requested: string): void {
   const rows = [...document.querySelectorAll<HTMLElement>('[data-media-row]')];
-  const source = rows.some((row) => row.dataset['source'] === requested)
-    ? requested
-    : '';
   const empty = document.querySelector<HTMLElement>('[data-media-empty]');
   const links = [
     ...document.querySelectorAll<HTMLAnchorElement>('[data-source-link]'),
   ];
+  const source = links.some((link) => link.dataset['sourceLink'] === requested)
+    ? requested
+    : '';
   const surface = document.querySelector<HTMLElement>('[data-media-surface]');
   const owner = surface?.dataset['mediaSurface'] ?? '';
   const sourceRoot = document.querySelector<HTMLAnchorElement>(

@@ -23,6 +23,7 @@ import {
 import { readSession, writeSession } from './player-session.ts';
 import { sourceNames } from '../lib/sources.ts';
 import { eventElement } from './dom.ts';
+import { copyText } from './clipboard.ts';
 
 const PROGRESS_TICK_MS = 500;
 const SOUNDCLOUD_START_TIMEOUT_MS = 8000;
@@ -161,6 +162,10 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     } else {
       artEl.innerHTML = artHtml;
       syncArtSizes();
+      new MutationObserver(syncArtSizes).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-rail'],
+      });
     }
   }
 
@@ -169,7 +174,11 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
       ?.querySelector('img[sizes]')
       ?.setAttribute(
         'sizes',
-        dock.dataset['art'] === 'expanded' ? '14.5rem' : '2.5rem',
+        dock.dataset['art'] !== 'expanded'
+          ? '2.5rem'
+          : document.documentElement.dataset['rail'] === 'collapsed'
+            ? '4.25rem'
+            : '14.5rem',
       );
   }
 
@@ -401,6 +410,7 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     const iframe = document.createElement('iframe');
     iframe.src = embedUrl(item.videoId, location.origin);
     iframe.title = item.title;
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
     iframe.allow =
       'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share';
     iframe.allowFullscreen = true;
@@ -875,8 +885,10 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     }
     const target =
       neighbour(1) ?? (repeatMode === 'all' ? current.id : undefined);
-    if (target === undefined) return;
-    if (repeatMode === 'off' && isLastIn(order, current.id)) {
+    if (
+      target === undefined ||
+      (repeatMode === 'off' && isLastIn(order, current.id))
+    ) {
       playbackWanted = false;
       setState(false);
       return;
@@ -966,7 +978,10 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
 
   seek?.addEventListener('change', () => {
     scrubbing = false;
-    if (current.kind === 'youtube') player?.seekTo(Number(seek.value), true);
+    if (current.kind === 'youtube') {
+      remotePosition = Number(seek.value);
+      player?.seekTo(remotePosition, true);
+    }
     if (current.kind === 'soundcloud') {
       remotePosition = Number(seek.value);
       if (soundcloudPlayed && soundcloudSound === soundId(current)) {
@@ -1122,12 +1137,9 @@ function initPlayer(dock: HTMLElement, audio: HTMLAudioElement): void {
     const copy = target?.closest<HTMLElement>('[data-row-copy]');
     const link = copy?.dataset['rowCopy'];
     if (copy && link) {
-      void Promise.resolve(link)
-        .then((text) => navigator.clipboard.writeText(text))
-        .then(
-          () => announce(dock.dataset['copied']),
-          () => announce(dock.dataset['copyFailed']),
-        );
+      void copyText(link).then((copied) =>
+        announce(dock.dataset[copied ? 'copied' : 'copyFailed']),
+      );
       copy.closest<HTMLElement>('[popover]')?.hidePopover();
       return;
     }

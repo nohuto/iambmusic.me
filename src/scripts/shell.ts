@@ -1,20 +1,7 @@
 import { eventElement } from './dom.ts';
+import { storageGet, storageSet } from './storage.ts';
 
 const root = document.documentElement;
-
-function read(key: string): string | null | undefined {
-  try {
-    return localStorage.getItem(key);
-  } catch {
-    return undefined;
-  }
-}
-
-function store(key: string, value: string): void {
-  try {
-    localStorage.setItem(key, value);
-  } catch {}
-}
 
 function railToggle(): HTMLButtonElement | null {
   return document.querySelector<HTMLButtonElement>('[data-rail-toggle]');
@@ -51,7 +38,7 @@ document.addEventListener('click', (event) => {
   const target = eventElement(event);
   if (target?.closest('[data-rail-toggle]')) {
     const collapsed = root.dataset['rail'] !== 'collapsed';
-    store('iambmusic-rail', collapsed ? 'collapsed' : 'expanded');
+    storageSet('iambmusic-rail', collapsed ? 'collapsed' : 'expanded');
     applyRail(collapsed);
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document
@@ -67,7 +54,10 @@ document.addEventListener('click', (event) => {
     SourceGroup | undefined;
   if (group) {
     const expanded = root.dataset[`${group}Sources`] === 'collapsed';
-    store(`iambmusic-${group}-sources`, expanded ? 'expanded' : 'collapsed');
+    storageSet(
+      `iambmusic-${group}-sources`,
+      expanded ? 'expanded' : 'collapsed',
+    );
     applySources(group, expanded);
   }
 });
@@ -115,7 +105,11 @@ function syncContextMenuScrollLock(): void {
 }
 
 function blockContextMenuScroll(event: Event): void {
-  if (root.hasAttribute('data-context-menu-open')) event.preventDefault();
+  if (
+    root.hasAttribute('data-context-menu-open') &&
+    !eventElement(event)?.closest('[data-anchored-menu]:popover-open')
+  )
+    event.preventDefault();
 }
 
 function handleScroll(): void {
@@ -217,15 +211,14 @@ function setup(): void {
 }
 
 function restoreRoot(): void {
-  const rail = read('iambmusic-rail');
   applyRail(
-    rail === undefined
-      ? root.dataset['rail'] === 'collapsed'
-      : rail === 'collapsed',
+    storageGet('iambmusic-rail', root.dataset['rail'] ?? '') === 'collapsed',
   );
   for (const group of ['music', 'social'] as const) {
-    const saved = read(`iambmusic-${group}-sources`);
-    if (saved === undefined) continue;
+    const saved = storageGet(
+      `iambmusic-${group}-sources`,
+      root.dataset[`${group}Sources`] ?? '',
+    );
     root.dataset[`${group}Sources`] =
       saved === 'collapsed' ? 'collapsed' : 'expanded';
   }

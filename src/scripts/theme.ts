@@ -1,4 +1,5 @@
 import { eventElement } from './dom.ts';
+import { storageGet, storageRemove, storageSet } from './storage.ts';
 
 type Theme = 'light' | 'dark';
 
@@ -11,13 +12,10 @@ const activeTheme = (): Theme => {
 
 function restoreOverride(): void {
   document.documentElement.classList.add('has-js');
-  let theme: string | null;
-  try {
-    theme = localStorage.getItem('theme_override');
-  } catch {
-    syncControls();
-    return;
-  }
+  const theme = storageGet(
+    'theme_override',
+    document.documentElement.dataset.theme ?? '',
+  );
   if (theme === 'dark' || theme === 'light')
     document.documentElement.dataset.theme = theme;
   else delete document.documentElement.dataset.theme;
@@ -59,10 +57,8 @@ document.addEventListener('click', (event) => {
   const override = next === systemTheme() ? null : next;
   if (override) document.documentElement.dataset.theme = override;
   else delete document.documentElement.dataset.theme;
-  try {
-    if (override) localStorage.setItem('theme_override', override);
-    else localStorage.removeItem('theme_override');
-  } catch {}
+  if (override) storageSet('theme_override', override);
+  else storageRemove('theme_override');
   syncControls();
 });
 

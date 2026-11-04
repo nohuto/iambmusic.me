@@ -13,6 +13,15 @@ function emailAddress(): string {
   );
 }
 
+export async function copyText(value: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 function showToast(message: string | undefined): void {
@@ -35,12 +44,8 @@ function fillEmail(): void {
 document.addEventListener('click', async (event) => {
   const source = eventElement(event)?.closest<HTMLElement>('[data-email]');
   if (!source) return;
-  try {
-    await navigator.clipboard.writeText(emailAddress());
-    showToast(source.dataset['toast']);
-  } catch {
-    showToast(source.dataset['failed']);
-  }
+  const copied = await copyText(emailAddress());
+  showToast(copied ? source.dataset['toast'] : source.dataset['failed']);
 });
 
 fillEmail();
