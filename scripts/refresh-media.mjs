@@ -616,8 +616,11 @@ async function refreshSocialSources(
   ]) {
     if (!handle) continue;
     const incoming = await fetcher(handle, now).catch((error) => {
-      failures.push(error);
-      console.warn(`${profileId} ${source}: ${error.message}`);
+      if (source !== 'instagram') failures.push(error);
+      const cause = error.cause?.message;
+      console.warn(
+        `${profileId} ${source}: ${error.message}${cause ? ` (${cause})` : ''}`,
+      );
       return [];
     });
     if (incoming.length === 0) {
