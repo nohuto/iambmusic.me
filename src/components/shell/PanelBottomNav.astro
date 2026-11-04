@@ -24,10 +24,11 @@ const { lang, profile, page, ui } = Astro.props;
 <style>
   .bottom {
     position: fixed;
+    view-transition-name: bottom-nav;
     block-size: var(--bottom-stack);
     inset-inline: 0;
     inset-block-end: 0;
-    z-index: 7;
+    z-index: var(--layer-bottom-nav);
     padding-block-end: var(--safe-bottom);
     background: var(--panel-ground);
     border-block-start: var(--rule) solid var(--panel-rule);

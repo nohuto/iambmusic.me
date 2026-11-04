@@ -12,12 +12,10 @@ const { ui } = Astro.props;
 <button
   class="theme-control"
   type="button"
-  role="switch"
   data-theme-toggle
   data-label-light={ui.switches.toLight}
   data-label-dark={ui.switches.toDark}
   aria-label={ui.switches.toDark}
-  aria-checked="false"
 >
   <span class="thumb">
     <span class="icon" data-theme-icon="dark">

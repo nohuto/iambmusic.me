@@ -2,20 +2,18 @@ import { eventElement } from './dom.ts';
 
 const root = document.documentElement;
 
-function read(key: string): string | null {
+function read(key: string): string | null | undefined {
   try {
     return localStorage.getItem(key);
   } catch {
-    return null;
+    return undefined;
   }
 }
 
 function store(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
-  } catch {
-    // a blocked storage API must not break the control
-  }
+  } catch {}
 }
 
 function railToggle(): HTMLButtonElement | null {
@@ -146,6 +144,17 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+document.addEventListener('focusout', (event) => {
+  const next = event.relatedTarget;
+  if (!(next instanceof Node)) return;
+  for (const menu of document.querySelectorAll<HTMLElement>(
+    '[data-anchored-menu]:popover-open',
+  )) {
+    const trigger = document.querySelector(`[popovertarget="${menu.id}"]`);
+    if (!menu.contains(next) && !trigger?.contains(next)) menu.hidePopover();
+  }
+});
+
 function anchorMenus(): void {
   for (const menu of document.querySelectorAll<HTMLElement>(
     '[data-anchored-menu]',
@@ -208,12 +217,17 @@ function setup(): void {
 }
 
 function restoreRoot(): void {
-  applyRail(read('iambmusic-rail') === 'collapsed');
+  const rail = read('iambmusic-rail');
+  applyRail(
+    rail === undefined
+      ? root.dataset['rail'] === 'collapsed'
+      : rail === 'collapsed',
+  );
   for (const group of ['music', 'social'] as const) {
+    const saved = read(`iambmusic-${group}-sources`);
+    if (saved === undefined) continue;
     root.dataset[`${group}Sources`] =
-      read(`iambmusic-${group}-sources`) === 'collapsed'
-        ? 'collapsed'
-        : 'expanded';
+      saved === 'collapsed' ? 'collapsed' : 'expanded';
   }
 }
 

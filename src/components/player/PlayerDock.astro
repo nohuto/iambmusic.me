@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { Profile, ProfileId, UiDictionary } from '../../data/types.ts';
 import { getPlayables } from '../../lib/playable.ts';
 import Icon from '../ui/Icon.astro';
+import { inlineJson } from '../../lib/inline-json.ts';
 
 interface Props {
   profile: Profile;
@@ -25,6 +26,7 @@ const hasQueue = playables.length > 1;
     data-profile={profileId}
     data-queued={ui.music.queued}
     data-copied={ui.music.copied}
+    data-copy-failed={ui.actions.copyFailed}
   >
     <audio preload="none" data-player-audio />
     <iframe
@@ -39,13 +41,20 @@ const hasQueue = playables.length > 1;
       is:inline
       type="application/json"
       data-playables
-      set:html={JSON.stringify(playables)}
+      set:html={inlineJson(playables)}
     />
     <div class="identity">
       <span class="art-slot">
         <span class="art">
           <span class="art-image" data-player-art>
-            <Image src={profile.images.logo} alt="" width={80} height={80} />
+            <Image
+              src={profile.images.logo}
+              alt=""
+              width={80}
+              height={80}
+              widths={[80, 120, 240, 464]}
+              sizes="2.5rem"
+            />
           </span>
           <button
             class="art-toggle icon-action"
@@ -74,7 +83,7 @@ const hasQueue = playables.length > 1;
           data-player-source
           href="#"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noreferrer"
           hidden
         >
           <span data-player-source-icon="youtube">
@@ -164,8 +173,6 @@ const hasQueue = playables.length > 1;
         </span>
         <input
           type="range"
-          min="0"
-          max="100"
           value="0"
           step="0.1"
           data-player-seek
@@ -179,7 +186,7 @@ const hasQueue = playables.length > 1;
 
     <div class="side">
       <button
-        class="stage-toggle icon-action"
+        class="icon-action"
         type="button"
         data-player-stage
         data-expand={ui.video.expand}
@@ -212,10 +219,8 @@ const hasQueue = playables.length > 1;
         </button>
         <input
           type="range"
-          min="0"
           max="1"
           step="0.01"
-          value="0.5"
           data-player-volume
           aria-label={ui.player.volume}
           aria-keyshortcuts="Control+ArrowUp Control+ArrowDown Meta+ArrowUp Meta+ArrowDown"
@@ -223,7 +228,7 @@ const hasQueue = playables.length > 1;
       </div>
     </div>
 
-    <p class="sr-only" data-player-status role="status" aria-live="polite" />
+    <p class="sr-only" data-player-status role="status" />
 
     <p
       class="error"
@@ -239,9 +244,10 @@ const hasQueue = playables.length > 1;
 <style>
   .dock {
     position: fixed;
+    view-transition-name: player-dock;
     inset-inline: 0;
     inset-block-end: var(--bottom-stack, 0px);
-    z-index: 6;
+    z-index: var(--layer-dock);
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -279,7 +285,6 @@ const hasQueue = playables.length > 1;
     position: absolute;
     inset-block-end: 0;
     inset-inline-start: 0;
-    display: block;
     inline-size: 2.5rem;
     block-size: 2.5rem;
     z-index: 1;
@@ -300,7 +305,6 @@ const hasQueue = playables.length > 1;
     inset-inline-end: 3px;
     z-index: 2;
     display: none;
-    place-items: center;
     inline-size: 1.25rem;
     block-size: 1.25rem;
     padding: 0;
@@ -309,6 +313,18 @@ const hasQueue = playables.length > 1;
     background: rgb(0 0 0 / 0.55);
     color: #f0f0f2;
     cursor: pointer;
+  }
+
+  .art-toggle::before {
+    content: '';
+    position: absolute;
+    inset: min(0px, (100% - 24px) / 2);
+  }
+
+  @media (pointer: coarse) {
+    .art-toggle::before {
+      inset: min(0px, (100% - var(--touch)) / 2);
+    }
   }
 
   [data-art-icon] {
@@ -336,9 +352,7 @@ const hasQueue = playables.length > 1;
     }
 
     .dock[data-art='expanded'] .art {
-      position: absolute;
       inset-block-end: 100%;
-      inset-inline-start: 0;
       inline-size: var(--rail-width);
       block-size: var(--rail-width);
       z-index: 5;
@@ -378,7 +392,6 @@ const hasQueue = playables.length > 1;
   }
 
   .title {
-    font-size: var(--step-1);
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -432,7 +445,7 @@ const hasQueue = playables.length > 1;
     color: var(--legend-quiet);
   }
 
-  @media (max-width: 22.5rem) {
+  @media (max-width: 26rem) {
     [data-player-shuffle],
     [data-player-repeat] {
       display: none;
@@ -472,7 +485,6 @@ const hasQueue = playables.length > 1;
     position: absolute;
     inset-block-start: 0;
     inset-inline: 0;
-    display: block;
     align-items: center;
     gap: var(--space-2);
   }
@@ -519,7 +531,6 @@ const hasQueue = playables.length > 1;
   input[type='range'] {
     inline-size: 100%;
     block-size: 1rem;
-    margin: 0;
     background: none;
     appearance: none;
     cursor: pointer;

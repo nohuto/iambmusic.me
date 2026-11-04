@@ -7,7 +7,6 @@ import type {
   ProfileId,
   UiDictionary,
 } from '../../data/types.ts';
-import { localize } from '../../i18n/index.ts';
 import type { MusicSource, SocialSource } from '../../lib/library.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
@@ -34,15 +33,16 @@ const {
 } = Astro.props;
 ---
 
-<aside class="rail">
+<div class="rail">
   <div class="inner">
     <div class="identity">
       <a class="mark" href={routePath(lang, profile, 'home')}>
         <Image
           src={activeProfile.images.logo}
-          alt={localize(activeProfile.images.logoAlt, lang)}
+          alt=""
           width={34}
           height={34}
+          densities={[1, 2, 3]}
         />
         <span>{activeProfile.shortName}</span>
       </a>
@@ -69,7 +69,7 @@ const {
       socialSources={socialSources}
     />
   </div>
-</aside>
+</div>
 
 <style>
   .rail {
@@ -81,7 +81,7 @@ const {
       position: fixed;
       inset-block: 0;
       inset-inline-start: 0;
-      z-index: 5;
+      z-index: var(--layer-rail);
       display: block;
       inline-size: var(--rail-width);
       overflow: clip;

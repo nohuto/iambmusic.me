@@ -1,5 +1,7 @@
 import { eventElement } from './dom.ts';
 
+const FOCUS_HIGHLIGHT_MS = 3500;
+
 interface Facts {
   count: number;
   date: string | null;
@@ -73,7 +75,15 @@ function focusRow(id: string): void {
   });
   action.focus({ preventScroll: true });
   target.setAttribute('data-media-focus', '');
-  setTimeout(() => target.removeAttribute('data-media-focus'), 3500);
+  setTimeout(
+    () => target.removeAttribute('data-media-focus'),
+    FOCUS_HIGHLIGHT_MS,
+  );
+}
+
+function applyFromUrl(): void {
+  if (!document.querySelector('[data-media-surface]')) return;
+  apply(new URLSearchParams(location.search).get('source') ?? '');
 }
 
 function setup(): void {
@@ -84,10 +94,20 @@ function setup(): void {
   if (focus) focusRow(focus);
 }
 
+let navigating = false;
+document.addEventListener('astro:before-preparation', () => {
+  navigating = true;
+});
+document.addEventListener('astro:after-swap', () => {
+  navigating = false;
+  applyFromUrl();
+});
+
 document.addEventListener(
   'click',
   (event) => {
     if (
+      navigating ||
       event.metaKey ||
       event.ctrlKey ||
       event.shiftKey ||
@@ -100,7 +120,10 @@ document.addEventListener(
     if (!link || new URL(link.href).pathname !== location.pathname) return;
     event.preventDefault();
     const source = link.dataset['sourceLink'] ?? '';
-    history.replaceState(history.state, '', link.href);
+    const url = new URL(link.href);
+    const sort = new URLSearchParams(location.search).get('sort');
+    if (sort) url.searchParams.set('sort', sort);
+    history.replaceState(history.state, '', url);
     apply(source);
   },
   { capture: true },

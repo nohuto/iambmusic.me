@@ -9,7 +9,7 @@ interface Props {
 const { ui } = Astro.props;
 ---
 
-<dialog class="stage" data-video-dialog aria-label={ui.video.dialogLabel}>
+<dialog class="video-stage" data-video-dialog aria-label={ui.video.dialogLabel}>
   <div class="controls">
     <button
       class="ghost icon-action"
@@ -32,7 +32,7 @@ const { ui } = Astro.props;
 </dialog>
 
 <style>
-  .stage {
+  .video-stage {
     position: fixed;
     padding: 0;
     border: 0;
@@ -41,26 +41,25 @@ const { ui } = Astro.props;
     overflow: visible;
   }
 
-  .stage[data-mode='compact'] {
+  .video-stage[data-mode='compact'] {
     inset: auto var(--space-4) calc(var(--footer-height) + var(--space-3)) auto;
     inline-size: min(100% - 2rem, 22.25rem);
     box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.8);
   }
 
-  .stage[data-mode='expanded'] {
+  .video-stage[data-mode='expanded'] {
     inset: 0;
     margin: auto;
     inline-size: min(100% - 2rem, 62rem);
   }
 
-  .stage::backdrop {
+  .video-stage::backdrop {
     background: rgb(0 0 0 / 0.86);
   }
 
   .frame {
     aspect-ratio: 16 / 9;
     inline-size: 100%;
-    min-inline-size: 22.25rem;
     border-radius: var(--radius);
     overflow: hidden;
   }
@@ -95,16 +94,16 @@ const { ui } = Astro.props;
     color: #fff;
   }
 
-  .stage[data-mode='compact'] .ghost {
+  .video-stage[data-mode='compact'] .ghost {
     color: var(--legend);
   }
 
-  .stage[data-mode='compact'] [data-video-collapse] {
+  .video-stage[data-mode='compact'] [data-video-collapse] {
     display: none;
   }
 
   @media (min-width: 48rem) {
-    .stage[data-mode='compact'] {
+    .video-stage[data-mode='compact'] {
       inline-size: 30rem;
     }
   }

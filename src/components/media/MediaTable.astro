@@ -28,7 +28,7 @@ const { surface, rows, profile, lang, ui, heading } = Astro.props;
 
   <MediaHead ui={ui} />
 
-  <ul class="rows">
+  <ul>
     {rows.map((row, position) => (
       <li
         data-media-row
@@ -41,6 +41,7 @@ const { surface, rows, profile, lang, ui, heading } = Astro.props;
         <MediaRow
           row={row}
           position={position + 1}
+          eager={surface === 'social' && position < 5}
           profile={profile}
           lang={lang}
           ui={ui}
@@ -50,7 +51,7 @@ const { surface, rows, profile, lang, ui, heading } = Astro.props;
   </ul>
 
   <p class="empty" data-media-empty hidden={rows.length > 0}>
-    {ui.video.empty}
+    {surface === 'social' ? ui.video.emptySocial : ui.video.empty}
   </p>
 </section>
 

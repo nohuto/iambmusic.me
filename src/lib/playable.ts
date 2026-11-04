@@ -46,27 +46,27 @@ export function getPlayables(
     })),
   }));
 
-  const videos: PlayableVideo[] = getProfileMedia(profileId).items.flatMap(
-    (item) =>
-      item.source === 'youtube' &&
-      item.playback === 'youtube-embed' &&
-      item.videoId
-        ? [
-            {
-              kind: 'youtube',
-              id: item.id,
-              title: displayTitle(profileId, item.title),
-              videoId: item.videoId,
-              url: item.url,
-              thumbnail: item.thumbnail?.url ?? null,
-              durationSeconds: item.durationSeconds,
-            } as const,
-          ]
-        : [],
+  const media = getProfileMedia(profileId).items;
+  const videos: PlayableVideo[] = media.flatMap((item) =>
+    item.source === 'youtube' &&
+    item.playback === 'youtube-embed' &&
+    item.videoId
+      ? [
+          {
+            kind: 'youtube',
+            id: item.id,
+            title: displayTitle(profileId, item.title),
+            videoId: item.videoId,
+            url: item.url,
+            thumbnail: item.thumbnail?.url ?? null,
+            durationSeconds: item.durationSeconds,
+          } as const,
+        ]
+      : [],
   );
 
-  const soundcloud: PlayableSoundCloud[] = getProfileMedia(profileId)
-    .items.filter(
+  const soundcloud: PlayableSoundCloud[] = media
+    .filter(
       (item) =>
         item.source === 'soundcloud' && item.playback === 'soundcloud-widget',
     )

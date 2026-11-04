@@ -34,11 +34,11 @@ const ui = getDictionary(lang);
         data-email-text
         data-toast={ui.actions.emailCopied}
         data-failed={ui.actions.copyFailed}
-        aria-label={ui.actions.copyEmail}
       ></button>
+      <noscript>iamb.synthmusic [at] gmail.com</noscript>
     </p>
   </section>
-  <div class="toast" role="status" aria-live="polite" data-toast-region></div>
+  <div class="toast" role="status" data-toast-region></div>
 </AppLayout>
 
 <style>
@@ -61,7 +61,6 @@ const ui = getDictionary(lang);
     border: 0;
     background: none;
     color: var(--legend);
-    font: inherit;
     font-size: var(--step-3);
     font-weight: 600;
     text-align: start;
@@ -76,17 +75,19 @@ const ui = getDictionary(lang);
     color: var(--ink);
   }
 
+  html:not(.has-js) .address button {
+    display: none;
+  }
+
   .toast {
     position: fixed;
     inset-inline-end: var(--space-4);
     inset-block-end: calc(var(--footer-height) + var(--space-3));
-    z-index: 8;
+    z-index: var(--layer-toast);
     padding: var(--space-2) var(--space-3);
     border: var(--rule) solid var(--panel-rule);
     border-radius: var(--radius);
     background: var(--panel-plate);
-    color: var(--legend);
-    font-size: var(--step-1);
     opacity: 0;
     pointer-events: none;
     transition: opacity 140ms ease;

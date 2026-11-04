@@ -1,5 +1,5 @@
 import type { Profile, ProfileId } from '../data/types.ts';
-import { displayTitle } from './display-title.ts';
+import { displayTitle, tidyTitle } from './display-title.ts';
 import { getProfileMedia, type MediaItem, type MediaSource } from './media.ts';
 
 export type SocialSource = 'tiktok' | 'instagram';
@@ -18,6 +18,12 @@ export interface LibraryRow {
   readonly playable: boolean;
 }
 
+function embeddable(item: MediaItem): boolean {
+  return (
+    item.playback === 'youtube-embed' || item.playback === 'soundcloud-widget'
+  );
+}
+
 function fromMedia(profileId: ProfileId, item: MediaItem): LibraryRow {
   return {
     id: item.id,
@@ -25,22 +31,17 @@ function fromMedia(profileId: ProfileId, item: MediaItem): LibraryRow {
     title:
       item.source === 'youtube' || item.source === 'soundcloud'
         ? displayTitle(profileId, item.title)
-        : item.title,
+        : tidyTitle(item.title),
     publishedAt: item.publishedAt,
     durationSeconds: item.durationSeconds,
     thumbnail: item.thumbnail?.url ?? null,
     url: item.url,
     videoId: item.videoId ?? null,
-    playable:
-      item.playback === 'youtube-embed' ||
-      item.playback === 'soundcloud-widget',
+    playable: embeddable(item),
   };
 }
 
-export function getMusicRows(
-  profile: Profile,
-  profileId: ProfileId,
-): readonly LibraryRow[] {
+export function getMusicRows(profile: Profile): readonly LibraryRow[] {
   const local: LibraryRow[] = profile.tracks.map((track) => ({
     id: `local:${track.id}`,
     source: 'local',
@@ -53,22 +54,15 @@ export function getMusicRows(
     playable: true,
   }));
 
-  const streams = getProfileMedia(profileId)
-    .items.filter(
-      (item) =>
-        item.playback === 'youtube-embed' ||
-        item.playback === 'soundcloud-widget',
-    )
-    .map((item) => fromMedia(profileId, item));
+  const streams = getProfileMedia(profile.id)
+    .items.filter(embeddable)
+    .map((item) => fromMedia(profile.id, item));
 
   return [...local, ...streams];
 }
 
-export function getMusicSources(
-  profile: Profile,
-  profileId: ProfileId,
-): readonly MusicSource[] {
-  const rows = getProfileMedia(profileId).items;
+export function getMusicSources(profile: Profile): readonly MusicSource[] {
+  const rows = getProfileMedia(profile.id).items;
   return (['youtube', 'soundcloud'] as const).filter(
     (source) =>
       profile.platforms.some((platform) => platform.id === source) ||

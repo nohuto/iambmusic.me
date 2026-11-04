@@ -7,8 +7,6 @@ export const dictionaries: Readonly<Record<Language, UiDictionary>> = {
   en,
 };
 
-export const defaultLanguage: Language = 'de';
-
 export function getDictionary(language: Language): UiDictionary {
   return dictionaries[language];
 }

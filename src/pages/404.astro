@@ -1,7 +1,13 @@
 ---
 import { getImage } from 'astro:assets';
 import iambLogo from '../assets/profiles/iamb/logo.png';
+import AppHeader from '../components/shell/AppHeader.astro';
+import SearchDialog from '../components/search/SearchDialog.astro';
 import ThemeBootstrap from '../components/shell/ThemeBootstrap.astro';
+import { getDictionary } from '../i18n/index.ts';
+import { inlineJson } from '../lib/inline-json.ts';
+import { getPlayables } from '../lib/playable.ts';
+import { resolveProfile } from '../lib/profile-context.ts';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -11,6 +17,8 @@ const favicon = await getImage({
   height: 64,
   format: 'png',
 });
+const { profile } = resolveProfile('iamb');
+const ui = getDictionary('de');
 ---
 
 <!doctype html>
@@ -28,15 +36,36 @@ const favicon = await getImage({
     <ThemeBootstrap />
   </head>
   <body>
+    <AppHeader
+      lang="de"
+      profile="iamb"
+      activeProfile={profile}
+      page="home"
+      ui={ui}
+    />
     <main class="missing">
       <h1>404</h1>
-      <p lang="de">Diese Seite gibt es nicht.</p>
+      <p>Diese Seite gibt es nicht.</p>
       <p lang="en">This page does not exist.</p>
       <p class="links">
-        <a href="/de/iamb/">Startseite</a>
-        <a href="/en/iamb/">Home</a>
+        <a href="/de/iamb/">Start</a>
+        <a href="/en/iamb/" lang="en">
+          Home
+        </a>
       </p>
     </main>
+    <SearchDialog lang="de" profile="iamb" ui={ui} />
+    <script
+      is:inline
+      type="application/json"
+      data-playables
+      set:html={inlineJson(getPlayables(profile, 'iamb'))}
+    />
+    <script>
+      import '../scripts/theme.ts';
+      import '../scripts/search.ts';
+      import '../scripts/shell.ts';
+    </script>
   </body>
 </html>
 

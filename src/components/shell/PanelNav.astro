@@ -72,7 +72,11 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
               <Icon name={icons[item.page]} size="1.25rem" />
               <span
                 class="label"
-                aria-hidden={variant === 'bar' && item.page === 'social'}
+                aria-hidden={
+                  variant === 'bar' && item.page === 'social'
+                    ? 'true'
+                    : undefined
+                }
               >
                 {variant === 'bar' && item.page === 'social'
                   ? ui.nav.socialShort
@@ -190,7 +194,6 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
 
   .panel-nav-rail .indicator {
     block-size: 1.15rem;
-    background: transparent;
   }
 
   .panel-nav-rail a[aria-current] .indicator {
@@ -278,7 +281,6 @@ const railMusicSources = (['soundcloud', 'youtube'] as const).filter((source) =>
   .panel-nav-bar .indicator {
     inline-size: 1.25rem;
     block-size: 2px;
-    background: transparent;
   }
 
   .panel-nav-bar a[aria-current] .indicator {

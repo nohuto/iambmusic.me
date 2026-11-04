@@ -11,7 +11,6 @@ const profileStories = defineCollection({
     language: z.enum(['de', 'en']),
     heading: z.string(),
     status: z.enum(['confirmed', 'provisional']),
-    ownerRequirement: z.string().optional(),
   }),
 });
 

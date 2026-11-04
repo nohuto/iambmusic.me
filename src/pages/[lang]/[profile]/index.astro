@@ -20,7 +20,7 @@ interface Props {
 const { lang, profile: profileId } = Astro.props;
 const { profile } = resolveProfile(profileId);
 const ui = getDictionary(lang);
-const latest = getMusicRows(profile, profileId)
+const latest = getMusicRows(profile)
   .filter((row) => row.source === 'youtube' || row.source === 'soundcloud')
   .slice(0, 5);
 ---

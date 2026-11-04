@@ -9,18 +9,18 @@ interface Props {
 const { ui } = Astro.props;
 ---
 
-<div class="media-head media-grid">
+<div
+  class="media-head media-grid"
+  data-sort-asc={ui.music.sortAsc}
+  data-sort-desc={ui.music.sortDesc}
+>
   <span class="index" aria-hidden="true">
     #
   </span>
 
-  <button
-    class="sort"
-    type="button"
-    data-sort="title"
-    aria-label={ui.music.sortTitle}
-  >
+  <button class="sort" type="button" data-sort="title">
     {ui.music.columns.title}
+    <span class="sr-only" data-sort-state></span>
     <span class="caret" aria-hidden="true">
       <span data-caret="asc">
         <Icon name="caret-up" weight="bold" size="0.7rem" />
@@ -35,13 +35,9 @@ const { ui } = Astro.props;
     <span>{ui.music.columns.source}</span>
   </span>
 
-  <button
-    class="sort released"
-    type="button"
-    data-sort="released"
-    aria-label={ui.music.sortReleased}
-  >
+  <button class="sort released" type="button" data-sort="released">
     {ui.music.columns.released}
+    <span class="sr-only" data-sort-state></span>
     <span class="caret" aria-hidden="true">
       <span data-caret="asc">
         <Icon name="caret-up" weight="bold" size="0.7rem" />
@@ -63,7 +59,7 @@ const { ui } = Astro.props;
     padding-block: var(--space-2);
     border-block-end: var(--rule) solid var(--panel-rule);
     color: var(--legend-faint);
-    font-size: var(--step-0);
+    font-size: var(--step-head);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }

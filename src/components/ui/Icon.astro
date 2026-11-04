@@ -15,9 +15,8 @@ const supported = [
   'play',
   'x',
   'arrow-square-out',
+  'arrow-right',
   'youtube-logo',
-  'translate',
-  'spotify-logo',
   'soundcloud-logo',
   'tiktok-logo',
   'instagram-logo',
@@ -58,7 +57,7 @@ const source = await readFile(
 
 const markup = source.replace(
   '<svg ',
-  `<svg width="${size}" height="${size}" aria-hidden="true" focusable="false" class="icon-glyph" `,
+  `<svg width="${size}" height="${size}" aria-hidden="true" class="icon-glyph" `,
 );
 ---
 

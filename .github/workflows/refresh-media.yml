@@ -10,7 +10,6 @@ permissions:
 
 concurrency:
   group: refresh-media
-  cancel-in-progress: false
 
 jobs:
   refresh:

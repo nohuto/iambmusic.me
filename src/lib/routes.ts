@@ -6,7 +6,7 @@ interface RouteTarget {
   readonly profile: ProfileId;
 }
 
-export const defaultLanguage: Language = 'de';
+const defaultLanguage: Language = 'de';
 
 export function routePath(
   lang: Language,

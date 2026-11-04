@@ -13,7 +13,6 @@ const { lang } = Astro.props;
     class="flag"
     viewBox="0 0 5 3"
     aria-hidden="true"
-    focusable="false"
     shape-rendering="crispEdges"
   >
     <path fill="#000" d="M0 0h5v1H0z" />
@@ -21,7 +20,7 @@ const { lang } = Astro.props;
     <path fill="#ffce00" d="M0 2h5v1H0z" />
   </svg>
 ) : (
-  <svg class="flag" viewBox="0 0 50 30" aria-hidden="true" focusable="false">
+  <svg class="flag" viewBox="0 0 50 30" aria-hidden="true">
     <path fill="#012169" d="M0 0h50v30H0z" />
     <path stroke="#fff" stroke-width="6" d="M0 0l50 30M50 0L0 30" />
     <path stroke="#c8102e" stroke-width="2" d="M0 0l50 30M50 0L0 30" />
@@ -32,7 +31,6 @@ const { lang } = Astro.props;
 
 <style>
   .flag {
-    display: block;
     flex: none;
     inline-size: 0.9375rem;
     block-size: 0.5625rem;

@@ -1,5 +1,4 @@
 import logo from '../../assets/profiles/aimb/logo.png';
-import channels from '../media-channels.json';
 import type { AimbProfile } from '../types.ts';
 
 export const aimbProfile: AimbProfile = {
@@ -24,15 +23,11 @@ export const aimbProfile: AimbProfile = {
       en: 'Get in touch with me about the AiMB Project.',
     },
     about: {
-      de: 'Ich bin Markus B., hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
-      en: 'I’m Markus B., here I share my story, studio setup and inspirations.',
+      de: 'Ich bin Markus B. Hier erzähle ich von meinem Werdegang, meinem Studio und meinen Inspirationen.',
+      en: 'I’m Markus B. Here I share my story, studio setup and inspirations.',
     },
   },
   hero: {
-    title: {
-      de: 'Music created in collab with AI',
-      en: 'Music created in collab with AI',
-    },
     lead: {
       de: 'Cinematische elektronische Musik, produziert in Zusammenarbeit mit KI.',
       en: 'Cinematic electronic music, produced in collaboration with AI.',
@@ -40,10 +35,6 @@ export const aimbProfile: AimbProfile = {
   },
   images: {
     logo,
-    logoAlt: {
-      de: 'Logo des AiMB Project',
-      en: 'AiMB Project logo',
-    },
   },
   tracks: [
     {
@@ -53,14 +44,8 @@ export const aimbProfile: AimbProfile = {
       durationSeconds: 48,
       sources: [
         {
-          format: 'mp3',
           src: '/audio/aimb/last-in-space.mp3',
           mimeType: 'audio/mpeg',
-        },
-        {
-          format: 'm4a',
-          src: '/audio/aimb/last-in-space.m4a',
-          mimeType: 'audio/mp4',
         },
       ],
     },
@@ -77,9 +62,8 @@ export const aimbProfile: AimbProfile = {
       profile: 'aimb',
       id: 'soundcloud',
       name: 'SoundCloud',
-      url: 'https://soundcloud.com/aimp-musicproject',
+      url: 'https://soundcloud.com/aimb-project',
       category: 'listening',
     },
   ],
-  youtube: { profile: 'aimb', ...channels.aimb.youtube },
 };

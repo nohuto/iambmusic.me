@@ -20,7 +20,8 @@
   --radius-inner: 4px;
   --rule: 1px;
 
-  --step-0: 0.72rem;
+  --step-head: 0.72rem;
+  --step-0: 0.8125rem;
   --step-nav: 0.86rem;
   --step-1: 0.95rem;
   --step-2: 1rem;
@@ -56,6 +57,13 @@
   --scrollbar-track: var(--panel-recess);
   --scrollbar-thumb: var(--screw);
   --scrollbar-thumb-hover: var(--ink);
+
+  --layer-header: 4;
+  --layer-rail: 5;
+  --layer-dock: 6;
+  --layer-bottom-nav: 7;
+  --layer-toast: 8;
+  --layer-skip-link: 10;
 }
 
 :root[data-profile='aimb'] {

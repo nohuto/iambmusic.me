@@ -23,17 +23,11 @@ const menuId = 'language-menu';
 ---
 
 <div class="language-switch">
-  <button
-    class="trigger"
-    type="button"
-    popovertarget={menuId}
-    aria-label={ui.switches.language}
-  >
+  <button class="trigger" type="button" popovertarget={menuId}>
     <Flag lang={lang} />
     <span class="full">{dictionaries[lang].languageName}</span>
-    <span class="short" aria-hidden="true">
-      {lang.toUpperCase()}
-    </span>
+    <span class="short">{lang.toUpperCase()}</span>
+    <span class="sr-only">{ui.switches.language}</span>
     <Icon name="caret-down" size="0.8rem" />
   </button>
 
@@ -99,11 +93,7 @@ const menuId = 'language-menu';
   .menu {
     inline-size: max-content;
     min-inline-size: 10rem;
-    padding: 4px var(--space-2);
-  }
-
-  .menu:popover-open {
-    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
   }
 
   .menu ul {
@@ -126,8 +116,8 @@ const menuId = 'language-menu';
     text-decoration: none;
   }
 
-  .menu a:hover {
-    background: var(--panel-ground);
+  .menu a:is(:hover, :focus-visible) {
+    background: var(--panel-hover);
   }
 
   .menu a[aria-current] .name {

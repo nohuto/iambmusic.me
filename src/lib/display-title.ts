@@ -7,8 +7,12 @@ const brandAliases: Record<ProfileId, readonly string[]> = {
 
 const leadingSeparator = /^[\s\-–\u2014:|]+/;
 
+export function tidyTitle(raw: string): string {
+  return raw.trim().replaceAll('...', '…');
+}
+
 export function displayTitle(profile: ProfileId, raw: string): string {
-  const title = raw.trim();
+  const title = tidyTitle(raw);
   const alias = [...brandAliases[profile]]
     .sort((a, b) => b.length - a.length)
     .find((entry) => title.toLowerCase().startsWith(entry.toLowerCase()));

@@ -7,7 +7,6 @@ import type {
   ProfileId,
   UiDictionary,
 } from '../../data/types.ts';
-import { localize } from '../../i18n/index.ts';
 import { routePath } from '../../lib/routes.ts';
 import Icon from '../ui/Icon.astro';
 import LanguageSwitch from './LanguageSwitch.astro';
@@ -31,9 +30,10 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
   <a class="mark" href={routePath(lang, profile, 'home')}>
     <Image
       src={activeProfile.images.logo}
-      alt={localize(activeProfile.images.logoAlt, lang)}
+      alt=""
       width={30}
       height={30}
+      densities={[1, 2, 3]}
     />
     <span>{activeProfile.shortName}</span>
   </a>
@@ -42,7 +42,6 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     class="search-field"
     type="button"
     data-search-open
-    aria-label={ui.search.open}
     aria-keyshortcuts="Control+K Meta+K"
   >
     <Icon name="magnifying-glass" size="1rem" />
@@ -79,7 +78,7 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     position: fixed;
     inset-block-start: 0;
     inset-inline: 0;
-    z-index: 4;
+    z-index: var(--layer-header);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -87,7 +86,6 @@ const { lang, profile, activeProfile, page, ui } = Astro.props;
     gap: var(--space-3);
     min-block-size: var(--header-height);
     padding-inline: var(--space-4);
-    background: transparent;
   }
 
   .app-header[data-stuck] {

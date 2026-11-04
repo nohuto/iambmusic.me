@@ -21,7 +21,7 @@ export const artist: ArtistProfile = {
   glance: [
     {
       label: { de: 'Rolle', en: 'Role' },
-      value: { de: 'Musiker & Produzent', en: 'Music artist & producer' },
+      value: { de: 'Musiker & Produzent', en: 'Musician & producer' },
     },
     {
       label: { de: 'Genre', en: 'Genre' },
@@ -34,7 +34,7 @@ export const artist: ArtistProfile = {
       en: 'I produce in Cakewalk Sonar with various VSTs and master with iZotope Ozone 12.',
     },
     hardware: {
-      de: 'Als Masterkeyboard nutze ich ein Yamaha MoXF, dazu ein Motu M4 und einen Windows PC. Einige Synths aus meinen Anfängen, etwa der Roland JX-8P, sind geblieben. Aus Platzgründen arbeite ich heute aber mit Softsynths.',
+      de: 'Als Masterkeyboard nutze ich ein Yamaha MoXF, dazu ein Motu M4 und einen Windows-PC. Einige Synths aus meinen Anfängen, etwa der Roland JX-8P, sind geblieben. Aus Platzgründen arbeite ich heute aber mit Softsynths.',
       en: 'I use a Yamaha MoXF as my master keyboard, together with a Motu M4 and a Windows PC. A few synths from my early days remain, including the Roland JX-8P, but limited space means I work with soft synths today.',
     },
   },
@@ -42,36 +42,36 @@ export const artist: ArtistProfile = {
     {
       period: { de: '1985', en: '1985' },
       text: {
-        de: 'Erster Synth, den Roland Jx8P und ein Fostex 4-Spur Kassettenrecorder',
-        en: 'My first synth, the Roland Jx8P, and a Fostex 4-track cassette recorder',
+        de: 'Erster Synth, der Roland JX-8P, und ein Fostex-4-Spur-Kassettenrecorder.',
+        en: 'My first synth, the Roland JX-8P, and a Fostex 4-track cassette recorder.',
       },
     },
     {
       period: { de: '1986', en: '1986' },
       text: {
-        de: 'Roland TR-505 Drumcomputer',
-        en: 'Roland TR-505 drum machine',
+        de: 'Roland TR-505 Drumcomputer.',
+        en: 'Roland TR-505 drum machine.',
       },
     },
     {
       period: { de: '1987', en: '1987' },
       text: {
-        de: 'Erster Sequencer C-LAB für C64',
-        en: 'First sequencer, C-LAB for the C64',
+        de: 'Erster Sequencer C-LAB für C64.',
+        en: 'First sequencer, C-LAB for the C64.',
       },
     },
     {
       period: { de: '1990', en: '1990' },
       text: {
-        de: 'Erster PC fürs Studium. Einstieg in die DAW Cakewalk für DOS, später bis heute Windows-Versionen von Cakewalk Sonar',
-        en: 'My first PC for university. I started using the Cakewalk DAW for DOS, followed later by the Windows versions of Cakewalk Sonar, which I still use today',
+        de: 'Erster PC fürs Studium. Einstieg in die DAW Cakewalk für DOS, später bis heute Windows-Versionen von Cakewalk Sonar.',
+        en: 'My first PC for university. I started using the Cakewalk DAW for DOS, followed later by the Windows versions of Cakewalk Sonar, which I still use today.',
       },
     },
     {
       period: { de: '1998', en: '1998' },
       text: {
-        de: 'Nutzung von Soundfonts für meine PC-Soundblaster-Karte',
-        en: 'I used SoundFonts with my PC’s Sound Blaster card',
+        de: 'Nutzung von Soundfonts für meine PC-Soundblaster-Karte.',
+        en: 'I used SoundFonts with my PC’s Sound Blaster card.',
       },
     },
     {
@@ -84,8 +84,8 @@ export const artist: ArtistProfile = {
     {
       period: { de: '2014', en: '2014' },
       text: {
-        de: 'Yamaha MoXF6. Erstmals Keyboard Unterricht bis 2015',
-        en: 'Yamaha MoXF6. I took keyboard lessons for the first time, through 2015',
+        de: 'Yamaha MoXF6. Erstmals Keyboard-Unterricht bis 2015.',
+        en: 'Yamaha MoXF6. I took keyboard lessons for the first time, through 2015.',
       },
     },
     {
@@ -111,7 +111,7 @@ export const artist: ArtistProfile = {
     },
     {
       period: { de: '2023', en: '2023' },
-      text: { de: 'TikTok Profil erstellt.', en: 'Created my TikTok profile.' },
+      text: { de: 'TikTok-Profil erstellt.', en: 'Created my TikTok profile.' },
     },
     {
       period: { de: 'bis 2024', en: 'through 2024' },
@@ -121,7 +121,7 @@ export const artist: ArtistProfile = {
       },
     },
     {
-      period: { de: '18.02.25', en: '18 February 2025' },
+      period: { de: 'Februar 2025', en: 'February 2025' },
       text: {
         de: 'Bin ich dem KlangKunst TechnoCollective beigetreten. (www.technocollective.de)',
         en: 'I joined the KlangKunst TechnoCollective. (www.technocollective.de)',
@@ -137,14 +137,14 @@ export const artist: ArtistProfile = {
     {
       period: { de: '2026', en: '2026' },
       text: {
-        de: 'Website www.iambmusic.me mit allen Links zu meiner Musik und Musikvideos. An dieser Stelle, vielen Dank an nohuto der das hier ermöglicht hat!',
+        de: 'Website www.iambmusic.me mit allen Links zu meiner Musik und Musikvideos. An dieser Stelle vielen Dank an nohuto, der das hier ermöglicht hat!',
         en: 'Website www.iambmusic.me with all the links to my music and music videos. I would like to take this opportunity to thank nohuto, who made all of this possible!',
       },
     },
     {
-      period: { de: 'noch in 2026', en: 'later in 2026' },
+      period: { de: 'Später 2026', en: 'Later in 2026' },
       text: {
-        de: 'Ich beschäftige mich mit dem Thema Mastering, um die Qualität meiner Songs zu verbessern. Habe mir dazu von Izotope - Ozone 12 angeschafft.',
+        de: 'Ich beschäftige mich mit dem Thema Mastering, um die Qualität meiner Songs zu verbessern. Habe mir dazu iZotope Ozone 12 angeschafft.',
         en: 'I am learning about mastering to improve the quality of my songs. For this, I purchased iZotope Ozone 12.',
       },
     },

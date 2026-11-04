@@ -1,4 +1,5 @@
 ---
+import { formatClock } from '../../lib/clock.ts';
 import { Image } from 'astro:assets';
 import type { Language, Profile, UiDictionary } from '../../data/types.ts';
 import type { LibraryRow, LibrarySource } from '../../lib/library.ts';
@@ -10,12 +11,13 @@ import Icon from '../ui/Icon.astro';
 interface Props {
   row: LibraryRow;
   position: number;
+  eager?: boolean;
   profile: Profile;
   lang: Language;
   ui: UiDictionary;
 }
 
-const { row, position, profile, lang, ui } = Astro.props;
+const { row, position, eager, profile, lang, ui } = Astro.props;
 const dateFormat = new Intl.DateTimeFormat(lang, { dateStyle: 'medium' });
 
 const glyphs = {
@@ -33,11 +35,16 @@ const playable = isLocal || row.playable;
 const length =
   row.durationSeconds === null || !Number.isFinite(row.durationSeconds)
     ? '-'
-    : `${Math.floor(row.durationSeconds / 60)}:${String(Math.floor(row.durationSeconds % 60)).padStart(2, '0')}`;
+    : formatClock(row.durationSeconds);
 const released = row.publishedAt
   ? dateFormat.format(new Date(row.publishedAt))
   : '-';
 const watch = row.videoId ? watchUrl(row.videoId) : null;
+const thumbnailSet =
+  row.thumbnail?.startsWith('https://i1.sndcdn.com/') &&
+  row.thumbnail.endsWith('-large.jpg')
+    ? `${row.thumbnail} 1x, ${row.thumbnail.replace('-large.', '-t200x200.')} 2x`
+    : undefined;
 const sourceLink = isLocal ? null : row.source === 'youtube' ? watch : row.url;
 const sourceLinkLabel =
   row.source === 'youtube'
@@ -82,7 +89,7 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
       href={row.url ?? undefined}
       aria-label={ui.music.openExternal}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noreferrer"
     >
       <span class="index" data-row-index aria-hidden="true">
         {position}
@@ -104,19 +111,20 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
         {row.thumbnail ? (
           <img
             src={row.thumbnail}
+            srcset={thumbnailSet}
             alt=""
             width="320"
             height="180"
-            loading="lazy"
+            loading={eager ? undefined : 'lazy'}
             decoding="async"
           />
         ) : (
           <Image
-            class="mark"
             src={profile.images.logo}
             alt=""
-            width={96}
-            height={96}
+            width={54}
+            height={54}
+            densities={[1, 2, 3]}
           />
         )}
       </span>
@@ -130,7 +138,7 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
       </span>
     </span>
 
-    <span class="source-slot" aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
 
     <span class="released">{released}</span>
     <span class="length">{length}</span>
@@ -140,9 +148,8 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     <a
       class="source source-link"
       href={sourceLink}
-      aria-label={sourceLinkLabel}
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noreferrer"
     >
       <Icon name={glyphs[row.source]} size="1rem" />
       <span>{names[row.source]}</span>
@@ -174,7 +181,7 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
           </li>
           {sourceLink && (
             <li>
-              <a href={sourceLink} target="_blank" rel="noopener noreferrer">
+              <a href={sourceLink} target="_blank" rel="noreferrer">
                 {sourceLinkLabel}
               </a>
             </li>
@@ -225,7 +232,6 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     border: 0;
     background: none;
     color: inherit;
-    font: inherit;
     text-align: start;
     cursor: pointer;
   }
@@ -247,7 +253,6 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
   }
 
   .shot {
-    display: block;
     inline-size: 3.375rem;
     aspect-ratio: 16 / 9;
     border-radius: var(--radius-inner);
@@ -261,12 +266,6 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     object-fit: cover;
   }
 
-  .shot :global(.mark) {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: contain;
-  }
-
   .titles {
     display: grid;
     gap: 2px;
@@ -274,7 +273,6 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
   }
 
   .title {
-    font-size: var(--step-1);
     font-weight: 600;
     line-height: 1.35;
     overflow: hidden;
@@ -347,7 +345,6 @@ const menuId = `row-menu-${row.id.replace(/[^A-Za-z0-9]/g, '-')}`;
     border: 0;
     background: none;
     color: var(--legend);
-    font: inherit;
     font-size: var(--step-nav);
     text-align: start;
     text-decoration: none;

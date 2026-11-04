@@ -4,20 +4,17 @@ export type Language = (typeof languages)[number];
 export const profileIds = ['iamb', 'aimb'] as const;
 export type ProfileId = (typeof profileIds)[number];
 
-export const pageIds = ['home', 'music', 'social', 'about', 'contact'] as const;
+const pageIds = ['home', 'music', 'social', 'about', 'contact'] as const;
 export type PageId = (typeof pageIds)[number];
 
 export type LocalizedText = Readonly<Record<Language, string>>;
 
-export type AudioFormat = 'mp3' | 'm4a';
-
-export interface AudioSource {
-  readonly format: AudioFormat;
+interface AudioSource {
   readonly src: string;
   readonly mimeType: string;
 }
 
-export interface Track<P extends ProfileId = ProfileId> {
+interface Track<P extends ProfileId = ProfileId> {
   readonly profile: P;
   readonly id: string;
   readonly title: string;
@@ -25,7 +22,7 @@ export interface Track<P extends ProfileId = ProfileId> {
   readonly sources: readonly AudioSource[];
 }
 
-export const platformIds = [
+const platformIds = [
   'youtube',
   'tiktok',
   'instagram',
@@ -39,9 +36,9 @@ export const platformIds = [
   'bandlab',
   'bandcamp',
 ] as const;
-export type PlatformId = (typeof platformIds)[number];
+type PlatformId = (typeof platformIds)[number];
 
-export type PlatformCategory = 'listening' | 'social';
+type PlatformCategory = 'listening' | 'social';
 
 export interface PlatformLink<P extends ProfileId = ProfileId> {
   readonly profile: P;
@@ -49,25 +46,16 @@ export interface PlatformLink<P extends ProfileId = ProfileId> {
   readonly name: string;
   readonly url: string;
   readonly category: PlatformCategory;
-  readonly brandMark?: string;
 }
 
-export interface ChannelIdentity<P extends ProfileId = ProfileId> {
-  readonly profile: P;
-  readonly handle: string;
-  readonly channelId?: string;
-}
-
-export interface HeroContent {
-  readonly title: LocalizedText;
+interface HeroContent {
   readonly lead: LocalizedText;
 }
 
-export type PageMeta = Readonly<Record<PageId, LocalizedText>>;
+type PageMeta = Readonly<Record<PageId, LocalizedText>>;
 
-export interface ProfileImages {
+interface ProfileImages {
   readonly logo: ImageMetadata;
-  readonly logoAlt: LocalizedText;
 }
 
 export interface GlanceFact {
@@ -100,7 +88,6 @@ export interface Profile<P extends ProfileId = ProfileId> {
   readonly images: ProfileImages;
   readonly tracks: readonly Track<P>[];
   readonly platforms: readonly PlatformLink<P>[];
-  readonly youtube: ChannelIdentity<P>;
 }
 
 export type IambProfile = Profile<'iamb'>;
@@ -124,11 +111,9 @@ export interface UiDictionary {
   };
   readonly actions: {
     readonly discoverMusic: string;
-    readonly discoverLabel: string;
     readonly readStory: string;
     readonly skipToContent: string;
     readonly seeMore: string;
-    readonly copyEmail: string;
     readonly emailCopied: string;
     readonly copyFailed: string;
   };
@@ -157,8 +142,8 @@ export interface UiDictionary {
     readonly filterLabel: string;
     readonly local: string;
     readonly rowMenu: string;
-    readonly sortTitle: string;
-    readonly sortReleased: string;
+    readonly sortAsc: string;
+    readonly sortDesc: string;
     readonly addToQueue: string;
     readonly openYouTube: string;
     readonly openSoundCloud: string;
@@ -202,6 +187,7 @@ export interface UiDictionary {
     readonly dialogLabel: string;
     readonly unavailable: string;
     readonly empty: string;
+    readonly emptySocial: string;
     readonly updated: string;
   };
   readonly switches: {

@@ -11,6 +11,7 @@ import SearchDialog from '../components/search/SearchDialog.astro';
 import PlayerDock from '../components/player/PlayerDock.astro';
 import type { Language, PageId, Profile, ProfileId } from '../data/types.ts';
 import { getDictionary } from '../i18n/index.ts';
+import { inlineJson } from '../lib/inline-json.ts';
 import { ClientRouter } from 'astro:transitions';
 import { getMusicSources, getSocialSources } from '../lib/library.ts';
 import { absoluteUrl, alternateLinks, routePath } from '../lib/routes.ts';
@@ -27,7 +28,7 @@ interface Props {
 }
 
 const { lang, profile, activeProfile, page, title, description } = Astro.props;
-const musicSources = getMusicSources(activeProfile, profile);
+const musicSources = getMusicSources(activeProfile);
 const socialSources = getSocialSources(profile);
 
 const ui = getDictionary(lang);
@@ -40,6 +41,37 @@ const favicon = await getImage({
   height: 64,
   format: 'png',
 });
+const touchIcon = await getImage({
+  src: iambLogo,
+  width: 180,
+  height: 180,
+  format: 'png',
+});
+const themeColors = {
+  iamb: { light: '#ddd0b0', dark: '#241c07' },
+  aimb: { light: '#c8d2e2', dark: '#0d1526' },
+}[profile];
+const locales = { de: 'de_DE', en: 'en_US' };
+const shareImage = await getImage({
+  src: activeProfile.images.logo,
+  width: 500,
+  height: 500,
+  format: 'jpeg',
+  background: themeColors.dark,
+});
+const profileData =
+  page === 'home'
+    ? inlineJson({
+        '@context': 'https://schema.org',
+        '@type': 'MusicGroup',
+        name: activeProfile.name,
+        url: canonical,
+        image: absoluteUrl(shareImage.src, Astro.site),
+        sameAs: activeProfile.platforms
+          .map((platform) => platform.url)
+          .filter((url) => !url.includes('/release/')),
+      })
+    : null;
 ---
 
 <!doctype html>
@@ -55,6 +87,36 @@ const favicon = await getImage({
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" sizes="64x64" href={favicon.src} />
+    <link rel="apple-touch-icon" href={touchIcon.src} />
+    {(['light', 'dark'] as const).map((scheme) => (
+      <meta
+        name="theme-color"
+        media={`(prefers-color-scheme: ${scheme})`}
+        content={themeColors[scheme]}
+        data-light={themeColors.light}
+        data-dark={themeColors.dark}
+      />
+    ))}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={activeProfile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locales[lang]} />
+    <meta
+      property="og:locale:alternate"
+      content={locales[lang === 'de' ? 'en' : 'de']}
+    />
+    <meta
+      property="og:image"
+      content={absoluteUrl(shareImage.src, Astro.site)}
+    />
+    <meta property="og:image:width" content="500" />
+    <meta property="og:image:height" content="500" />
+    <meta name="twitter:card" content="summary" />
+    {profileData && (
+      <script is:inline type="application/ld+json" set:html={profileData} />
+    )}
     {alternates.map((alternate) => (
       <link
         rel="alternate"

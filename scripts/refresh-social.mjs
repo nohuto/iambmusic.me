@@ -13,7 +13,7 @@ const COVER_QUALITY = 78;
 
 function optimizeCover(bytes) {
   return sharp(bytes)
-    .resize({ width: COVER_WIDTH, height: COVER_HEIGHT, fit: 'cover' })
+    .resize({ width: COVER_WIDTH, height: COVER_HEIGHT })
     .jpeg({ quality: COVER_QUALITY, mozjpeg: true })
     .toBuffer();
 }
@@ -22,14 +22,19 @@ async function saveCover(source, id, url) {
   if (!url) return null;
   try {
     const response = await fetch(url);
-    if (!response.ok) return null;
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const bytes = await optimizeCover(
       Buffer.from(await response.arrayBuffer()),
     );
     await mkdir(path.join(coverRoot, source), { recursive: true });
     await writeFile(path.join(coverRoot, source, `${id}.jpg`), bytes);
-    return { url: `/media/${source}/${id}.jpg`, width: null, height: null };
-  } catch {
+    return {
+      url: `/media/${source}/${id}.jpg`,
+      width: COVER_WIDTH,
+      height: COVER_HEIGHT,
+    };
+  } catch (error) {
+    console.warn(`${source} cover ${id}: ${error.message}`);
     return null;
   }
 }
@@ -49,8 +54,8 @@ export async function fetchTikTok(handle, now) {
       ],
       { maxBuffer: 32 * 1024 * 1024 },
     ));
-  } catch {
-    return [];
+  } catch (error) {
+    throw new Error(`tiktok @${handle}: yt-dlp failed`, { cause: error });
   }
 
   const items = [];
@@ -62,13 +67,13 @@ export async function fetchTikTok(handle, now) {
       continue;
     }
     const id = String(entry.id ?? '');
-    if (!/^\d+$/.test(id)) continue;
+    if (!/^\d+$/.test(id) || !Number.isFinite(entry.timestamp)) continue;
     items.push({
       id: `tiktok:${id}`,
       source: 'tiktok',
       url: `https://www.tiktok.com/@${handle}/video/${id}`,
       title: (entry.title || entry.description || `TikTok ${id}`).slice(0, 200),
-      publishedAt: new Date((entry.timestamp ?? 0) * 1000).toISOString(),
+      publishedAt: new Date(entry.timestamp * 1000).toISOString(),
       discoveredAt: now,
       durationSeconds: Number.isFinite(entry.duration)
         ? Math.round(entry.duration)
@@ -93,26 +98,31 @@ export async function fetchInstagram(handle, now) {
         },
       },
     );
-    if (!response.ok) return [];
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     payload = await response.json();
-  } catch {
-    return [];
+  } catch (error) {
+    throw new Error(`instagram @${handle}: profile request failed`, {
+      cause: error,
+    });
   }
 
   const edges = payload?.data?.user?.edge_owner_to_timeline_media?.edges ?? [];
   const items = [];
   for (const { node } of edges) {
     const code = node?.shortcode;
-    if (typeof code !== 'string' || code.length === 0) continue;
+    if (
+      typeof code !== 'string' ||
+      code.length === 0 ||
+      !Number.isFinite(node.taken_at_timestamp)
+    )
+      continue;
     const caption = node.edge_media_to_caption?.edges?.[0]?.node?.text ?? '';
     items.push({
       id: `instagram:${code}`,
       source: 'instagram',
       url: `https://www.instagram.com/p/${code}/`,
       title: (caption.split('\n')[0] || `Instagram ${code}`).slice(0, 200),
-      publishedAt: new Date(
-        (node.taken_at_timestamp ?? 0) * 1000,
-      ).toISOString(),
+      publishedAt: new Date(node.taken_at_timestamp * 1000).toISOString(),
       discoveredAt: now,
       durationSeconds: Number.isFinite(node.video_duration)
         ? Math.round(node.video_duration)

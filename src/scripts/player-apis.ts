@@ -12,7 +12,7 @@ export interface YouTubePlayer {
   destroy(): void;
 }
 
-export interface YouTubeApi {
+interface YouTubeApi {
   Player: new (
     element: HTMLElement,
     options: {

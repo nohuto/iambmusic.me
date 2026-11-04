@@ -54,6 +54,26 @@ function sort(panel: HTMLElement, column: string, direction: Direction): void {
   renumber(panel);
 }
 
+function mark(
+  panel: HTMLElement,
+  button: HTMLElement,
+  direction: Direction,
+): void {
+  const head = button.closest<HTMLElement>('.media-head');
+  for (const other of panel.querySelectorAll<HTMLElement>('[data-sort]')) {
+    const state = other.querySelector('[data-sort-state]');
+    if (other === button) {
+      other.dataset['direction'] = direction;
+      if (state)
+        state.textContent =
+          head?.dataset[direction === 'asc' ? 'sortAsc' : 'sortDesc'] ?? '';
+    } else {
+      delete other.dataset['direction'];
+      if (state) state.textContent = '';
+    }
+  }
+}
+
 document.addEventListener('click', (event) => {
   const button = eventElement(event)?.closest<HTMLButtonElement>('[data-sort]');
   const panel = button?.closest<HTMLElement>('[data-sortable]');
@@ -71,13 +91,30 @@ document.addEventListener('click', (event) => {
           ? 'asc'
           : 'desc';
 
-  for (const other of panel.querySelectorAll<HTMLElement>('[data-sort]')) {
-    if (other !== button) delete other.dataset['direction'];
-  }
-  button.dataset['direction'] = direction;
+  mark(panel, button, direction);
   sort(panel, column, direction);
+  const url = new URL(location.href);
+  url.searchParams.set('sort', `${column}-${direction}`);
+  history.replaceState(history.state, '', url);
   document.dispatchEvent(new CustomEvent('iamb:rows-changed'));
 });
+
+function restore(): void {
+  const match = /^(title|released)-(asc|desc)$/.exec(
+    new URLSearchParams(location.search).get('sort') ?? '',
+  );
+  if (!match) return;
+  const [, column = '', direction = 'asc'] = match;
+  for (const panel of document.querySelectorAll<HTMLElement>(
+    '[data-sortable]',
+  )) {
+    const button = panel.querySelector<HTMLElement>(`[data-sort="${column}"]`);
+    if (!button) continue;
+    mark(panel, button, direction as Direction);
+    sort(panel, column, direction as Direction);
+  }
+  document.dispatchEvent(new CustomEvent('iamb:rows-changed'));
+}
 
 function setup(): void {
   for (const panel of document.querySelectorAll<HTMLElement>('[data-sortable]'))
@@ -85,5 +122,9 @@ function setup(): void {
 }
 
 document.addEventListener('iamb:rows-changed', setup);
+restore();
 setup();
-document.addEventListener('astro:page-load', setup);
+document.addEventListener('astro:page-load', () => {
+  restore();
+  setup();
+});

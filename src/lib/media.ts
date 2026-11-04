@@ -2,7 +2,7 @@ import type { ProfileId } from '../data/types.ts';
 
 export type MediaSource = 'youtube' | 'soundcloud' | 'instagram' | 'tiktok';
 
-export interface MediaThumbnail {
+interface MediaThumbnail {
   readonly url: string;
   readonly width: number | null;
   readonly height: number | null;

@@ -56,13 +56,8 @@ const initial = facts[''];
       <span data-facts-count data-label={ui.music.entries}>
         {initial?.count} {ui.music.entries}
       </span>
-      <span
-        class="dot"
-        aria-hidden="true"
-        data-facts-dot
-        hidden={!initial?.date}
-      >
-        &#183;
+      <span aria-hidden="true" data-facts-dot hidden={!initial?.date}>
+        -
       </span>
       <span
         data-facts-updated
@@ -103,10 +98,6 @@ const initial = facts[''];
   }
 
   @media (max-width: 60rem) {
-    h1 {
-      font-size: clamp(2rem, 9vw, 2.6rem);
-    }
-
     .lead {
       font-size: var(--step-1);
     }

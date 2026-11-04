@@ -13,11 +13,9 @@ export const de: UiDictionary = {
   },
   actions: {
     discoverMusic: 'Musik entdecken',
-    discoverLabel: 'ENTDECKEN',
     readStory: 'Erfahre mehr über mich',
     skipToContent: 'Zum Inhalt springen',
     seeMore: 'Mehr ansehen',
-    copyEmail: 'E-Mail-Adresse kopieren',
     emailCopied: 'E-Mail kopiert',
     copyFailed: 'Kopieren fehlgeschlagen',
   },
@@ -34,7 +32,7 @@ export const de: UiDictionary = {
   music: {
     lead: 'Hier findest du meine Uploads auf YouTube und SoundCloud und kannst sie direkt anhören.',
     soundcloudNote:
-      'In WebKit basierenden Browsern startet SoundCloud beim ersten Mal erst nach einem zweiten Tippen (das Laden eines Songs kann ein paar Sekunden dauern).',
+      'In WebKit-basierten Browsern startet SoundCloud beim ersten Mal erst nach einem zweiten Tippen (das Laden eines Songs kann ein paar Sekunden dauern).',
     all: 'Alle',
     entries: 'Einträge',
     columns: {
@@ -47,14 +45,14 @@ export const de: UiDictionary = {
     filterLabel: 'Quelle filtern',
     local: 'Lokal',
     rowMenu: 'Weitere Aktionen',
-    sortTitle: 'Nach Titel sortieren',
-    sortReleased: 'Nach Veröffentlichung sortieren',
+    sortAsc: 'aufsteigend sortiert',
+    sortDesc: 'absteigend sortiert',
     addToQueue: 'Zur Warteschlange hinzufügen',
     openYouTube: 'Auf YouTube öffnen',
     openSoundCloud: 'Auf SoundCloud öffnen',
     copyLink: 'Link zum Song kopieren',
-    queued: 'Zur Warteschlange hinzugefügt.',
-    copied: 'Link kopiert.',
+    queued: 'Zur Warteschlange hinzugefügt',
+    copied: 'Link kopiert',
   },
   social: {
     lead: 'Beiträge von meinen Accounts auf Social Media.',
@@ -92,6 +90,7 @@ export const de: UiDictionary = {
     dialogLabel: 'Videoplayer',
     unavailable: 'Dieses Video lässt sich hier nicht abspielen.',
     empty: 'Zurzeit sind keine Videos verfügbar.',
+    emptySocial: 'Zurzeit sind keine Beiträge verfügbar.',
     updated: 'Zuletzt aktualisiert',
   },
   switches: {

@@ -8,6 +8,7 @@ import type {
   UiDictionary,
 } from '../../data/types.ts';
 import { localize } from '../../i18n/index.ts';
+import Icon from '../ui/Icon.astro';
 import { routePath } from '../../lib/routes.ts';
 
 interface Props {
@@ -20,16 +21,17 @@ interface Props {
 const { profile, profileId, lang, ui } = Astro.props;
 
 const cutoutAlt = {
-  de: 'Freigestelltes Porträt von Markus B.',
-  en: 'Cut-out portrait of Markus B.',
+  de: 'Porträt von Markus B.',
+  en: 'Portrait of Markus B.',
 };
 const artworkAlt = cutoutAlt[lang];
 const [titleHead = profile.name, ...titleTail] = profile.name.split(' ');
 const titleRest = titleTail.join(' ');
-const artwork = await getImage({
+const artwork = await getImage({ src: cutout, widths: [380, 640, 900] });
+const artworkAvif = await getImage({
   src: cutout,
   widths: [380, 640, 900],
-  format: 'webp',
+  format: 'avif',
 });
 const placeholder =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
@@ -47,27 +49,20 @@ const placeholder =
       )}
     </h1>
     <p class="lead">{localize(profile.hero.lead, lang)}</p>
-    <a
-      class="discover"
-      href={routePath(lang, profileId, 'music')}
-      aria-label={ui.actions.discoverMusic}
-    >
-      <span class="discover-word" aria-hidden="true">
-        {ui.actions.discoverLabel}
-      </span>
-      <span class="discover-frame" aria-hidden="true">
-        <span class="discover-corner corner-lt" />
-        <span class="discover-corner corner-rt" />
-        <span class="discover-corner corner-rb" />
-        <span class="discover-corner corner-lb" />
-      </span>
-      <span class="discover-arrow arrow-left" aria-hidden="true" />
-      <span class="discover-arrow arrow-right" aria-hidden="true" />
+    <a class="discover" href={routePath(lang, profileId, 'music')}>
+      <span class="discover-label">{ui.actions.discoverMusic}</span>
+      <Icon name="arrow-right" size="1.1rem" />
     </a>
   </div>
 
   <div class="artwork cutout">
     <picture>
+      <source
+        media="(min-width: 60rem)"
+        srcset={artworkAvif.srcSet.attribute}
+        sizes="(max-width: 80rem) 21rem, 28rem"
+        type="image/avif"
+      />
       <source
         media="(min-width: 60rem)"
         srcset={artwork.srcSet.attribute}
@@ -102,14 +97,12 @@ const placeholder =
     align-content: center;
     justify-items: start;
     max-inline-size: 34rem;
-    container-type: inline-size;
   }
 
   h1 {
     font-size: var(--step-title);
     font-stretch: 115%;
     line-height: 1.02;
-    letter-spacing: -0.03em;
   }
 
   .title-tail {
@@ -128,168 +121,30 @@ const placeholder =
     font-size: var(--step-lead);
   }
   .discover {
-    position: relative;
-    justify-self: start;
-    text-decoration: none;
-    display: grid;
-    place-items: center;
-    inline-size: 188px;
-    block-size: 52px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
     margin-block-start: var(--space-2);
-    margin-inline-start: 2rem;
-    border: 0;
-    background: none;
     color: var(--legend);
-    cursor: pointer;
-  }
-
-  @container (max-width: 27.5rem) {
-    .discover {
-      justify-self: center;
-      margin-inline-start: 0;
-    }
-  }
-
-  .discover-word {
-    z-index: 1;
-    font-size: 13px;
+    font-size: var(--step-1);
     font-weight: 700;
-    letter-spacing: 0.32em;
-    text-indent: 0.32em;
+    letter-spacing: var(--legend-tracking);
+    text-transform: uppercase;
+    text-decoration: none;
   }
 
-  .discover-frame {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    border: 4px double var(--ink-field);
-    box-shadow: inset 0 0 15px
-      color-mix(in srgb, var(--ink-field) 30%, transparent);
-    clip-path: polygon(
-      24% 0%,
-      76% 0%,
-      100% 30%,
-      100% 70%,
-      76% 100%,
-      24% 100%,
-      0% 70%,
-      0% 30%
-    );
+  .discover-label {
+    padding-block: 0.35rem;
+    border-block-end: 2px solid var(--ink-field);
   }
 
-  .discover-corner {
-    position: absolute;
-    inline-size: 52px;
-    block-size: 52px;
-    background: var(--ink-field);
-    box-shadow: inset 1px 1px 8px
-      color-mix(in srgb, var(--ink) 55%, transparent);
-    transform: scale(1) rotate(45deg);
-    transition: transform 200ms ease;
+  .discover :global(.icon-glyph) {
+    transition: translate 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
-  .corner-lt {
-    inset-block-start: -25.5px;
-    inset-inline-start: -33px;
-  }
-
-  .corner-rt {
-    inset-block-start: -25.7px;
-    inset-inline-start: 93%;
-  }
-
-  .corner-rb {
-    inset-block-start: 45%;
-    inset-inline-start: 90.5%;
-  }
-
-  .corner-lb {
-    inset-block-start: 27.3px;
-    inset-inline-start: -22px;
-  }
-
-  .discover-arrow {
-    position: absolute;
-    inset-block-start: 35%;
-    inline-size: 11%;
-    block-size: 30%;
-    background: var(--ink-field);
-    transition: left 200ms ease;
-  }
-
-  .arrow-left {
-    left: -13.5%;
-    clip-path: polygon(100% 0, 100% 100%, 0 50%);
-  }
-
-  .arrow-right {
-    left: 102%;
-    clip-path: polygon(100% 49%, 0 0, 0 100%);
-  }
-
-  .discover:hover .discover-corner,
-  .discover:focus-visible .discover-corner {
-    background: var(--ink);
-    transform: scale(1.25) rotate(45deg);
-  }
-
-  .discover:hover .discover-frame,
-  .discover:focus-visible .discover-frame {
-    border-color: var(--ink);
-    box-shadow: inset 0 0 26px color-mix(in srgb, var(--ink) 34%, transparent);
-  }
-
-  .discover:hover .discover-arrow,
-  .discover:focus-visible .discover-arrow {
-    background: var(--ink);
-  }
-
-  .discover:hover .arrow-right,
-  .discover:focus-visible .arrow-right {
-    left: -15%;
-    animation: discover-arrow-right 600ms ease-in-out infinite alternate;
-  }
-
-  .discover:hover .arrow-left,
-  .discover:focus-visible .arrow-left {
-    left: 103%;
-    animation: discover-arrow-left 600ms ease-in-out infinite alternate;
-  }
-
-  @keyframes discover-arrow-left {
-    to {
-      transform: translateX(10px);
-    }
-  }
-
-  @keyframes discover-arrow-right {
-    to {
-      transform: translateX(-10px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .discover-corner,
-    .discover-arrow {
-      transition: none;
-    }
-
-    .discover:hover .discover-corner,
-    .discover:focus-visible .discover-corner {
-      transform: scale(1) rotate(45deg);
-    }
-
-    .discover:hover .arrow-right,
-    .discover:focus-visible .arrow-right {
-      left: -13.5%;
-      animation: none;
-    }
-
-    .discover:hover .arrow-left,
-    .discover:focus-visible .arrow-left {
-      left: 102%;
-      animation: none;
-    }
+  .discover:hover :global(.icon-glyph),
+  .discover:focus-visible :global(.icon-glyph) {
+    translate: 0.3rem 0;
   }
 
   .artwork {
@@ -299,7 +154,6 @@ const placeholder =
   .artwork :global(img) {
     display: block;
     inline-size: 100%;
-    block-size: auto;
     object-fit: contain;
     object-position: bottom right;
   }
@@ -314,15 +168,7 @@ const placeholder =
       margin-block-start: calc((var(--header-height) + var(--intro-gap)) * -1);
       padding-block: calc(var(--header-height) + var(--intro-gap))
         var(--space-6);
-    }
-
-    .spotlight {
       --artwork-size: clamp(19rem, 44%, 28rem);
-    }
-
-    .discover {
-      justify-self: start;
-      margin-inline-start: 2rem;
     }
 
     .copy {
@@ -332,11 +178,8 @@ const placeholder =
     .artwork {
       display: block;
       position: absolute;
-      inset-block-end: 0;
       inset-inline-end: 0;
       inline-size: var(--artwork-size);
-      block-size: calc(100% - var(--space-3));
-      margin-block-end: 0;
       pointer-events: none;
     }
 
@@ -345,8 +188,7 @@ const placeholder =
     }
 
     .cutout {
-      inset-block: 0 -2.25rem;
-      block-size: auto;
+      inset-block: var(--header-height) -2.25rem;
     }
   }
 

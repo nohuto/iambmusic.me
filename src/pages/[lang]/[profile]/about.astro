@@ -76,18 +76,9 @@ const { Content } = await render(story);
         <ul class="inspirations">
           {artist.inspirations.map((inspiration) => (
             <li>
-              <a
-                href={inspiration.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={inspiration.url} target="_blank" rel="noreferrer">
                 <span class="shot">
-                  <Image
-                    src={inspiration.image}
-                    alt=""
-                    width={240}
-                    loading="lazy"
-                  />
+                  <Image src={inspiration.image} alt="" width={240} />
                 </span>
                 <span class="name">{inspiration.name}</span>
               </a>
@@ -125,10 +116,6 @@ const { Content } = await render(story);
     padding-block-start: var(--space-2);
   }
 
-  section h2 {
-    font-size: var(--step-3);
-  }
-
   .studio {
     display: grid;
     gap: var(--space-3);
@@ -142,17 +129,17 @@ const { Content } = await render(story);
 
   .moment {
     display: grid;
-    grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
+    align-items: baseline;
     gap: var(--space-1) var(--space-4);
     padding-block: var(--space-3);
     border-block-start: var(--rule) solid var(--panel-rule);
   }
 
   .moment dt {
-    color: var(--legend-faint);
-    font-size: var(--step-0);
+    color: var(--legend-quiet);
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
   }
 
   .inspirations {
@@ -160,7 +147,6 @@ const { Content } = await render(story);
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     gap: var(--space-3);
     padding-block-start: var(--space-3);
-    list-style: none;
   }
 
   .inspirations a {
@@ -173,7 +159,6 @@ const { Content } = await render(story);
   }
 
   .shot {
-    display: block;
     aspect-ratio: 4 / 3;
     border-radius: var(--radius-inner);
     overflow: hidden;

@@ -10,6 +10,7 @@ import {
 } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { toIsoTimestamp } from './timestamps.mjs';
 
 const API_ROOT = 'https://www.googleapis.com/youtube/v3';
 const PAGE_SIZE = 50;
@@ -47,8 +48,10 @@ export function createRequest(apiKey, fetchImpl = fetch) {
     let response;
     try {
       response = await fetchImpl(url);
-    } catch {
-      throw new Error(`youtube ${resource}: network request failed`);
+    } catch (error) {
+      throw new Error(`youtube ${resource}: network request failed`, {
+        cause: error,
+      });
     }
     if (!response.ok) {
       throw new Error(
@@ -57,8 +60,10 @@ export function createRequest(apiKey, fetchImpl = fetch) {
     }
     try {
       return await response.json();
-    } catch {
-      throw new Error(`youtube ${resource}: response was not valid JSON`);
+    } catch (error) {
+      throw new Error(`youtube ${resource}: response was not valid JSON`, {
+        cause: error,
+      });
     }
   };
 }
@@ -233,12 +238,6 @@ function pickThumbnail(thumbnails) {
   return null;
 }
 
-function toIsoTimestamp(value) {
-  if (typeof value !== 'string') return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
-}
-
 export function normalizeCandidates(items) {
   const normalized = [];
   for (const item of items) {
@@ -259,6 +258,13 @@ export function normalizeCandidates(items) {
     normalized.push({ videoId, title, publishedAt, thumbnail });
   }
   return normalized;
+}
+
+function countBySource(items) {
+  const counts = {};
+  for (const item of items)
+    counts[item.source] = (counts[item.source] ?? 0) + 1;
+  return counts;
 }
 
 export function selectLatestMusic(items, limit = HOME_COUNT) {
@@ -387,7 +393,7 @@ export function mergeSource(
   incoming,
   source,
   now,
-  additive = false,
+  { keepMissing = false } = {},
 ) {
   if (incoming.length === 0) return previousItems;
 
@@ -404,7 +410,7 @@ export function mergeSource(
     };
   });
 
-  if (additive) {
+  if (keepMissing) {
     const seen = new Set(merged.map((item) => item.id));
     merged.push(...existing.filter((item) => !seen.has(item.id)));
   }
@@ -430,7 +436,7 @@ export async function buildYouTubeItems(channel, request) {
   const items = [];
   for (const video of candidates) {
     const detail = details.get(video.videoId);
-    if (detail?.private) continue;
+    if (!detail || detail.private) continue;
     items.push({
       id: `youtube:${video.videoId}`,
       source: 'youtube',
@@ -438,14 +444,14 @@ export async function buildYouTubeItems(channel, request) {
       title: video.title,
       publishedAt: video.publishedAt,
       discoveredAt: video.publishedAt,
-      durationSeconds: detail?.durationSeconds ?? null,
+      durationSeconds: detail.durationSeconds,
       thumbnail: video.thumbnail,
       videoId: video.videoId,
-      playback: detail?.embeddable === false ? 'external' : 'youtube-embed',
+      playback: detail.embeddable ? 'youtube-embed' : 'external',
     });
   }
   if (items.length === 0)
-    throw new Error('youtube videos: every candidate is private');
+    throw new Error('youtube videos: every candidate is private or missing');
   return items.sort(
     (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
   );
@@ -484,13 +490,9 @@ async function replaceAtomically(directory, feeds, renameFile) {
         existed: await fileExists(target),
         replaced: false,
       };
-      if (entry.existed) await copyFile(target, entry.backup);
-      await writeFile(
-        entry.temporary,
-        `${JSON.stringify(feed, null, 2)}\n`,
-        'utf8',
-      );
       staged.push(entry);
+      if (entry.existed) await copyFile(target, entry.backup);
+      await writeFile(entry.temporary, `${JSON.stringify(feed, null, 2)}\n`);
     }
     for (const entry of staged) {
       await renameFile(entry.temporary, entry.target);
@@ -595,9 +597,7 @@ export async function validateGeneratedCache(outputDir = defaultOutputDir) {
       }
     }
 
-    const counts = {};
-    for (const item of feed.items)
-      counts[item.source] = (counts[item.source] ?? 0) + 1;
+    const counts = countBySource(feed.items);
     summaries.push({
       profile: feed.profile,
       items: feed.items.length,
@@ -608,7 +608,14 @@ export async function validateGeneratedCache(outputDir = defaultOutputDir) {
   return summaries;
 }
 
-async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
+async function refreshSocialSources(
+  profileId,
+  channel,
+  feed,
+  now,
+  outputDir,
+  failures,
+) {
   const { fetchInstagram, fetchTikTok } = await import('./refresh-social.mjs');
   let items = feed.items;
   const refreshedAt = { ...feed.refreshedAt };
@@ -618,14 +625,20 @@ async function refreshSocialSources(profileId, channel, feed, now, outputDir) {
     ['tiktok', fetchTikTok, channel.tiktok],
   ]) {
     if (!handle) continue;
-    const incoming = await fetcher(handle, now).catch(() => []);
+    const incoming = await fetcher(handle, now).catch((error) => {
+      failures.push(error);
+      console.warn(`${profileId} ${source}: ${error.message}`);
+      return [];
+    });
     if (incoming.length === 0) {
       console.warn(
         `${profileId} ${source}: no usable records, keeping the previous cache`,
       );
       continue;
     }
-    const merged = mergeSource(items, incoming, source, now, true);
+    const merged = mergeSource(items, incoming, source, now, {
+      keepMissing: true,
+    });
     if (sameItems(items, merged)) {
       console.log(`${profileId} ${source}: unchanged`);
       continue;
@@ -656,9 +669,14 @@ async function refreshSoundCloudSource(
   request,
   now,
   outputDir,
+  failures,
 ) {
   const { fetchSoundCloud } = await import('./refresh-soundcloud.mjs');
-  const incoming = await fetchSoundCloud(profileUrl, request).catch(() => []);
+  const incoming = await fetchSoundCloud(profileUrl, request).catch((error) => {
+    failures.push(error);
+    console.warn(`${profileId} soundcloud: ${error.message}`);
+    return [];
+  });
   if (incoming.length === 0) {
     console.warn(
       `${profileId} soundcloud: no usable records, keeping the previous cache`,
@@ -703,20 +721,36 @@ async function main(argv) {
     return;
   }
 
-  const apiKey = process.env.YOUTUBE_API_KEY;
-  if (typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-    throw new Error(
-      'YOUTUBE_API_KEY is not set; generated media was left unchanged',
-    );
-  }
-
   const channels = await readChannels();
   const now = new Date().toISOString();
-  const feeds = await refreshAll({
-    channels,
-    request: createRequest(apiKey.trim()),
-    now,
-  });
+  const failures = [];
+  const apiKey = process.env.YOUTUBE_API_KEY?.trim();
+  let feeds = null;
+  if (apiKey) {
+    try {
+      feeds = await refreshAll({
+        channels,
+        request: createRequest(apiKey),
+        now,
+      });
+    } catch (error) {
+      failures.push(error);
+      console.warn(`youtube: ${error.message}; keeping the previous cache`);
+    }
+  } else {
+    failures.push(new Error('YOUTUBE_API_KEY is not set'));
+    console.warn(
+      'youtube: YOUTUBE_API_KEY is not set; keeping the previous cache',
+    );
+  }
+  if (!feeds) {
+    feeds = new Map();
+    for (const profileId of Object.keys(channels))
+      feeds.set(
+        profileId,
+        validateMedia(await readMedia(profileId), profileId),
+      );
+  }
 
   if (argv.includes('--with-social')) {
     for (const [profileId, channel] of Object.entries(channels)) {
@@ -730,6 +764,7 @@ async function main(argv) {
             feed,
             now,
             defaultOutputDir,
+            failures,
           ),
         );
     }
@@ -741,8 +776,17 @@ async function main(argv) {
     if (clientId && clientSecret) {
       const { createSoundCloudRequest } =
         await import('./refresh-soundcloud.mjs');
-      const request = await createSoundCloudRequest(clientId, clientSecret);
-      for (const [profileId, channel] of Object.entries(channels)) {
+      const request = await createSoundCloudRequest(
+        clientId,
+        clientSecret,
+      ).catch((error) => {
+        failures.push(error);
+        console.warn(`soundcloud: ${error.message}`);
+        return null;
+      });
+      for (const [profileId, channel] of request
+        ? Object.entries(channels)
+        : []) {
         const feed = feeds.get(profileId);
         if (feed && channel.soundcloud) {
           feeds.set(
@@ -754,6 +798,7 @@ async function main(argv) {
               request,
               now,
               defaultOutputDir,
+              failures,
             ),
           );
         }
@@ -766,11 +811,14 @@ async function main(argv) {
   }
 
   for (const [profileId, feed] of feeds) {
-    const counts = {};
-    for (const item of feed.items)
-      counts[item.source] = (counts[item.source] ?? 0) + 1;
+    const counts = countBySource(feed.items);
     console.log(`${profileId}: ${feed.items.length} items`, counts);
   }
+  if (failures.length)
+    throw new AggregateError(
+      failures,
+      failures.map((failure) => failure.message).join('; '),
+    );
 }
 
 if (

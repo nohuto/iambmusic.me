@@ -10,7 +10,7 @@ const { platforms, ui } = Astro.props;
 
 const resolve = (platform: PlatformLink) => ({
   ...platform,
-  mark: platform.brandMark ?? `/icons/platforms/${platform.id}.svg`,
+  mark: `/icons/platforms/${platform.id}.svg`,
 });
 
 const groups = [
@@ -19,7 +19,7 @@ const groups = [
 ] as const;
 ---
 
-<section class="panel platforms" aria-labelledby="platforms-heading">
+<section class="panel" aria-labelledby="platforms-heading">
   <header class="panel-head">
     <h2 id="platforms-heading">{ui.sections.platforms}</h2>
   </header>
@@ -34,7 +34,7 @@ const groups = [
         <ul>
           {entries.map((platform) => (
             <li>
-              <a href={platform.url} target="_blank" rel="noopener noreferrer">
+              <a href={platform.url} target="_blank" rel="noreferrer">
                 <img
                   class="mark"
                   src={platform.mark}
@@ -82,7 +82,6 @@ const groups = [
     padding-inline: var(--space-2);
     border-radius: var(--radius-inner);
     color: var(--legend);
-    font-size: var(--step-1);
     text-decoration: none;
   }
 

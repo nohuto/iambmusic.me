@@ -1,3 +1,5 @@
+import { toIsoTimestamp } from './timestamps.mjs';
+
 const API_ROOT = 'https://api.soundcloud.com/';
 const TOKEN_URL = 'https://secure.soundcloud.com/oauth/token';
 
@@ -6,8 +8,8 @@ async function readJson(response, label) {
     throw new Error(`${label}: request rejected with HTTP ${response.status}`);
   try {
     return await response.json();
-  } catch {
-    throw new Error(`${label}: response was not valid JSON`);
+  } catch (error) {
+    throw new Error(`${label}: response was not valid JSON`, { cause: error });
   }
 }
 
@@ -27,8 +29,10 @@ export async function createSoundCloudRequest(
       },
       body: 'grant_type=client_credentials',
     });
-  } catch {
-    throw new Error('soundcloud auth: network request failed');
+  } catch (error) {
+    throw new Error('soundcloud auth: network request failed', {
+      cause: error,
+    });
   }
 
   const token = await readJson(response, 'soundcloud auth');
@@ -49,24 +53,20 @@ export async function createSoundCloudRequest(
           Authorization: `OAuth ${token.access_token}`,
         },
       });
-    } catch {
-      throw new Error(`soundcloud ${url.pathname}: network request failed`);
+    } catch (error) {
+      throw new Error(`soundcloud ${url.pathname}: network request failed`, {
+        cause: error,
+      });
     }
     return readJson(result, `soundcloud ${url.pathname}`);
   };
-}
-
-function timestamp(value) {
-  if (typeof value !== 'string') return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
 }
 
 export function normalizeSoundCloudTracks(tracks) {
   const items = [];
   for (const track of tracks) {
     const match = /^soundcloud:tracks:(.+)$/.exec(track?.urn ?? '');
-    const publishedAt = timestamp(track?.created_at);
+    const publishedAt = toIsoTimestamp(track?.created_at);
     const artwork = track?.artwork_url ?? track?.user?.avatar_url;
     if (
       !match ||
@@ -103,7 +103,18 @@ export function normalizeSoundCloudTracks(tracks) {
   );
 }
 
-export async function fetchSoundCloud(profileUrl, request) {
+async function widgetResolves(profileUrl, fetchImpl) {
+  try {
+    const response = await fetchImpl(
+      `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(profileUrl)}`,
+    );
+    return response.ok || response.status === 429 || response.status >= 500;
+  } catch {
+    return true;
+  }
+}
+
+export async function fetchSoundCloud(profileUrl, request, fetchImpl = fetch) {
   const profile = await request(
     `/resolve?url=${encodeURIComponent(profileUrl)}`,
   );
@@ -123,5 +134,7 @@ export async function fetchSoundCloud(profileUrl, request) {
     tracks.push(...collection);
     next = typeof page?.next_href === 'string' ? page.next_href : '';
   }
-  return normalizeSoundCloudTracks(tracks);
+  const items = normalizeSoundCloudTracks(tracks);
+  if (await widgetResolves(profileUrl, fetchImpl)) return items;
+  return items.map((item) => ({ ...item, playback: 'external' }));
 }

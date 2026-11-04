@@ -1,3 +1,4 @@
+import { formatClock } from '../lib/clock.ts';
 import { navigate } from 'astro:transitions/client';
 import type { Playable } from '../lib/playable.ts';
 import { sourceNames } from '../lib/sources.ts';
@@ -12,7 +13,7 @@ const normalise = (value: string) =>
 
 const clock = (seconds: number | null | undefined) => {
   if (typeof seconds !== 'number' || !Number.isFinite(seconds)) return '';
-  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+  return formatClock(seconds);
 };
 
 const dialogNow = () =>
@@ -152,6 +153,8 @@ function bind(
     }
   });
   dialog.addEventListener('close', () => {
+    matches = [];
+    active = -1;
     input.removeAttribute('aria-activedescendant');
     input.setAttribute('aria-expanded', 'false');
     invoker?.focus();
@@ -194,7 +197,6 @@ document.addEventListener('click', (event) => {
 
   const trigger = target?.closest<HTMLElement>('[data-search-open]');
   if (!trigger) return;
-  event.preventDefault();
   openSearch(trigger);
 });
 

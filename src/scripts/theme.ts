@@ -11,17 +11,36 @@ const activeTheme = (): Theme => {
 
 function restoreOverride(): void {
   document.documentElement.classList.add('has-js');
-  let theme: string | null = null;
+  let theme: string | null;
   try {
     theme = localStorage.getItem('theme_override');
-  } catch {}
+  } catch {
+    syncControls();
+    return;
+  }
   if (theme === 'dark' || theme === 'light')
     document.documentElement.dataset.theme = theme;
   else delete document.documentElement.dataset.theme;
   syncControls();
 }
 
+function syncThemeColor(): void {
+  const override = document.documentElement.dataset.theme;
+  for (const meta of document.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  )) {
+    const scheme =
+      override === 'dark' || override === 'light'
+        ? override
+        : meta.media.includes('dark')
+          ? 'dark'
+          : 'light';
+    meta.content = meta.dataset[scheme] ?? meta.content;
+  }
+}
+
 function syncControls(): void {
+  syncThemeColor();
   const theme = activeTheme();
   for (const button of document.querySelectorAll<HTMLButtonElement>(
     '[data-theme-toggle]',
@@ -31,7 +50,6 @@ function syncControls(): void {
         ? button.dataset['labelLight']
         : button.dataset['labelDark'];
     if (next) button.setAttribute('aria-label', next);
-    button.setAttribute('aria-checked', String(theme === 'dark'));
   }
 }
 
