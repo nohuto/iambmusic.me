@@ -201,7 +201,7 @@ html[data-theme='dark'] .theme-control .icon[data-theme-icon='light'] {
 
 .theme-control .thumb {
   translate: 0 0;
-  transition: translate 220ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  transition: translate 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html[data-theme='dark'] .theme-control .thumb {
@@ -541,18 +541,6 @@ html[data-social-sources='collapsed'] #social-sources {
   grid-template-rows: 0fr;
   opacity: 0;
   visibility: hidden;
-}
-
-@property --rail-width {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0px;
-}
-
-@media (min-width: 60rem) and (prefers-reduced-motion: no-preference) {
-  html {
-    transition: --rail-width 240ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
 }
 
 @media (min-width: 60rem) {
