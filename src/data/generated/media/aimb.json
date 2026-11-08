@@ -1,9 +1,9 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-11-04T10:43:29.243Z",
+  "generatedAt": "2026-11-08T11:21:20.910Z",
   "refreshedAt": {
     "youtube": "2026-10-31T10:26:47.302Z",
-    "soundcloud": "2026-11-04T10:43:29.243Z"
+    "soundcloud": "2026-11-08T11:21:20.910Z"
   },
   "items": [
     {
@@ -243,7 +243,7 @@
       "title": "When the day ends",
       "publishedAt": "2026-07-16T21:08:27.000Z",
       "discoveredAt": "2026-08-30T18:07:56.182Z",
-      "durationSeconds": 254,
+      "durationSeconds": 224,
       "thumbnail": {
         "url": "https://i1.sndcdn.com/artworks-YgkRuAHHzFG1HxsW-4uzQ6w-large.jpg",
         "width": null,
