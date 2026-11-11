@@ -1,21 +1,37 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-11-10T12:44:28.409Z",
+  "generatedAt": "2026-11-11T11:56:07.411Z",
   "refreshedAt": {
-    "youtube": "2026-10-31T10:26:47.302Z",
-    "soundcloud": "2026-11-10T12:44:28.409Z"
+    "youtube": "2026-11-11T11:56:07.411Z",
+    "soundcloud": "2026-11-11T11:56:07.411Z"
   },
   "items": [
+    {
+      "id": "youtube:0z1IwJRvaLw",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=0z1IwJRvaLw",
+      "title": "Soundwave message ... to a friend",
+      "publishedAt": "2026-11-10T21:12:50.000Z",
+      "discoveredAt": "2026-11-11T11:56:07.411Z",
+      "durationSeconds": 210,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/0z1IwJRvaLw/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "0z1IwJRvaLw",
+      "playback": "youtube-embed"
+    },
     {
       "id": "soundcloud:2435211435",
       "source": "soundcloud",
       "url": "https://soundcloud.com/aimb-project/sound-waves-message?utm_medium=api&utm_campaign=social_sharing&utm_source=id_335176",
-      "title": "Sound waves message",
+      "title": "Soundwave message",
       "publishedAt": "2026-11-09T21:46:54.000Z",
       "discoveredAt": "2026-11-10T12:44:28.409Z",
       "durationSeconds": 210,
       "thumbnail": {
-        "url": "https://i1.sndcdn.com/artworks-MQozKvGweB2c3PQ0-wURATg-large.jpg",
+        "url": "https://i1.sndcdn.com/artworks-D4Nuow8qtA5nAzQc-KkR5SQ-large.jpg",
         "width": null,
         "height": null
       },
