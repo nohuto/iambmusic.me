@@ -1,11 +1,27 @@
 {
   "profile": "aimb",
-  "generatedAt": "2026-11-15T12:00:17.332Z",
+  "generatedAt": "2026-11-16T12:52:21.283Z",
   "refreshedAt": {
-    "youtube": "2026-11-11T11:56:07.411Z",
+    "youtube": "2026-11-16T12:52:21.283Z",
     "soundcloud": "2026-11-15T12:00:17.332Z"
   },
   "items": [
+    {
+      "id": "youtube:EfTvMlhxa4Q",
+      "source": "youtube",
+      "url": "https://www.youtube.com/watch?v=EfTvMlhxa4Q",
+      "title": "Somewhere in Nowhere",
+      "publishedAt": "2026-11-15T13:17:43.000Z",
+      "discoveredAt": "2026-11-16T12:52:21.283Z",
+      "durationSeconds": 197,
+      "thumbnail": {
+        "url": "https://i.ytimg.com/vi/EfTvMlhxa4Q/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "videoId": "EfTvMlhxa4Q",
+      "playback": "youtube-embed"
+    },
     {
       "id": "soundcloud:2438606049",
       "source": "soundcloud",
